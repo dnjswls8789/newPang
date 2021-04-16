@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68b3d4065d10a2748a3cd48dd9901a53, type: 3}
+  m_Name: BlockConfig
+  m_EditorClassIdentifier: 
+  dropSpeed:
+  - 0.2
+  - 0.3
+  - 0.35
+  - 0.4
+  - 0.425
+  - 0.45
+  - 0.475
+  - 0.5
+  - 0.525
+  lazerSprite: {fileID: 21300000, guid: 97a206ad283f0c241adbbdbab0c59542, type: 3}
+  basicBlockSprites:
+  - {fileID: 21300000, guid: d41dda32c8eb8489ca685fa8ac3618e7, type: 3}
+  - {fileID: 21300000, guid: b3fd567a9dce84bf48b0c4607ed40d05, type: 3}
+  - {fileID: 21300000, guid: c7c406757850f4eb9b62b6e8d99d8c19, type: 3}
+  - {fileID: 21300000, guid: 21604808ef1294d4996d607b17e012c8, type: 3}
+  - {fileID: 21300000, guid: b2675aa6f38e14b16b8e6f5dc2fb2500, type: 3}
+  - {fileID: 21300000, guid: a6a939ec3a316490fa4474595a16b1ce, type: 3}
+  vertBlockSprites:
+  - {fileID: 21300000, guid: 7f17600c580f82c4b973efc7c1b573dd, type: 3}
+  - {fileID: 21300000, guid: 6b4fd8e572b28f94da1a3afbe9a6ed3d, type: 3}
+  - {fileID: 21300000, guid: e39e450875c6c374e8a94c45265f5d20, type: 3}
+  - {fileID: 21300000, guid: 569a6d4eeffb7664897ce5695e468f6b, type: 3}
+  - {fileID: 21300000, guid: 48e0f057b44351540beb5afc9ec8f4bb, type: 3}
+  - {fileID: 21300000, guid: 2ee550b050b144b4d9fbea7a2b9edb81, type: 3}
+  horzBlockSprites:
+  - {fileID: 21300000, guid: 998d96a52ff4c2f4cbee03eb585401de, type: 3}
+  - {fileID: 21300000, guid: 53d0cb55d0844ee4c9cf68ff1a398770, type: 3}
+  - {fileID: 21300000, guid: 9dae2a8476a4a27428a880b117a7ea06, type: 3}
+  - {fileID: 21300000, guid: 58df5b7a4c86bd24e805d5397e08d660, type: 3}
+  - {fileID: 21300000, guid: f43c680f34bea5240abcaf9c59dc0609, type: 3}
+  - {fileID: 21300000, guid: 283b09e787980154f896110e074bd47c, type: 3}
+  circleBlockSprites:
+  - {fileID: 21300000, guid: be9b7e79f7d45db4faa847b6aed17ad1, type: 3}
+  - {fileID: 21300000, guid: 8fab58555844bf1439d40bab0b7e6a1a, type: 3}
+  - {fileID: 21300000, guid: cce5a3ea32fcf864b995dea2cdc6b6a3, type: 3}
+  - {fileID: 21300000, guid: fa1d200b9e1bb0e43864fa2048a8e7a8, type: 3}
+  - {fileID: 21300000, guid: 8999a2bbe9f50e340925512c7fea2cc2, type: 3}
+  - {fileID: 21300000, guid: 9b8329e0e365f5d4c817f6015801ecf8, type: 3}
+  blockColors:
+  - {r: 0.37647063, g: 0.26666668, b: 0, a: 1}
+  - {r: 0.10196079, g: 0.5294118, b: 0.27058825, a: 1}
+  - {r: 0.36862746, g: 0.3803922, b: 0.3803922, a: 1}
+  - {r: 0.10196079, g: 0.10196079, b: 0.10196079, a: 1}
+  - {r: 0.6, g: 0.10980393, b: 0, a: 1}
+  - {r: 0.10196079, g: 0.20000002, b: 0.20000002, a: 1}
+  explosion:
+  - {fileID: 2861438460690957853, guid: d93a234cb984ec44f889d1df1e9102af, type: 3}
+  - {fileID: 8132960832945420751, guid: c1da60478a7d11c4689e2e258b1581a0, type: 3}
+  - {fileID: 6873713167191644348, guid: b65cafe545f5b7d43ab7dc42977e3997, type: 3}
+  - {fileID: 2861438460690957853, guid: d93a234cb984ec44f889d1df1e9102af, type: 3}
+  - {fileID: 2861438460690957853, guid: d93a234cb984ec44f889d1df1e9102af, type: 3}
+  - {fileID: 2861438460690957853, guid: d93a234cb984ec44f889d1df1e9102af, type: 3}
+  - {fileID: 2861438460690957853, guid: d93a234cb984ec44f889d1df1e9102af, type: 3}
+  - {fileID: 2861438460690957853, guid: d93a234cb984ec44f889d1df1e9102af, type: 3}
+  - {fileID: 2861438460690957853, guid: d93a234cb984ec44f889d1df1e9102af, type: 3}
