@@ -41,3 +41,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Cell
+    uniqueID: 2692735335
+    locked: 0
+  - name: Block
+    uniqueID: 4069007007
+    locked: 0

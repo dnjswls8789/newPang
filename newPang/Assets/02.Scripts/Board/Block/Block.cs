@@ -6,7 +6,10 @@ public class Block : MonoBehaviour
 {
     [SerializeField] BlockConfig m_BlockConfig;
     SpriteRenderer m_SpriteRenderer;
-    protected BlockBreed m_Breed;   //렌더링되는 블럭 캐린터(즉, 이미지 종류)
+
+    public BlockStatus status;
+
+    public BlockBreed m_Breed;   //렌더링되는 블럭 캐린터(즉, 이미지 종류)
     public BlockBreed breed
     {
         get { return m_Breed; }
@@ -29,6 +32,54 @@ public class Block : MonoBehaviour
     {
         get { return m_QuestType; }
         set { m_QuestType = value; }
+    }
+
+    Vector2Int m_cellPosition;
+    public Vector2Int cellPosition
+    {
+        get { return m_cellPosition; }
+        set { m_cellPosition = value; }
+    }
+    public void SetCellPosition(int x, int y)
+    {
+        cellPosition = new Vector2Int(x, y);
+    }
+
+    int m_Durability;                 //내구도
+    public virtual int durability
+    {
+        get { return m_Durability; }
+        set { m_Durability = value; }
+    }
+
+    private bool swiping;
+    public bool isSwiping
+    {
+        get { return swiping; }
+        set { swiping = value; }
+    }
+
+    private bool droping;
+    public bool isDroping
+    {
+        get { return droping; }
+        set { droping = value; }
+    }
+
+    public void InitBlock(BlockBreed _breed, BlockType _type, Vector2Int position)
+    {
+        status = BlockStatus.NORMAL;
+
+        breed = _breed;
+        type = _type;
+        cellPosition = position;
+
+        m_Durability = 1;
+    }
+
+    private void Awake()
+    {
+        m_SpriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     public void UpdateView()
@@ -58,7 +109,12 @@ public class Block : MonoBehaviour
         }
     }
 
-    
+    public void Move(float x, float y)
+    {
+        transform.position = new Vector3(x, y);
+    }
+
+
     // 블럭을 제거한다.  
 
     public void DoActionClear()
@@ -91,5 +147,10 @@ public class Block : MonoBehaviour
     public bool IsEmpty()
     {
         return type == BlockType.EMPTY;
+    }
+
+    public bool IsSwipale()
+    {
+        return !isDroping && isSwiping && status == BlockStatus.NORMAL;
     }
 }
