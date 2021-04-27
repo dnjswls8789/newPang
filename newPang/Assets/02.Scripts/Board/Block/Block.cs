@@ -149,8 +149,9 @@ public class Block : MonoBehaviour
         return type == BlockType.EMPTY;
     }
 
-    public bool IsSwipale()
+    public bool IsSwipeable()
     {
-        return !isDroping && isSwiping && status == BlockStatus.NORMAL;
+
+        return !isDroping && !isSwiping && status == BlockStatus.NORMAL && !IsEmpty();
     }
 }

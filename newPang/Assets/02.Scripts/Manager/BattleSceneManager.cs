@@ -20,5 +20,17 @@ public class BattleSceneManager : SingletonClass<BattleSceneManager>
         stageBuilder.ComposeStage(stage);
 
         board.SetCellPosition();
+        board.MatchingCheckShuffle();
+
+        int a = 0;
+        while (!board.PangCheck())
+        {
+            a++;
+            board.AllShuffle();
+            board.MatchingCheckShuffle();
+        }
+        Debug.LogError(a);
+
+        Debug.LogError(board.PangCheck());
     }
 }
