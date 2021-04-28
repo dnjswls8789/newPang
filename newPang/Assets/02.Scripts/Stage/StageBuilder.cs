@@ -26,9 +26,9 @@ public class StageBuilder
         stage.InitStage(m_StageInfo);
 
         //2. Cell,Block 초기 값을 생성한다.
-        for (int nRow = 0; nRow < m_StageInfo.row; nRow++)
+        for (int nCol = 0; nCol < m_StageInfo.col; nCol++)
         {
-            for (int nCol = 0; nCol < m_StageInfo.col; nCol++)
+            for (int nRow = 0; nRow < m_StageInfo.row; nRow++)
             {
                 stage.board.blocks[nRow, nCol] = SpawnBlockForStage(nRow, nCol);
                 stage.board.cells[nRow, nCol] = SpawnCellForStage(nRow, nCol);

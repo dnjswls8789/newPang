@@ -2,6 +2,38 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public struct BlockPos
+{
+    public int row { get; set; }
+    public int col { get; set; }
+
+    public BlockPos(int nRow = 0, int nCol = 0)
+    {
+        row = nRow;
+        col = nCol;
+    }
+
+    //----------------------------------------------------------------------
+    // Struct 필수 override function
+    //----------------------------------------------------------------------
+    public override bool Equals(object obj)
+    {
+        return obj is BlockPos pos && row == pos.row && col == pos.row;
+    }
+
+    public override int GetHashCode()
+    {
+        var hashCode = -928284752;
+        hashCode = hashCode * -1521134295 + row.GetHashCode();
+        hashCode = hashCode * -1521134295 + col.GetHashCode();
+        return hashCode;
+    }
+
+    public override string ToString()
+    {
+        return $"(row = {row}, col = {col})";
+    }
+}
 public class Block : MonoBehaviour
 {
     [SerializeField] BlockConfig m_BlockConfig;
@@ -34,7 +66,7 @@ public class Block : MonoBehaviour
         set { m_QuestType = value; }
     }
 
-    Vector2Int m_cellPosition;
+    public Vector2Int m_cellPosition;
     public Vector2Int cellPosition
     {
         get { return m_cellPosition; }
@@ -52,7 +84,7 @@ public class Block : MonoBehaviour
         set { m_Durability = value; }
     }
 
-    private bool swiping;
+    public bool swiping;
     public bool isSwiping
     {
         get { return swiping; }
@@ -138,7 +170,7 @@ public class Block : MonoBehaviour
         explosionObj.SetActive(true);
         explosionObj.transform.position = this.transform.position;
 
-        yield return new WaitForSeconds(0.1f);
+        //yield return new WaitForSeconds(0.1f);
 
         //3. 블럭 GameObject 객체 삭제 or make size zero
         gameObject.InstantEnqueue();
@@ -151,7 +183,6 @@ public class Block : MonoBehaviour
 
     public bool IsSwipeable()
     {
-
         return !isDroping && !isSwiping && status == BlockStatus.NORMAL && !IsEmpty();
     }
 }

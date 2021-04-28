@@ -29,8 +29,5 @@ public class BattleSceneManager : SingletonClass<BattleSceneManager>
             board.AllShuffle();
             board.MatchingCheckShuffle();
         }
-        Debug.LogError(a);
-
-        Debug.LogError(board.PangCheck());
     }
 }

@@ -29,19 +29,19 @@ public class Board : MonoBehaviour
     {
         float initX = CalcInitX(0.5f);
         float initY = CalcInitY(0.5f);
-        for (int nRow = 0; nRow < m_Row; nRow++)
+        for (int nCol = 0; nCol < m_Col; nCol++)
         {
-            for (int nCol = 0; nCol < m_Col; nCol++)
+            for (int nRow = 0; nRow < m_Row; nRow++)
             {
                 //3.1 Cell GameObject 생성을 요청한다.GameObject가 생성되지 않는 경우에 null을 리턴한다.
                 Cell cell = m_Cells[nRow, nCol];
-                cell?.Move(initX + nCol, initY + nRow);
+                cell?.Move(initX + nRow, initY + nCol);
 
                 //3.2 Block GameObject 생성을 요청한다.
                 //    GameObject가 생성되지 않는 경우에 null을 리턴한다. EMPTY 인 경우에 null
                 Block block = m_Blocks[nRow, nCol];
                 block?.SetCellPosition(nRow, nCol);
-                block?.Move(initX + nCol, initY + nRow);
+                block?.Move(initX + nRow, initY + nCol);
             }
         }
     }
@@ -58,11 +58,210 @@ public class Board : MonoBehaviour
         return -m_Row / 2.0f + offset;
     }
 
+    public void DoSwipeAction(int nRow, int nCol, Swipe swipeDir)
+    {
+        StartCoroutine(CoDoSwipeAction(nRow, nCol, swipeDir));
+    }
+
+    IEnumerator CoDoSwipeAction(int nRow, int nCol, Swipe swipeDir)
+    {
+        int nSwipeRow = nRow, nSwipeCol = nCol;
+        nSwipeRow += swipeDir.GetTargetRow(); //Right : +1, LEFT : -1
+        nSwipeCol += swipeDir.GetTargetCol(); //UP : +1, DOWN : -1
+
+        float initX = CalcInitX(0.5f);
+        float initY = CalcInitY(0.5f);
+
+        if (nSwipeRow < 0 || nSwipeRow >= maxRow || nSwipeCol < 0 || nSwipeCol >= maxCol)
+        {
+            yield break;
+        }
+
+        if (blocks[nRow, nCol] == null || blocks[nSwipeRow, nSwipeCol] == null)
+        {
+            yield break;
+        }
+
+        // 두 블럭 다 스왑 가능한지.
+        if (blocks[nRow, nCol].IsSwipeable() && blocks[nSwipeRow, nSwipeCol].IsSwipeable())
+        {
+            Block baseBlock = blocks[nRow, nCol];
+            Block targetBlock = blocks[nSwipeRow, nSwipeCol];
+
+            Vector3 basePos = baseBlock.transform.position;
+            Vector3 targetPos = targetBlock.transform.position;
+
+            StartCoroutine(Action2D.MoveTo(baseBlock.transform, targetPos, Constants.SWIPE_DURATION));
+            StartCoroutine(Action2D.MoveTo(targetBlock.transform, basePos, Constants.SWIPE_DURATION));
+
+            baseBlock.isSwiping = true;
+            targetBlock.isSwiping = true;
+
+            //2.2.2 Board에 저장된 블럭의 위치를 교환한다
+            blocks[nRow, nCol] = targetBlock;
+            blocks[nSwipeRow, nSwipeCol] = baseBlock;
+            yield return new WaitForSeconds(Constants.SWIPE_DURATION);
+
+
+            blocks[nRow, nCol]?.Move(initX + nRow, initY + nCol);
+            blocks[nSwipeRow, nSwipeCol]?.Move(initX + nSwipeRow, initY + nSwipeCol);
+
+            baseBlock.isSwiping = false;
+            targetBlock.isSwiping = false;
+
+            targetBlock.SetCellPosition(nRow, nCol);
+            baseBlock.SetCellPosition(nSwipeRow, nSwipeCol);
+
+            bool baseCheck = false;
+            bool targetCheck = false;
+            SwipedBlockPangCheck(nRow, nCol, out baseCheck);
+            SwipedBlockPangCheck(nSwipeRow, nSwipeCol, out targetCheck);
+            //////////// 움직인 두개 매치 체크 하고 둘다 아니면 돌려보내기 ////////////////////
+            if (!baseCheck && !targetCheck)
+            {
+                baseBlock = blocks[nRow, nCol];
+                targetBlock = blocks[nSwipeRow, nSwipeCol];
+
+                basePos = baseBlock.transform.position;
+                targetPos = targetBlock.transform.position;
+
+                StartCoroutine(Action2D.MoveTo(baseBlock.transform, targetPos, Constants.SWIPE_DURATION));
+                StartCoroutine(Action2D.MoveTo(targetBlock.transform, basePos, Constants.SWIPE_DURATION));
+
+                baseBlock.isSwiping = true;
+                targetBlock.isSwiping = true;
+
+                //2.2.2 Board에 저장된 블럭의 위치를 교환한다
+                blocks[nRow, nCol] = targetBlock;
+                blocks[nSwipeRow, nSwipeCol] = baseBlock;
+                yield return new WaitForSeconds(Constants.SWIPE_DURATION);
+
+
+                blocks[nRow, nCol]?.Move(initX + nRow, initY + nCol);
+                blocks[nSwipeRow, nSwipeCol]?.Move(initX + nSwipeRow, initY + nSwipeCol);
+
+                baseBlock.isSwiping = false;
+                targetBlock.isSwiping = false;
+
+                targetBlock.SetCellPosition(nRow, nCol);
+                baseBlock.SetCellPosition(nSwipeRow, nSwipeCol);
+
+                SwipedBlockPangCheck(nRow, nCol, out baseCheck);
+                SwipedBlockPangCheck(nSwipeRow, nSwipeCol, out targetCheck);
+            }
+        }
+
+    }
+
+    public void SwipedBlockPangCheck(int nRow, int nCol, out bool found)
+    {
+        found = false;
+        List<Block> matchedBlockList = new List<Block>();
+        List<Block> clearList = new List<Block>();
+
+        Block baseBlock = blocks[nRow, nCol];
+        if (baseBlock == null) return;
+
+        matchedBlockList.Add(baseBlock);
+
+        //1. 가로 블럭 검색
+        Block block;
+
+        //1.1 오른쪽 방향
+        for (int i = nRow + 1; i < maxRow; i++)
+        {
+            block = m_Blocks[i, nCol];
+            if (block == null) break;
+            if (!block.IsSafeEqual(baseBlock) || block.status != BlockStatus.NORMAL || block.isSwiping)
+                break;
+
+            matchedBlockList.Add(block);
+        }
+
+        //1.2 왼쪽 방향
+        for (int i = nRow - 1; i >= 0; i--)
+        {
+            block = m_Blocks[i, nCol];
+            if (block == null) break;
+            if (!block.IsSafeEqual(baseBlock) || block.status != BlockStatus.NORMAL || block.isSwiping)
+                break;
+
+            matchedBlockList.Add(block);
+        }
+
+        //1.3 매치된 상태인지 판단한다
+        //    기준 블럭(baseBlock)을 제외하고 좌우에 2개이상이면 기준블럭 포함해서 3개이상 매치되는 경우로 판단할 수 있다
+        if (matchedBlockList.Count >= 3)
+        {
+            for (int i = 0; i < matchedBlockList.Count; i++)
+            {
+                clearList.Add(matchedBlockList[i]);
+            }
+
+            //SetBlockStatusMatched(matchedBlockList, true);
+            found = true;
+        }
+
+
+        matchedBlockList.Clear();
+
+        //2. 세로 블럭 검색
+        matchedBlockList.Add(baseBlock);
+
+        //2.1 위쪽 검색
+        for (int i = nCol + 1; i < maxCol; i++)
+        {
+            block = m_Blocks[nRow, i];
+            if (block == null) break;
+            if (!block.IsSafeEqual(baseBlock) || block.status != BlockStatus.NORMAL || block.isSwiping)
+                break;
+
+            matchedBlockList.Add(block);
+        }
+
+        //2.2 아래쪽 검색
+        for (int i = nCol - 1; i >= 0; i--)
+        {
+            block = m_Blocks[nRow, i];
+            if (block == null) break;
+            if (!block.IsSafeEqual(baseBlock) || block.status != BlockStatus.NORMAL || block.isSwiping)
+                break;
+
+            matchedBlockList.Add(block);
+        }
+
+        //2.3 매치된 상태인지 판단한다
+        //    기준 블럭(baseBlock)을 제외하고 상하에 2개이상이면 기준블럭 포함해서 3개이상 매치되는 경우로 판단할 수 있다
+        if (matchedBlockList.Count >= 3)
+        {
+            for (int i = 0; i < matchedBlockList.Count; i++)
+            {
+                // 가로에서 이미 찾아서 clearList 에 baseBlock 들어있을 때는 baseBlock 안넣음. (matchedList[0] == baseBlock)
+                if (found && i == 0) continue;
+                clearList.Add(matchedBlockList[i]);
+            }
+
+            //SetBlockStatusMatched(matchedBlockList, false);
+            found = true;
+        }
+
+        if (found)
+        {
+            for (int i = 0; i < clearList.Count; i++)
+            {
+                clearList[i].status = BlockStatus.CLEAR;
+                clearList[i].DoActionClear();
+            }
+        }
+
+        return;
+    }
+
     public void AllShuffle()
     {
-        for (int row = 0; row < m_Row; row++)
+        for (int col = 0; col < m_Col; col++)
         {
-            for (int col = 0; col < m_Col; col++)
+            for (int row = 0; row < m_Row; row++)
             {
                 blocks[row, col].breed = (BlockBreed)UnityEngine.Random.Range(0, BattleSceneManager.GetInstance.stage.blockCount);
             }
@@ -71,9 +270,9 @@ public class Board : MonoBehaviour
 
     public void MatchingCheckShuffle()
     {
-        for (int row = 0; row < m_Row; row++)
+        for (int col = 0; col < m_Col; col++)
         {
-            for (int col = 0; col < m_Col; col++)
+            for (int row = 0; row < m_Row; row++)
             {
                 // 왼쪽 아래부터 체크.
                 // 왼쪽 아래로 두칸씩 검사.
@@ -199,9 +398,9 @@ public class Board : MonoBehaviour
 
     public bool PangCheck()
     {
-        for (int nRow = 0; nRow < maxRow; nRow++)
+        for (int nCol = 0; nCol < maxCol; nCol++)
         {
-            for (int nCol = 0; nCol < maxCol; nCol++)
+            for (int nRow = 0; nRow < maxRow; nRow++)
             {
                 // 왼쪽 아래부터 오른쪽 위로 체크하니깐
                 // 왼쪽이랑 아래는 체크 안해도 이미 지나온 길이겠지.
