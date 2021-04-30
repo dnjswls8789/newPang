@@ -55,11 +55,8 @@ public class InputManager
 {
     Transform m_Container;
 
-#if UNITY_ANDROID && !UNITY_EDITOR
-        IInputHandlerBase m_InputHandler = new TouchHandler();
-#else
     IInputHandlerBase m_InputHandler = new MouseHandler();
-#endif
+
     public InputManager(Transform container)
     {
         m_Container = container;

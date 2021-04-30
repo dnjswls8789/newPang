@@ -36,6 +36,7 @@ public struct BlockPos
 }
 public class Block : MonoBehaviour
 {
+    public Board board;
     [SerializeField] BlockConfig m_BlockConfig;
     SpriteRenderer m_SpriteRenderer;
 
@@ -84,14 +85,14 @@ public class Block : MonoBehaviour
         set { m_Durability = value; }
     }
 
-    public bool swiping;
+    bool swiping;
     public bool isSwiping
     {
         get { return swiping; }
         set { swiping = value; }
     }
 
-    private bool droping;
+    public bool droping;
     public bool isDroping
     {
         get { return droping; }
@@ -102,16 +103,52 @@ public class Block : MonoBehaviour
     {
         status = BlockStatus.NORMAL;
 
-        breed = _breed;
         type = _type;
         cellPosition = position;
+        breed = _breed;
 
         m_Durability = 1;
+
+        transform.localScale = Vector3.one;
     }
 
     private void Awake()
     {
         m_SpriteRenderer = GetComponent<SpriteRenderer>();
+    }
+
+    public void BlockDropCheck()
+    {
+        if (IsDropable())
+        {
+            StartCoroutine(CoDoDropAction());
+        }
+    }
+
+    public void SpawnBlockDrop(int dropCount)
+    {
+        if (IsDropable())
+        {
+            StartCoroutine(CodoSpawnBlockDropAction(dropCount));
+        }
+    }
+
+    IEnumerator CodoSpawnBlockDropAction(int dropCount)
+    {
+        float duration = m_BlockConfig.dropSpeed[dropCount];
+
+        isDroping = true;
+
+        float initX = board.CalcInitX(0.5f);
+        float initY = board.CalcInitX(0.5f);
+
+        StartCoroutine(Action2D.MoveTo(transform, new Vector3(initX + cellPosition.x, initY + cellPosition.y), duration));
+        yield return new WaitForSeconds(duration);
+
+        isDroping = false;
+
+        bool found;
+        board.SwipedBlockPangCheck(cellPosition.x, cellPosition.y, out found);
     }
 
     public void UpdateView()
@@ -174,6 +211,77 @@ public class Block : MonoBehaviour
 
         //3. 블럭 GameObject 객체 삭제 or make size zero
         gameObject.InstantEnqueue();
+        status = BlockStatus.CLEAR;
+    }
+
+    IEnumerator CoDoDropAction()
+    {
+        int dropIndex = 0;
+
+        for (int i = 1; i < board.maxCol; i++)
+        {
+            if (cellPosition.y - i < 0) break;
+
+            if (board.blocks[cellPosition.x, cellPosition.y - i].status == BlockStatus.CLEAR)
+            {
+                dropIndex++;
+            }
+            else if (!board.blocks[cellPosition.x, cellPosition.y - i].IsDropable())
+            {
+                break;
+            }
+        }
+        
+        if (dropIndex == 0) yield break;
+
+        Block baseBlock = this;
+        Block targetBlock = board.blocks[cellPosition.x, cellPosition.y - dropIndex];
+
+        float duration = m_BlockConfig.dropSpeed[dropIndex - 1];
+
+        float initX = board.CalcInitX(0.5f);
+        float initY = board.CalcInitY(0.5f);
+
+        board.blocks[cellPosition.x, cellPosition.y] = targetBlock;
+        board.blocks[cellPosition.x, cellPosition.y - dropIndex] = baseBlock;
+
+        baseBlock.SetCellPosition(cellPosition.x, cellPosition.y - dropIndex);
+        targetBlock.SetCellPosition(cellPosition.x, cellPosition.y);
+
+        isDroping = true;
+
+        StartCoroutine(Action2D.MoveTo(baseBlock.transform, new Vector3(initX + baseBlock.cellPosition.x, initY + baseBlock.cellPosition.y), duration));
+        targetBlock?.Move(initX + targetBlock.cellPosition.x, initY + targetBlock.cellPosition.y);
+
+        yield return new WaitForSeconds(duration);
+
+        isDroping = false;
+
+        bool found;
+        board.SwipedBlockPangCheck(cellPosition.x, cellPosition.y, out found);
+    }
+
+
+
+    public bool IsSafeEqual(Block targetBlock)
+    {
+        if (targetBlock == null)
+            return false;
+
+        if (IsEmpty() || targetBlock.IsEmpty())
+            return false;
+
+        return breed == targetBlock.breed;
+    }
+
+    public bool MatchCheck(Block targetBlock)
+    {
+        return IsSafeEqual(targetBlock) && status == BlockStatus.NORMAL && !isSwiping && !isDroping;
+    }
+
+    public bool IsDropable()
+    {
+        return status == BlockStatus.NORMAL && !IsEmpty() && !isSwiping && !isDroping;
     }
 
     public bool IsEmpty()
@@ -183,6 +291,6 @@ public class Block : MonoBehaviour
 
     public bool IsSwipeable()
     {
-        return !isDroping && !isSwiping && status == BlockStatus.NORMAL && !IsEmpty();
+        return status == BlockStatus.NORMAL && !IsEmpty() && !isSwiping && !isDroping;
     }
 }

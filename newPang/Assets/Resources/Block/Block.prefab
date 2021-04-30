@@ -94,6 +94,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87cb10e4eabbec4489687ce091eb33d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  board: {fileID: 0}
   m_BlockConfig: {fileID: 11400000, guid: 63f1793891421334d9b12cfdefa4cd5c, type: 2}
   status: 0
   m_Breed: 0
+  m_cellPosition: {x: 0, y: 0}
+  droping: 0

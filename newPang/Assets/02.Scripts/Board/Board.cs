@@ -25,6 +25,56 @@ public class Board : MonoBehaviour
         m_Blocks = new Block[row, col];
     }
 
+    private void Update()
+    {
+        for (int row = 0; row < maxRow; row++)
+        {
+            for (int col = 0; col < maxCol; col++)
+            {
+                blocks[row, col].BlockDropCheck();
+            }
+        }
+
+        for (int row = 0; row < maxRow; row++)
+        {
+            int count = GetClearCount(row);
+        
+            if (count > 0)
+            {
+                float initX = CalcInitX(0.5f);
+                float initY = CalcInitX(0.5f);
+        
+                for (int i = 0; i < count; i++)
+                {
+                    Block spawnBlock = BlockFactory.SpawnBlock(BlockType.BASIC, BattleSceneManager.GetInstance.stage.blockCount);
+                    spawnBlock?.SetCellPosition(row, maxCol - 1 - i);
+                    blocks[spawnBlock.cellPosition.x, spawnBlock.cellPosition.y] = spawnBlock;
+                    spawnBlock?.Move(initX + row, maxCol - 1 + initY + count - i);
+                    
+                    spawnBlock?.SpawnBlockDrop(count - 1);
+                }
+            }
+        }
+    }
+
+    public int GetClearCount(int row)
+    {
+        int count = 0;
+
+        for (int col = maxCol- 1; col >= 0; col--)
+        {
+            if (blocks[row, col].status == BlockStatus.CLEAR)
+            {
+                count++;
+            }
+            else if (!blocks[row, col].IsDropable())
+            {
+                break;
+            }
+        }
+        return count;
+    }
+
     public void SetCellPosition()
     {
         float initX = CalcInitX(0.5f);
@@ -100,17 +150,17 @@ public class Board : MonoBehaviour
             //2.2.2 Board에 저장된 블럭의 위치를 교환한다
             blocks[nRow, nCol] = targetBlock;
             blocks[nSwipeRow, nSwipeCol] = baseBlock;
-            yield return new WaitForSeconds(Constants.SWIPE_DURATION);
 
+            targetBlock.SetCellPosition(nRow, nCol);
+            baseBlock.SetCellPosition(nSwipeRow, nSwipeCol);
+
+            yield return new WaitForSeconds(Constants.SWIPE_DURATION);
 
             blocks[nRow, nCol]?.Move(initX + nRow, initY + nCol);
             blocks[nSwipeRow, nSwipeCol]?.Move(initX + nSwipeRow, initY + nSwipeCol);
 
             baseBlock.isSwiping = false;
             targetBlock.isSwiping = false;
-
-            targetBlock.SetCellPosition(nRow, nCol);
-            baseBlock.SetCellPosition(nSwipeRow, nSwipeCol);
 
             bool baseCheck = false;
             bool targetCheck = false;
@@ -134,17 +184,17 @@ public class Board : MonoBehaviour
                 //2.2.2 Board에 저장된 블럭의 위치를 교환한다
                 blocks[nRow, nCol] = targetBlock;
                 blocks[nSwipeRow, nSwipeCol] = baseBlock;
-                yield return new WaitForSeconds(Constants.SWIPE_DURATION);
 
+                targetBlock.SetCellPosition(nRow, nCol);
+                baseBlock.SetCellPosition(nSwipeRow, nSwipeCol);
+
+                yield return new WaitForSeconds(Constants.SWIPE_DURATION);
 
                 blocks[nRow, nCol]?.Move(initX + nRow, initY + nCol);
                 blocks[nSwipeRow, nSwipeCol]?.Move(initX + nSwipeRow, initY + nSwipeCol);
 
                 baseBlock.isSwiping = false;
                 targetBlock.isSwiping = false;
-
-                targetBlock.SetCellPosition(nRow, nCol);
-                baseBlock.SetCellPosition(nSwipeRow, nSwipeCol);
 
                 SwipedBlockPangCheck(nRow, nCol, out baseCheck);
                 SwipedBlockPangCheck(nSwipeRow, nSwipeCol, out targetCheck);
@@ -172,7 +222,7 @@ public class Board : MonoBehaviour
         {
             block = m_Blocks[i, nCol];
             if (block == null) break;
-            if (!block.IsSafeEqual(baseBlock) || block.status != BlockStatus.NORMAL || block.isSwiping)
+            if (!block.MatchCheck(baseBlock))
                 break;
 
             matchedBlockList.Add(block);
@@ -183,7 +233,7 @@ public class Board : MonoBehaviour
         {
             block = m_Blocks[i, nCol];
             if (block == null) break;
-            if (!block.IsSafeEqual(baseBlock) || block.status != BlockStatus.NORMAL || block.isSwiping)
+            if (!block.MatchCheck(baseBlock))
                 break;
 
             matchedBlockList.Add(block);
@@ -213,7 +263,7 @@ public class Board : MonoBehaviour
         {
             block = m_Blocks[nRow, i];
             if (block == null) break;
-            if (!block.IsSafeEqual(baseBlock) || block.status != BlockStatus.NORMAL || block.isSwiping)
+            if (!block.MatchCheck(baseBlock))
                 break;
 
             matchedBlockList.Add(block);
@@ -224,7 +274,7 @@ public class Board : MonoBehaviour
         {
             block = m_Blocks[nRow, i];
             if (block == null) break;
-            if (!block.IsSafeEqual(baseBlock) || block.status != BlockStatus.NORMAL || block.isSwiping)
+            if (!block.MatchCheck(baseBlock))
                 break;
 
             matchedBlockList.Add(block);
@@ -249,7 +299,7 @@ public class Board : MonoBehaviour
         {
             for (int i = 0; i < clearList.Count; i++)
             {
-                clearList[i].status = BlockStatus.CLEAR;
+                clearList[i].status = BlockStatus.MATCH;
                 clearList[i].DoActionClear();
             }
         }

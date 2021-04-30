@@ -15,13 +15,6 @@ public static class Action2D
     public static IEnumerator MoveTo(Transform target, Vector3 to, float duration, bool bSelfRemove = false)
     {
         Vector2 startPos = target.transform.position;
-
-        //Ninez.Board.BlockBehaviour blockObj = target.GetComponent<Ninez.Board.BlockBehaviour>();
-        //if (blockObj != null)
-        //{
-        //    blockObj.isMoving = true;
-        //}
-
         float elapsed = 0.0f;
         while (elapsed < duration)
         {
@@ -36,10 +29,6 @@ public static class Action2D
         if (bSelfRemove)
             Object.Destroy(target.gameObject, 0.1f);
 
-        //if (blockObj != null)
-        //{
-        //    blockObj.isMoving = false;
-        //}
         yield break;
 
     }

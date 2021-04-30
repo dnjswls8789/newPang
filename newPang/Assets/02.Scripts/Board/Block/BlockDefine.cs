@@ -44,16 +44,16 @@ public enum BlockQuestType  //블럭 클리어 발동 효과
     CLEAR_LAZER_BUFF = 8    // LAZER + LAZER 조합
 }
 
-static class BlockMethod
-{
-    public static bool IsSafeEqual(this Block block, Block targetBlock)
-    {
-        if (block == null || targetBlock == null)
-            return false;
+//static class BlockMethod
+//{
+//    public static bool IsSafeEqual(this Block block, Block targetBlock)
+//    {
+//        if (block == null || targetBlock == null)
+//            return false;
 
-        if (block.IsEmpty() || targetBlock.IsEmpty())
-            return false;
+//        if (block.IsEmpty() || targetBlock.IsEmpty())
+//            return false;
 
-        return block.breed == targetBlock.breed;
-    }
-}
+//        return block.breed == targetBlock.breed;
+//    }
+//}
