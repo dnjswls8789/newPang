@@ -27,6 +27,11 @@ public class Board : MonoBehaviour
 
     private void Update()
     {
+        BoardUpdate();
+    }
+
+    public void BoardUpdate()
+    {
         for (int row = 0; row < maxRow; row++)
         {
             for (int col = 0; col < maxCol; col++)
@@ -35,33 +40,128 @@ public class Board : MonoBehaviour
             }
         }
 
-        for (int row = 0; row < maxRow; row++)
+        BlockSpawnAndDrop(PangCheck());
+    }
+
+    public void BlockSpawnAndDrop(bool pangCheck)
+    {
+        // 팡 가능 있으면 그냥 랜덤생성
+        if (pangCheck)
         {
-            int count = GetClearCount(row);
-        
-            if (count > 0)
+            for (int row = 0; row < maxRow; row++)
             {
+                int clearCount = GetClearCount(row);
+
                 float initX = CalcInitX(0.5f);
                 float initY = CalcInitX(0.5f);
-        
-                for (int i = 0; i < count; i++)
+
+                for (int i = 0; i < clearCount; i++)
                 {
                     Block spawnBlock = BlockFactory.SpawnBlock(BlockType.BASIC, BattleSceneManager.GetInstance.stage.blockCount);
+
                     spawnBlock?.SetCellPosition(row, maxCol - 1 - i);
                     blocks[spawnBlock.cellPosition.x, spawnBlock.cellPosition.y] = spawnBlock;
-                    spawnBlock?.Move(initX + row, maxCol - 1 + initY + count - i);
-                    
-                    spawnBlock?.SpawnBlockDrop(count - 1);
+                    spawnBlock?.Move(initX + row, maxCol - 1 + initY + clearCount - i);
+
+                    spawnBlock?.SpawnBlockDrop(clearCount - 1);
                 }
             }
         }
+        // 팡 가능 없으면 직접 브리드 값 넣기
+        else
+        {
+            int spawnCount = 0;
+            BlockBreed baseBreed = BlockBreed.NA;
+            for (int row = 0; row < maxRow; row++)
+            {
+                int clearCount = GetClearCount(row);
+
+                float initX = CalcInitX(0.5f);
+                float initY = CalcInitX(0.5f);
+
+                for (int i = 0; i < clearCount; i++)
+                {
+                    //int col = maxCol - 1 - i;
+                    int col = maxCol - clearCount + i;
+                    Block spawnBlock = null;
+                    // 1 번째 생성
+                    if (spawnCount == 0)
+                    {
+                        Block targetBlock = null;
+                        // 왼쪽 비교.
+                        if (row - 1 >= 0 && blocks[row - 1, col].IsMatchable())
+                        {
+                            targetBlock = blocks[row - 1, col];
+                        }
+                        // 오른쪽 비교
+                        else if (row + 1 < maxRow && blocks[row + 1, col].IsMatchable())
+                        {
+                            targetBlock = blocks[row + 1, col];
+                        }
+                        // 아래쪽 비교
+                        else if (col - 1 >= 0 && blocks[row, col - 1].IsMatchable())
+                        {
+                            targetBlock = blocks[row, col - 1];
+                        }
+                        // 블럭 떨어진 후 위쪽은 블럭이 없으니 안해도 됨.
+
+                        if (targetBlock != null)
+                        {
+                            baseBreed = targetBlock.breed;
+
+                            BlockBreed newBreed = (BlockBreed)UnityEngine.Random.Range(0, BattleSceneManager.GetInstance.stage.blockCount);
+
+                            // 대상 블럭이랑 다른 블럭 생성.
+                            while (baseBreed == newBreed)
+                            {
+                                newBreed = (BlockBreed)UnityEngine.Random.Range(0, BattleSceneManager.GetInstance.stage.blockCount);
+                            }
+
+                            spawnBlock = BlockFactory.SpawnBlock(BlockType.BASIC, BattleSceneManager.GetInstance.stage.blockCount, newBreed);
+                            spawnCount++;
+
+                        }
+                        else
+                        {
+                            // 랜덤생성 하고 넘어가기.
+                            Debug.LogError("랜덤생성 하고 넘어가기.");
+                            spawnBlock = BlockFactory.SpawnBlock(BlockType.BASIC, BattleSceneManager.GetInstance.stage.blockCount);
+                        }
+                    }
+                    // 2, 3 번째 생성
+                    else if (spawnCount > 0 && spawnCount < 3)
+                    {
+                        // 2, 3 번째 블럭은 baseBreed 랑 같은 블럭 생성.
+                        spawnBlock = BlockFactory.SpawnBlock(BlockType.BASIC, BattleSceneManager.GetInstance.stage.blockCount, baseBreed);
+                        spawnCount++;
+
+                    }
+                    // 그 뒤는 랜덤
+                    else
+                    {
+                        spawnBlock = BlockFactory.SpawnBlock(BlockType.BASIC, BattleSceneManager.GetInstance.stage.blockCount);
+                        spawnCount++;
+
+                    }
+
+
+                    spawnBlock?.SetCellPosition(row, col);
+                    blocks[spawnBlock.cellPosition.x, spawnBlock.cellPosition.y] = spawnBlock;
+                    spawnBlock?.Move(initX + row, initY + col + clearCount);
+
+                    spawnBlock?.SpawnBlockDrop(clearCount - 1);
+                }
+            }
+
+        }
+
     }
 
     public int GetClearCount(int row)
     {
         int count = 0;
 
-        for (int col = maxCol- 1; col >= 0; col--)
+        for (int col = maxCol - 1; col >= 0; col--)
         {
             if (blocks[row, col].status == BlockStatus.CLEAR)
             {

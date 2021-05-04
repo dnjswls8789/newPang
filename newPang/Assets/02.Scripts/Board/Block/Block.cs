@@ -117,39 +117,7 @@ public class Block : MonoBehaviour
         m_SpriteRenderer = GetComponent<SpriteRenderer>();
     }
 
-    public void BlockDropCheck()
-    {
-        if (IsDropable())
-        {
-            StartCoroutine(CoDoDropAction());
-        }
-    }
 
-    public void SpawnBlockDrop(int dropCount)
-    {
-        if (IsDropable())
-        {
-            StartCoroutine(CodoSpawnBlockDropAction(dropCount));
-        }
-    }
-
-    IEnumerator CodoSpawnBlockDropAction(int dropCount)
-    {
-        float duration = m_BlockConfig.dropSpeed[dropCount];
-
-        isDroping = true;
-
-        float initX = board.CalcInitX(0.5f);
-        float initY = board.CalcInitX(0.5f);
-
-        StartCoroutine(Action2D.MoveTo(transform, new Vector3(initX + cellPosition.x, initY + cellPosition.y), duration));
-        yield return new WaitForSeconds(duration);
-
-        isDroping = false;
-
-        bool found;
-        board.SwipedBlockPangCheck(cellPosition.x, cellPosition.y, out found);
-    }
 
     public void UpdateView()
     {
@@ -214,25 +182,44 @@ public class Block : MonoBehaviour
         status = BlockStatus.CLEAR;
     }
 
-    IEnumerator CoDoDropAction()
+    public void BlockDropCheck()
     {
-        int dropIndex = 0;
-
-        for (int i = 1; i < board.maxCol; i++)
+        if (IsDropable())
         {
-            if (cellPosition.y - i < 0) break;
+            int dropIndex = 0;
 
-            if (board.blocks[cellPosition.x, cellPosition.y - i].status == BlockStatus.CLEAR)
+            for (int i = 1; i < board.maxCol; i++)
             {
-                dropIndex++;
+                if (cellPosition.y - i < 0) break;
+
+                if (board.blocks[cellPosition.x, cellPosition.y - i].status == BlockStatus.CLEAR)
+                {
+                    dropIndex++;
+                }
+                else if (!board.blocks[cellPosition.x, cellPosition.y - i].IsDropable())
+                {
+                    break;
+                }
             }
-            else if (!board.blocks[cellPosition.x, cellPosition.y - i].IsDropable())
+
+            if (dropIndex > 0)
             {
-                break;
+                StartCoroutine(CoDoDropAction(dropIndex));
             }
         }
-        
-        if (dropIndex == 0) yield break;
+    }
+
+    public void SpawnBlockDrop(int dropCount)
+    {
+        if (IsDropable())
+        {
+            StartCoroutine(CoDoSpawnBlockDropAction(dropCount));
+        }
+    }
+
+    IEnumerator CoDoDropAction(int dropIndex)
+    {
+        isDroping = true;
 
         Block baseBlock = this;
         Block targetBlock = board.blocks[cellPosition.x, cellPosition.y - dropIndex];
@@ -248,8 +235,6 @@ public class Block : MonoBehaviour
         baseBlock.SetCellPosition(cellPosition.x, cellPosition.y - dropIndex);
         targetBlock.SetCellPosition(cellPosition.x, cellPosition.y);
 
-        isDroping = true;
-
         StartCoroutine(Action2D.MoveTo(baseBlock.transform, new Vector3(initX + baseBlock.cellPosition.x, initY + baseBlock.cellPosition.y), duration));
         targetBlock?.Move(initX + targetBlock.cellPosition.x, initY + targetBlock.cellPosition.y);
 
@@ -261,8 +246,25 @@ public class Block : MonoBehaviour
         board.SwipedBlockPangCheck(cellPosition.x, cellPosition.y, out found);
     }
 
+    IEnumerator CoDoSpawnBlockDropAction(int dropCount)
+    {
+        isDroping = true;
 
+        float duration = m_BlockConfig.dropSpeed[dropCount];
 
+        float initX = board.CalcInitX(0.5f);
+        float initY = board.CalcInitX(0.5f);
+
+        StartCoroutine(Action2D.MoveTo(transform, new Vector3(initX + cellPosition.x, initY + cellPosition.y), duration));
+        yield return new WaitForSeconds(duration);
+
+        isDroping = false;
+
+        bool found;
+        board.SwipedBlockPangCheck(cellPosition.x, cellPosition.y, out found);
+    }
+
+    // 같은 브리드인지.
     public bool IsSafeEqual(Block targetBlock)
     {
         if (targetBlock == null)
@@ -274,23 +276,33 @@ public class Block : MonoBehaviour
         return breed == targetBlock.breed;
     }
 
+    // 매치 체크.
     public bool MatchCheck(Block targetBlock)
     {
         return IsSafeEqual(targetBlock) && status == BlockStatus.NORMAL && !isSwiping && !isDroping;
     }
 
+    // 떨어질 수 있는 상태인지.
     public bool IsDropable()
     {
         return status == BlockStatus.NORMAL && !IsEmpty() && !isSwiping && !isDroping;
     }
 
+    // 빈 블럭인지.
     public bool IsEmpty()
     {
         return type == BlockType.EMPTY;
     }
 
+    // 스왑 가능한 상태인지.
     public bool IsSwipeable()
     {
         return status == BlockStatus.NORMAL && !IsEmpty() && !isSwiping && !isDroping;
+    }
+
+    // 매칭 가능한 블럭인지.
+    public bool IsMatchable()
+    {
+        return status == BlockStatus.NORMAL && !IsEmpty() && breed != BlockBreed.NA;
     }
 }
