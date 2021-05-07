@@ -238,6 +238,7 @@ public class Block : MonoBehaviour
         StartCoroutine(Action2D.MoveTo(baseBlock.transform, new Vector3(initX + baseBlock.cellPosition.x, initY + baseBlock.cellPosition.y), duration));
         targetBlock?.Move(initX + targetBlock.cellPosition.x, initY + targetBlock.cellPosition.y);
 
+
         yield return new WaitForSeconds(duration);
 
         isDroping = false;
@@ -256,6 +257,7 @@ public class Block : MonoBehaviour
         float initY = board.CalcInitX(0.5f);
 
         StartCoroutine(Action2D.MoveTo(transform, new Vector3(initX + cellPosition.x, initY + cellPosition.y), duration));
+
         yield return new WaitForSeconds(duration);
 
         isDroping = false;

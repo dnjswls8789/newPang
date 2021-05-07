@@ -24,10 +24,8 @@ public class BattleSceneManager : SingletonClass<BattleSceneManager>
         board.SetCellPosition();
         board.MatchingCheckShuffle();
 
-        int a = 0;
         while (!board.PangCheck())
         {
-            a++;
             board.AllShuffle();
             board.MatchingCheckShuffle();
         }

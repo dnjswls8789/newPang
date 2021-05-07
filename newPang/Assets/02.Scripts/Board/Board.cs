@@ -51,6 +51,11 @@ public class Board : MonoBehaviour
             for (int row = 0; row < maxRow; row++)
             {
                 int clearCount = GetClearCount(row);
+                if (clearCount>0)
+                {
+                Debug.LogError("팡 있음");
+
+                }
 
                 float initX = CalcInitX(0.5f);
                 float initY = CalcInitX(0.5f);
@@ -76,6 +81,11 @@ public class Board : MonoBehaviour
             {
                 int clearCount = GetClearCount(row);
 
+                if (clearCount >0 )
+                {
+                    Debug.LogError("팡 없음");
+
+                }
                 float initX = CalcInitX(0.5f);
                 float initY = CalcInitX(0.5f);
 
@@ -167,10 +177,10 @@ public class Board : MonoBehaviour
             {
                 count++;
             }
-            else if (!blocks[row, col].IsDropable())
-            {
-                break;
-            }
+            //else if (!blocks[row, col].IsDropable())
+            //{
+            //    break;
+            //}
         }
         return count;
     }
@@ -555,7 +565,7 @@ public class Board : MonoBehaviour
                 // 왼쪽 아래부터 오른쪽 위로 체크하니깐
                 // 왼쪽이랑 아래는 체크 안해도 이미 지나온 길이겠지.
                 Block baseBlock = blocks[nRow, nCol];
-                if (baseBlock == null || baseBlock.IsEmpty()) continue;
+                if (baseBlock == null || !baseBlock.IsSwipeable()) continue;
 
                 // 가로 2개 * 3, 세로 2개 * 3, 가로 띈 2개 * 2, 세로 띈 2개 * 2 체크해야함.
 
@@ -582,7 +592,7 @@ public class Board : MonoBehaviour
                                     if (nCol + 1 < maxCol)
                                     {
                                         block = blocks[leftRow, nCol + 1];
-                                        if (block != null)
+                                        if (block != null && block.IsSwipeable())
                                         {
                                             if (baseBlock.IsSafeEqual(block))
                                             {
@@ -594,7 +604,7 @@ public class Board : MonoBehaviour
                                     if (nCol - 1 >= 0)
                                     {
                                         block = blocks[leftRow, nCol - 1];
-                                        if (block != null)
+                                        if (block != null && block.IsSwipeable())
                                         {
                                             if (baseBlock.IsSafeEqual(block))
                                             {
@@ -606,7 +616,7 @@ public class Board : MonoBehaviour
                                     if (leftRow - 1 >= 0)
                                     {
                                         block = blocks[leftRow - 1, nCol];
-                                        if (block != null)
+                                        if (block != null && block.IsSwipeable())
                                         {
                                             if (baseBlock.IsSafeEqual(block))
                                             {
@@ -627,7 +637,7 @@ public class Board : MonoBehaviour
                                     if (nCol + 1 < maxCol)
                                     {
                                         block = blocks[rightRow, nCol + 1];
-                                        if (block != null)
+                                        if (block != null && block.IsSwipeable())
                                         {
                                             if (baseBlock.IsSafeEqual(block))
                                             {
@@ -639,7 +649,7 @@ public class Board : MonoBehaviour
                                     if (nCol - 1 >= 0)
                                     {
                                         block = blocks[rightRow, nCol - 1];
-                                        if (block != null)
+                                        if (block != null && block.IsSwipeable())
                                         {
                                             if (baseBlock.IsSafeEqual(block))
                                             {
@@ -651,7 +661,7 @@ public class Board : MonoBehaviour
                                     if (rightRow + 1 < maxRow)
                                     {
                                         block = blocks[rightRow + 1, nCol];
-                                        if (block != null)
+                                        if (block != null && block.IsSwipeable())
                                         {
                                             if (baseBlock.IsSafeEqual(block))
                                             {
@@ -690,7 +700,7 @@ public class Board : MonoBehaviour
                                     if (nRow + 1 < maxRow)
                                     {
                                         block = blocks[nRow + 1, downCol];
-                                        if (block != null)
+                                        if (block != null && block.IsSwipeable())
                                         {
                                             if (baseBlock.IsSafeEqual(block))
                                             {
@@ -702,7 +712,7 @@ public class Board : MonoBehaviour
                                     if (nRow - 1 >= 0)
                                     {
                                         block = blocks[nRow - 1, downCol];
-                                        if (block != null)
+                                        if (block != null && block.IsSwipeable())
                                         {
                                             if (baseBlock.IsSafeEqual(block))
                                             {
@@ -714,7 +724,7 @@ public class Board : MonoBehaviour
                                     if (downCol - 1 >= 0)
                                     {
                                         block = blocks[nRow, downCol - 1];
-                                        if (block != null)
+                                        if (block != null && block.IsSwipeable())
                                         {
                                             if (baseBlock.IsSafeEqual(block))
                                             {
@@ -735,7 +745,7 @@ public class Board : MonoBehaviour
                                     if (nRow + 1 < maxRow)
                                     {
                                         block = blocks[nRow + 1, upCol];
-                                        if (block != null)
+                                        if (block != null && block.IsSwipeable())
                                         {
                                             if (baseBlock.IsSafeEqual(block))
                                             {
@@ -747,7 +757,7 @@ public class Board : MonoBehaviour
                                     if (nRow - 1 >= 0)
                                     {
                                         block = blocks[nRow - 1, upCol];
-                                        if (block != null)
+                                        if (block != null && block.IsSwipeable())
                                         {
                                             if (baseBlock.IsSafeEqual(block))
                                             {
@@ -759,7 +769,7 @@ public class Board : MonoBehaviour
                                     if (upCol + 1 < maxCol)
                                     {
                                         block = blocks[nRow, upCol + 1];
-                                        if (block != null)
+                                        if (block != null && block.IsSwipeable())
                                         {
                                             if (baseBlock.IsSafeEqual(block))
                                             {
@@ -792,7 +802,7 @@ public class Board : MonoBehaviour
                                 if (nCol + 1 < maxCol)
                                 {
                                     block = blocks[middleRow, nCol + 1];
-                                    if (block != null)
+                                    if (block != null && block.IsSwipeable())
                                     {
                                         if (baseBlock.IsSafeEqual(block))
                                         {
@@ -804,7 +814,7 @@ public class Board : MonoBehaviour
                                 if (nCol - 1 >= 0)
                                 {
                                     block = blocks[middleRow, nCol - 1];
-                                    if (block != null)
+                                    if (block != null && block.IsSwipeable())
                                     {
                                         if (baseBlock.IsSafeEqual(block))
                                         {
@@ -837,7 +847,7 @@ public class Board : MonoBehaviour
                                 if (nRow + 1 < maxRow)
                                 {
                                     block = blocks[nRow + 1, middleCol];
-                                    if (block != null)
+                                    if (block != null && block.IsSwipeable())
                                     {
                                         if (baseBlock.IsSafeEqual(block))
                                         {
@@ -849,7 +859,7 @@ public class Board : MonoBehaviour
                                 if (nRow - 1 >= 0)
                                 {
                                     block = blocks[nRow - 1, middleCol];
-                                    if (block != null)
+                                    if (block != null && block.IsSwipeable())
                                     {
                                         if (baseBlock.IsSafeEqual(block))
                                         {
