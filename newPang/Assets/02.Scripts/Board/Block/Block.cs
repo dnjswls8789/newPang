@@ -60,6 +60,13 @@ public class Block : MonoBehaviour
         set { m_BlockType = value; }
     }
 
+    protected MatchType m_MatchType;
+    public MatchType matchType
+    {
+        get { return m_MatchType; }
+        set { m_MatchType = value; }
+    }
+
     protected BlockQuestType m_QuestType;
     public BlockQuestType questType
     {
@@ -101,11 +108,25 @@ public class Block : MonoBehaviour
 
     public void InitBlock(BlockBreed _breed, BlockType _type, Vector2Int position)
     {
+        matchType = MatchType.NONE;
         status = BlockStatus.NORMAL;
 
         type = _type;
         cellPosition = position;
         breed = _breed;
+
+        m_Durability = 1;
+
+        isSwiping = false;
+        isDroping = false;
+
+        transform.localScale = Vector3.one;
+    }
+
+    public void ChangeBlock()
+    {
+        matchType = MatchType.NONE;
+        status = BlockStatus.NORMAL;
 
         m_Durability = 1;
 
@@ -154,15 +175,15 @@ public class Block : MonoBehaviour
 
     // 블럭을 제거한다.  
 
-    public void DoActionClear()
+    public void DoActionClear(bool bDestroy, System.Action callBack = null)
     {
-        StartCoroutine(CoStartSimpleExplosion(true));
+        StartCoroutine(CoStartSimpleExplosion(bDestroy, callBack));
     }
 
     /*
      * 블럭이 폭발한 후, GameObject를 삭제한다.
      */
-    IEnumerator CoStartSimpleExplosion(bool bDestroy = true)
+    IEnumerator CoStartSimpleExplosion(bool bDestroy, System.Action callBack)
     {
         //1. 크기가 줄어드는 액션 실행한다 : 폭파되면서 자연스럽게 소멸되는 모양 연출, 1 -> 0.3으로 줄어든다.
         yield return Action2D.Scale(transform, Constants.BLOCK_DESTROY_SCALE, 4f);
@@ -173,13 +194,24 @@ public class Block : MonoBehaviour
         newModule.startColor = m_BlockConfig.GetBlockColor(breed);
 
         explosionObj.SetActive(true);
-        explosionObj.transform.position = this.transform.position;
+        explosionObj.transform.position = transform.position;
 
-        //yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.1f);
 
-        //3. 블럭 GameObject 객체 삭제 or make size zero
-        gameObject.InstantEnqueue();
-        status = BlockStatus.CLEAR;
+        Quest();
+
+        if (bDestroy)
+        {
+            //3. 블럭 GameObject 객체 삭제 or make size zero
+            gameObject.InstantEnqueue();
+            status = BlockStatus.CLEAR;
+        }
+        else
+        {
+            ChangeBlock();
+        }
+
+        callBack?.Invoke();
     }
 
     public void BlockDropCheck()
@@ -243,8 +275,10 @@ public class Block : MonoBehaviour
 
         isDroping = false;
 
+        yield return null;
+
         bool found;
-        board.SwipedBlockPangCheck(cellPosition.x, cellPosition.y, out found);
+        board.BlockPangCheck(cellPosition.x, cellPosition.y, out found, false);
     }
 
     IEnumerator CoDoSpawnBlockDropAction(int dropCount)
@@ -262,8 +296,99 @@ public class Block : MonoBehaviour
 
         isDroping = false;
 
+        yield return null;
+
         bool found;
-        board.SwipedBlockPangCheck(cellPosition.x, cellPosition.y, out found);
+        board.BlockPangCheck(cellPosition.x, cellPosition.y, out found, false);
+    }
+
+    // 블럭의 매칭 결과를 조합한다
+    public void MatchTypeAdd(MatchType matchTypeTarget)
+    {
+        if (matchType == MatchType.FOUR && matchTypeTarget == MatchType.FOUR)
+            matchType = MatchType.FOUR_FOUR;
+
+        matchType = (MatchType)((int)matchType + (int)matchTypeTarget);
+    }
+
+    public void MatchTypeUpdate(MatchType match, bool horzMatch)
+    {
+        switch (match)
+        {
+            case MatchType.NONE:
+                break;
+            case MatchType.THREE:
+                break;
+            case MatchType.FOUR:
+                // 세로로 매치 됐으면 가로 특수블럭.
+                if (horzMatch)
+                {
+                    questType = BlockQuestType.CLEAR_VERT;
+                    type = BlockType.VERT;
+                }
+                else
+                {
+                    questType = BlockQuestType.CLEAR_HORZ;
+                    type = BlockType.HORZ;
+                }
+                break;
+            case MatchType.FIVE:
+                questType = BlockQuestType.CLEAR_LAZER;
+                type = BlockType.LAZER;
+                breed = BlockBreed.NA;
+                break;
+            case MatchType.THREE_THREE:
+                questType = BlockQuestType.CLEAR_CIRCLE;
+                type = BlockType.CIRCLE;
+                break;
+            case MatchType.THREE_FOUR:
+                questType = BlockQuestType.CLEAR_CIRCLE;
+                type = BlockType.CIRCLE;
+                break;
+            case MatchType.THREE_FIVE:
+                questType = BlockQuestType.CLEAR_LAZER;
+                type = BlockType.LAZER;
+                breed = BlockBreed.NA;
+                break;
+            case MatchType.FOUR_FIVE:
+                questType = BlockQuestType.CLEAR_LAZER;
+                type = BlockType.LAZER;
+                breed = BlockBreed.NA;
+                break;
+            case MatchType.FOUR_FOUR:
+                questType = BlockQuestType.CLEAR_CIRCLE;
+                type = BlockType.CIRCLE;
+                break;
+            default:
+                break;
+        }
+
+        UpdateView();
+    }
+
+    public void Quest()
+    {
+        switch (questType)
+        {
+            case BlockQuestType.CLEAR_HORZ:
+                break;
+            case BlockQuestType.CLEAR_VERT:
+                break;
+            case BlockQuestType.CLEAR_CIRCLE:
+                break;
+            case BlockQuestType.CLEAR_LAZER:
+                break;
+            case BlockQuestType.CLEAR_HORZ_BUFF:
+                break;
+            case BlockQuestType.CLEAR_VERT_BUFF:
+                break;
+            case BlockQuestType.CLEAR_CIRCLE_BUFF:
+                break;
+            case BlockQuestType.CLEAR_LAZER_BUFF:
+                break;
+            default:
+                break;
+        }
     }
 
     // 같은 브리드인지.
@@ -281,7 +406,7 @@ public class Block : MonoBehaviour
     // 매치 체크.
     public bool MatchCheck(Block targetBlock)
     {
-        return IsSafeEqual(targetBlock) && status == BlockStatus.NORMAL && !isSwiping && !isDroping;
+        return IsSafeEqual(targetBlock) && status == BlockStatus.NORMAL && targetBlock.status == BlockStatus.NORMAL && !isSwiping && !isDroping;
     }
 
     // 떨어질 수 있는 상태인지.
@@ -306,5 +431,10 @@ public class Block : MonoBehaviour
     public bool IsMatchable()
     {
         return status == BlockStatus.NORMAL && !IsEmpty() && breed != BlockBreed.NA;
+    }
+
+    public bool IsClearable()
+    {
+        return status == BlockStatus.NORMAL && !IsEmpty() && !isSwiping && !isDroping;
     }
 }

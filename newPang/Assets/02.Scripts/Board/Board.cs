@@ -2,10 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+public class TestBlocks
+{
+    public Block[] block;
+}
+
 public class Board : MonoBehaviour
 {
     int m_Row;
     int m_Col;
+
+    public TestBlocks[] testBlocks;
 
     public int maxRow { get { return m_Row; } }
     public int maxCol { get { return m_Col; } }
@@ -23,11 +31,26 @@ public class Board : MonoBehaviour
 
         m_Cells = new Cell[row, col];
         m_Blocks = new Block[row, col];
+
+        testBlocks = new TestBlocks[row];
+        for (int i = 0; i < row; i++)
+        {
+            testBlocks[i] = new TestBlocks();
+            testBlocks[i].block = new Block[col];
+        }
     }
 
     private void Update()
     {
         BoardUpdate();
+
+        for (int i = 0; i < maxCol; i++)
+        {
+            for (int j = 0; j < maxRow; j++)
+            {
+                testBlocks[j].block[i] = blocks[i, j];
+            }
+        }
     }
 
     public void BoardUpdate()
@@ -51,11 +74,6 @@ public class Board : MonoBehaviour
             for (int row = 0; row < maxRow; row++)
             {
                 int clearCount = GetClearCount(row);
-                if (clearCount>0)
-                {
-                Debug.LogError("팡 있음");
-
-                }
 
                 float initX = CalcInitX(0.5f);
                 float initY = CalcInitX(0.5f);
@@ -81,11 +99,6 @@ public class Board : MonoBehaviour
             {
                 int clearCount = GetClearCount(row);
 
-                if (clearCount >0 )
-                {
-                    Debug.LogError("팡 없음");
-
-                }
                 float initX = CalcInitX(0.5f);
                 float initY = CalcInitX(0.5f);
 
@@ -134,7 +147,6 @@ public class Board : MonoBehaviour
                         else
                         {
                             // 랜덤생성 하고 넘어가기.
-                            Debug.LogError("랜덤생성 하고 넘어가기.");
                             spawnBlock = BlockFactory.SpawnBlock(BlockType.BASIC, BattleSceneManager.GetInstance.stage.blockCount);
                         }
                     }
@@ -177,10 +189,10 @@ public class Board : MonoBehaviour
             {
                 count++;
             }
-            //else if (!blocks[row, col].IsDropable())
-            //{
-            //    break;
-            //}
+            else if (!blocks[row, col].IsDropable())
+            {
+                break;
+            }
         }
         return count;
     }
@@ -274,8 +286,8 @@ public class Board : MonoBehaviour
 
             bool baseCheck = false;
             bool targetCheck = false;
-            SwipedBlockPangCheck(nRow, nCol, out baseCheck);
-            SwipedBlockPangCheck(nSwipeRow, nSwipeCol, out targetCheck);
+            BlockPangCheck(nRow, nCol, out baseCheck, true);
+            BlockPangCheck(nSwipeRow, nSwipeCol, out targetCheck, true);
             //////////// 움직인 두개 매치 체크 하고 둘다 아니면 돌려보내기 ////////////////////
             if (!baseCheck && !targetCheck)
             {
@@ -306,21 +318,27 @@ public class Board : MonoBehaviour
                 baseBlock.isSwiping = false;
                 targetBlock.isSwiping = false;
 
-                SwipedBlockPangCheck(nRow, nCol, out baseCheck);
-                SwipedBlockPangCheck(nSwipeRow, nSwipeCol, out targetCheck);
+                BlockPangCheck(nRow, nCol, out baseCheck, true);
+                BlockPangCheck(nSwipeRow, nSwipeCol, out targetCheck, true);
             }
         }
 
     }
 
-    public void SwipedBlockPangCheck(int nRow, int nCol, out bool found)
+    // 특수블럭 생성 시 스와이프 매치체크랑 일반 매치체크랑 나눠야한다.
+    // 스와이프 시엔 스와이프 블럭이 특수블럭으로 변경.
+    // 일반 매치땐 왼쪽 아래 블럭이 특수블럭으로 변경.
+    public void BlockPangCheck(int nRow, int nCol, out bool found, bool swiped)
     {
         found = false;
-        List<Block> matchedBlockList = new List<Block>();
-        List<Block> clearList = new List<Block>();
 
         Block baseBlock = blocks[nRow, nCol];
         if (baseBlock == null) return;
+
+        List<Block> matchedBlockList = new List<Block>();
+        List<Block> clearList = new List<Block>();
+
+        bool horzMatch = false;
 
         matchedBlockList.Add(baseBlock);
 
@@ -355,10 +373,10 @@ public class Board : MonoBehaviour
         {
             for (int i = 0; i < matchedBlockList.Count; i++)
             {
+                matchedBlockList[i].MatchTypeAdd((MatchType)Mathf.Min(matchedBlockList.Count, 5));
                 clearList.Add(matchedBlockList[i]);
             }
 
-            //SetBlockStatusMatched(matchedBlockList, true);
             found = true;
         }
 
@@ -396,27 +414,46 @@ public class Board : MonoBehaviour
         {
             for (int i = 0; i < matchedBlockList.Count; i++)
             {
+                matchedBlockList[i].MatchTypeAdd((MatchType)Mathf.Min(matchedBlockList.Count, 5));
                 // 가로에서 이미 찾아서 clearList 에 baseBlock 들어있을 때는 baseBlock 안넣음. (matchedList[0] == baseBlock)
                 if (found && i == 0) continue;
                 clearList.Add(matchedBlockList[i]);
             }
 
-            //SetBlockStatusMatched(matchedBlockList, false);
+            horzMatch = true;
             found = true;
         }
 
         if (found)
         {
+            Block changedBlock = clearList[0];
+            for (int i = 1; i < clearList.Count; i++)
+            {
+                if (changedBlock.matchType < clearList[i].matchType)
+                {
+                    changedBlock = clearList[i];
+                }
+            }
+
+            MatchType matchType = changedBlock.matchType;
+
             for (int i = 0; i < clearList.Count; i++)
             {
-                clearList[i].status = BlockStatus.MATCH;
-                clearList[i].DoActionClear();
+                if ((int)changedBlock.matchType >= (int)MatchType.FOUR && changedBlock == clearList[i])
+                {
+                    clearList[i].status = BlockStatus.MATCH;
+                    clearList[i].DoActionClear(false, () => { changedBlock.MatchTypeUpdate(matchType, swiped ? horzMatch : !horzMatch); });
+                }
+                else
+                {
+                    clearList[i].status = BlockStatus.MATCH;
+                    clearList[i].DoActionClear(true);
+                }
             }
         }
 
         return;
     }
-
     public void AllShuffle()
     {
         for (int col = 0; col < m_Col; col++)
@@ -876,4 +913,404 @@ public class Board : MonoBehaviour
 
         return false;
     }
+
+
+    //private List<Block> GetRowBlock(int col)
+    //{
+    //    List<Block> blockRow = new List<Block>();
+
+    //    if (col < 0 || col >= maxCol) return blockRow;
+
+    //    for (int i = 0; i < maxRow; i++)
+    //    {
+    //        Block block = blocks[i, col];
+    //        if (block == null || block.IsClearable()) continue;
+    //        if (block.IsEvaluatable())
+    //        {
+    //            blockRow.Add(block);
+    //        }
+    //    }
+
+    //    return blockRow;
+    //}
+
+    //private List<Block> GetColBlock(int row)
+    //{
+    //    List<Block> blockCol = new List<Block>();
+
+    //    if (row < 0 || row >= maxRow) return blockCol;
+
+    //    for (int i = 0; i < maxCol; i++)
+    //    {
+    //        Block block = blocks[row, i];
+    //        if (block == null) continue;
+    //        if (block.IsEvaluatable())
+    //        {
+    //            blockCol.Add(block);
+    //        }
+    //    }
+
+    //    return blockCol;
+    //}
+
+    //private List<List<Block>> GetCircleBlock(int row, int col)
+    //{
+    //    List<List<Block>> blockCircle = new List<List<Block>>();
+
+    //    for (int i = -1; i < 2; i++)
+    //    {
+    //        int cRow = row + i;
+    //        if (cRow < 0 || cRow >= maxRow) continue;
+
+    //        List<Block> colBlock = new List<Block>();
+    //        for (int j = -1; j < 2; j++)
+    //        {
+    //            int cCol = col + j;
+    //            if (cCol < 0 || cCol >= maxCol) continue;
+
+    //            Block block = blocks[cRow, cCol];
+
+    //            if (block == null) continue;
+    //            if (block.IsEvaluatable())
+    //            {
+    //                colBlock.Add(block);
+    //            }
+    //        }
+    //        blockCircle.Add(colBlock);
+    //    }
+
+    //    return blockCircle;
+    //}
+
+    //private List<List<Block>> GetCircleDoubleBlock(int row, int col)
+    //{
+    //    List<List<Block>> blockCircle = new List<List<Block>>();
+
+    //    for (int i = -2; i < 3; i++)
+    //    {
+    //        int cRow = row + i;
+    //        if (cRow < 0 || cRow >= maxRow) continue;
+
+    //        List<Block> colBlock = new List<Block>();
+    //        for (int j = -2; j < 3; j++)
+    //        {
+    //            int cCol = col + j;
+    //            if (cCol < 0 || cCol >= maxCol) continue;
+
+    //            Block block = blocks[cRow, cCol];
+
+    //            if (block == null) continue;
+    //            if (block.IsEvaluatable())
+    //            {
+    //                colBlock.Add(block);
+    //            }
+    //        }
+    //        blockCircle.Add(colBlock);
+    //    }
+
+    //    return blockCircle;
+    //}
+
+    //private List<Block> GetEqualBreed(BlockBreed targetBlock)
+    //{
+    //    List<Block> targetList = new List<Block>();
+    //    for (int i = 0; i < maxRow; i++)
+    //    {
+    //        for (int j = 0; j < maxCol; j++)
+    //        {
+    //            Block block = blocks[i, j];
+    //            if (block == null) continue;
+    //            if (blocks[i, j].breed == targetBlock)
+    //            {
+    //                targetList.Add(blocks[i, j]);
+    //            }
+    //        }
+    //    }
+
+    //    return targetList;
+    //}
+
+    //public void ClearVert(int row, int col)
+    //{
+    //    List<Block> blockRow = GetColBlock(row);
+
+    //    for (int i = 0; i < blockRow.Count; i++)
+    //    {
+    //        if (blockRow[i].status != BlockStatus.NORMAL) continue;
+    //        blockRow[i].status = BlockStatus.MATCH;
+    //        blockRow[i].DoEvaluation(m_Enumerator, i, row);
+    //    }
+
+    //    if (row < 0 || row >= maxRow || col < 0 || col >= maxCol) return;
+
+    //    BattleSceneManager.GetInstance.gameObject.AddChildFromObjPool(
+    //        "Vertical",
+    //        blocks[row, col].blockBehaviour.transform.position,
+    //        Quaternion.Euler(0, 90, 0),
+    //        Vector3.one,
+    //        2f);
+    //}
+
+    //public void ClearHorz(int row, int col)
+    //{
+    //    List<Block> blockCol = GetRowBlock(col);
+
+    //    for (int i = 0; i < blockCol.Count; i++)
+    //    {
+    //        if (blockCol[i].status != BlockStatus.NORMAL) continue;
+    //        blockCol[i].status = BlockStatus.MATCH;
+    //        blockCol[i].DoEvaluation(m_Enumerator, col, i);
+    //    }
+
+    //    if (row < 0 || row >= maxRow || col < 0 || col >= maxCol) return;
+
+    //    BattleSceneManager.GetInstance.gameObject.AddChildFromObjPool(
+    //        "Vertical",
+    //        blocks[row, col].blockBehaviour.transform.position,
+    //        Quaternion.Euler(90, 90, 0),
+    //        Vector3.one,
+    //        2f);
+    //}
+
+    //public void ClearCircle(int row, int col)
+    //{
+    //    List<List<Block>> blockCircle = GetCircleBlock(row, col);
+
+    //    for (int i = 0; i < blockCircle.Count; i++)
+    //    {
+    //        for (int j = 0; j < blockCircle[i].Count; j++)
+    //        {
+    //            if (blockCircle[i][j].status != BlockStatus.NORMAL) continue;
+    //            blockCircle[i][j].status = BlockStatus.MATCH;
+    //            blockCircle[i][j].DoEvaluation(m_Enumerator, i, j);
+    //        }
+    //    }
+    //}
+
+    //public void ClearCircleDouble(int row, int col)
+    //{
+    //    List<List<Block>> blockCircle = GetCircleDoubleBlock(row, col);
+
+    //    for (int i = 0; i < blockCircle.Count; i++)
+    //    {
+    //        for (int j = 0; j < blockCircle[i].Count; j++)
+    //        {
+    //            if (blockCircle[i][j].status != BlockStatus.NORMAL) continue;
+    //            blockCircle[i][j].status = BlockStatus.MATCH;
+    //            blockCircle[i][j].DoEvaluation(m_Enumerator, i, j);
+    //        }
+    //    }
+    //}
+
+    //public void ClearLazer(BlockBreed targetBlock, float simpleScoreMul = 0.5f)
+    //{
+    //    List<Block> clearList = GetEqualBreed(targetBlock);
+    //    for (int i = 0; i < clearList.Count; i++)
+    //    {
+    //        if (clearList[i].status != BlockStatus.NORMAL) continue;
+
+    //        if (clearList[i].questType == BlockQuestType.CLEAR_SIMPLE)
+    //        {
+    //            clearList[i].score *= simpleScoreMul;
+    //        }
+
+    //        clearList[i].status = BlockStatus.MATCH;
+    //        clearList[i].DoEvaluation(m_Enumerator, clearList[i].cellPosition.x, clearList[i].cellPosition.y);
+    //    }
+    //}
+
+    //public void ChangeQuestWithBreed(BlockBreed breed, BlockQuestType quest, float scoreMul = 0.5f)
+    //{
+    //    List<Block> clearList = GetEqualBreed(breed);
+
+    //    for (int i = 0; i < clearList.Count; i++)
+    //    {
+    //        if (clearList[i].questType != BlockQuestType.CLEAR_SIMPLE) continue;
+    //        //clearList[i].questType = quest;
+    //        clearList[i].SetQuestType(quest, scoreMul);
+    //    }
+    //}
+
+    //public void SwipQuest(Block baseBlock, Block targetBlock)
+    //{
+    //    // 일자 + 일자      타겟블럭 기준 십자 폭발.
+    //    // 일자 + 써클      타겟블럭 기준 3줄 십자 폭발.
+    //    // 일자 + 레이저    해당 브리드 블럭 일자로 변경 후 폭발.
+
+    //    // 써클 + 써클      타겟블럭 기준 5 * 5 폭발.
+    //    // 써클 + 레이저    해당 브리드 블럭 써클로 변경 후 폭발.
+
+    //    // 레이저 + 심플    해당 브리드 블럭 폭발.
+    //    // 레이저 + 레이저  모든 블럭 폭발.
+    //    //=============================================================
+
+    //    // 일자 + 일자
+    //    if ((baseBlock.questType == BlockQuestType.CLEAR_HORZ || baseBlock.questType == BlockQuestType.CLEAR_VERT) &&
+    //        (targetBlock.questType == BlockQuestType.CLEAR_HORZ || targetBlock.questType == BlockQuestType.CLEAR_VERT))
+    //    {
+    //        baseBlock.questType = BlockQuestType.CLEAR_SIMPLE;
+    //        targetBlock.questType = BlockQuestType.CLEAR_SIMPLE;
+
+    //        baseBlock.status = BlockStatus.CLEAR;
+    //        targetBlock.status = BlockStatus.CLEAR;
+
+    //        ClearHorz(baseBlock.cellPosition.x, baseBlock.cellPosition.y);
+    //        ClearVert(baseBlock.cellPosition.x, baseBlock.cellPosition.y);
+
+    //        return;
+    //    }
+
+    //    // 일자 + 써클
+    //    if (((baseBlock.questType == BlockQuestType.CLEAR_HORZ || baseBlock.questType == BlockQuestType.CLEAR_VERT) &&
+    //        targetBlock.questType == BlockQuestType.CLEAR_CIRCLE) ||
+    //        (baseBlock.questType == BlockQuestType.CLEAR_CIRCLE &&
+    //        (targetBlock.questType == BlockQuestType.CLEAR_HORZ || targetBlock.questType == BlockQuestType.CLEAR_VERT)))
+    //    {
+    //        baseBlock.questType = BlockQuestType.CLEAR_SIMPLE;
+    //        targetBlock.questType = BlockQuestType.CLEAR_SIMPLE;
+
+    //        baseBlock.status = BlockStatus.CLEAR;
+    //        targetBlock.status = BlockStatus.CLEAR;
+
+    //        ClearHorz(baseBlock.cellPosition.x, baseBlock.cellPosition.y - 1);
+    //        ClearHorz(baseBlock.cellPosition.x, baseBlock.cellPosition.y);
+    //        ClearHorz(baseBlock.cellPosition.x, baseBlock.cellPosition.y + 1);
+    //        ClearVert(baseBlock.cellPosition.x - 1, baseBlock.cellPosition.y);
+    //        ClearVert(baseBlock.cellPosition.x, baseBlock.cellPosition.y);
+    //        ClearVert(baseBlock.cellPosition.x + 1, baseBlock.cellPosition.y);
+
+    //        return;
+    //    }
+
+
+    //    // 일자 + 레이저    해당 브리드 블럭 일자로 변경 후 폭발.
+    //    if ((baseBlock.questType == BlockQuestType.CLEAR_HORZ || baseBlock.questType == BlockQuestType.CLEAR_VERT) &&
+    //        targetBlock.questType == BlockQuestType.CLEAR_LAZER)
+    //    {
+    //        int random = UnityEngine.Random.Range(0, 2);
+    //        if (random == 0)
+    //        {
+    //            ChangeQuestWithBreed(baseBlock.breed, BlockQuestType.CLEAR_HORZ, 0.3f);
+    //        }
+    //        else
+    //        {
+    //            ChangeQuestWithBreed(baseBlock.breed, BlockQuestType.CLEAR_VERT, 0.3f);
+    //        }
+    //        baseBlock.status = BlockStatus.CLEAR;
+    //        targetBlock.status = BlockStatus.CLEAR;
+    //        ClearLazer(baseBlock.breed);
+
+    //        return;
+    //    }
+    //    else if ((targetBlock.questType == BlockQuestType.CLEAR_HORZ || targetBlock.questType == BlockQuestType.CLEAR_VERT) &&
+    //        baseBlock.questType == BlockQuestType.CLEAR_LAZER)
+    //    {
+    //        int random = UnityEngine.Random.Range(0, 2);
+    //        if (random == 0)
+    //        {
+    //            ChangeQuestWithBreed(targetBlock.breed, BlockQuestType.CLEAR_HORZ, 0.3f);
+    //        }
+    //        else
+    //        {
+    //            ChangeQuestWithBreed(targetBlock.breed, BlockQuestType.CLEAR_VERT, 0.3f);
+    //        }
+    //        baseBlock.status = BlockStatus.CLEAR;
+    //        targetBlock.status = BlockStatus.CLEAR;
+    //        ClearLazer(targetBlock.breed);
+
+    //        return;
+    //    }
+
+    //    // 써클 + 써클      타겟블럭 기준 5 * 5 폭발.
+    //    if (baseBlock.questType == BlockQuestType.CLEAR_CIRCLE && targetBlock.questType == BlockQuestType.CLEAR_CIRCLE)
+    //    {
+    //        baseBlock.questType = BlockQuestType.CLEAR_SIMPLE;
+    //        targetBlock.questType = BlockQuestType.CLEAR_SIMPLE;
+
+    //        baseBlock.status = BlockStatus.CLEAR;
+    //        targetBlock.status = BlockStatus.CLEAR;
+
+    //        ClearCircleDouble(baseBlock.cellPosition.x, baseBlock.cellPosition.y);
+
+    //        return;
+    //    }
+
+    //    // 써클 + 레이저    해당 브리드 블럭 써클로 변경 후 폭발.
+    //    if (baseBlock.questType == BlockQuestType.CLEAR_CIRCLE && targetBlock.questType == BlockQuestType.CLEAR_LAZER)
+    //    {
+    //        ChangeQuestWithBreed(baseBlock.breed, BlockQuestType.CLEAR_CIRCLE, 0.3f);
+
+    //        baseBlock.status = BlockStatus.CLEAR;
+    //        targetBlock.status = BlockStatus.CLEAR;
+
+    //        ClearLazer(baseBlock.breed);
+
+    //        return;
+    //    }
+    //    else if (targetBlock.questType == BlockQuestType.CLEAR_CIRCLE && baseBlock.questType == BlockQuestType.CLEAR_LAZER)
+    //    {
+    //        ChangeQuestWithBreed(targetBlock.breed, BlockQuestType.CLEAR_CIRCLE, 0.3f);
+
+    //        baseBlock.status = BlockStatus.CLEAR;
+    //        targetBlock.status = BlockStatus.CLEAR;
+
+    //        ClearLazer(targetBlock.breed);
+
+    //        return;
+    //    }
+
+    //    // 레이저 + 심플    해당 브리드 블럭 폭발.
+    //    if (baseBlock.questType == BlockQuestType.CLEAR_LAZER && targetBlock.questType == BlockQuestType.CLEAR_SIMPLE)
+    //    {
+    //        baseBlock.status = BlockStatus.CLEAR;
+    //        targetBlock.status = BlockStatus.CLEAR;
+    //        ClearLazer(targetBlock.breed, 0.7f);
+
+    //        return;
+    //    }
+    //    else if (targetBlock.questType == BlockQuestType.CLEAR_LAZER && baseBlock.questType == BlockQuestType.CLEAR_SIMPLE)
+    //    {
+    //        baseBlock.status = BlockStatus.CLEAR;
+    //        targetBlock.status = BlockStatus.CLEAR;
+    //        ClearLazer(baseBlock.breed, 0.7f);
+
+    //        return;
+    //    }
+
+    //    // 레이저 + 레이저  모든 블럭 폭발.
+    //    if (baseBlock.questType == BlockQuestType.CLEAR_LAZER && targetBlock.questType == BlockQuestType.CLEAR_LAZER)
+    //    {
+    //        baseBlock.status = BlockStatus.CLEAR;
+    //        targetBlock.status = BlockStatus.CLEAR;
+
+    //        for (int i = 0; i < stageBuilder.blockCount; i++)
+    //        {
+    //            ClearLazer((BlockBreed)i, 0.8f);
+    //        }
+
+    //        return;
+    //    }
+
+    //}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
