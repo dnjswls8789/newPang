@@ -111,6 +111,8 @@ public class Block : MonoBehaviour
         matchType = MatchType.NONE;
         status = BlockStatus.NORMAL;
 
+        questType = BlockQuestType.NONE;
+
         type = _type;
         cellPosition = position;
         breed = _breed;
@@ -127,6 +129,8 @@ public class Block : MonoBehaviour
     {
         matchType = MatchType.NONE;
         status = BlockStatus.NORMAL;
+
+        questType = BlockQuestType.NONE;
 
         m_Durability = 1;
 
@@ -261,15 +265,14 @@ public class Block : MonoBehaviour
         float initX = board.CalcInitX(0.5f);
         float initY = board.CalcInitY(0.5f);
 
-        board.blocks[cellPosition.x, cellPosition.y] = targetBlock;
-        board.blocks[cellPosition.x, cellPosition.y - dropIndex] = baseBlock;
-
-        baseBlock.SetCellPosition(cellPosition.x, cellPosition.y - dropIndex);
         targetBlock.SetCellPosition(cellPosition.x, cellPosition.y);
+        baseBlock.SetCellPosition(cellPosition.x, cellPosition.y - dropIndex);
+        
+        board.blocks[baseBlock.cellPosition.x, baseBlock.cellPosition.y] = baseBlock;
+        board.blocks[targetBlock.cellPosition.x, targetBlock.cellPosition.y] = targetBlock;
 
         StartCoroutine(Action2D.MoveTo(baseBlock.transform, new Vector3(initX + baseBlock.cellPosition.x, initY + baseBlock.cellPosition.y), duration));
         targetBlock?.Move(initX + targetBlock.cellPosition.x, initY + targetBlock.cellPosition.y);
-
 
         yield return new WaitForSeconds(duration);
 
@@ -289,6 +292,8 @@ public class Block : MonoBehaviour
 
         float initX = board.CalcInitX(0.5f);
         float initY = board.CalcInitX(0.5f);
+
+        board.blocks[cellPosition.x, cellPosition.y] = this;
 
         StartCoroutine(Action2D.MoveTo(transform, new Vector3(initX + cellPosition.x, initY + cellPosition.y), duration));
 
@@ -316,8 +321,10 @@ public class Block : MonoBehaviour
         switch (match)
         {
             case MatchType.NONE:
+                questType = BlockQuestType.NONE;
                 break;
             case MatchType.THREE:
+                questType = BlockQuestType.NONE;
                 break;
             case MatchType.FOUR:
                 // 세로로 매치 됐으면 가로 특수블럭.
@@ -364,6 +371,9 @@ public class Block : MonoBehaviour
         }
 
         UpdateView();
+
+        bool found;
+        board.BlockPangCheck(cellPosition.x, cellPosition.y, out found, false);
     }
 
     public void Quest()
@@ -371,12 +381,16 @@ public class Block : MonoBehaviour
         switch (questType)
         {
             case BlockQuestType.CLEAR_HORZ:
+                board.ClearHorz(cellPosition.x);
                 break;
             case BlockQuestType.CLEAR_VERT:
+                board.ClearVert(cellPosition.y);
                 break;
             case BlockQuestType.CLEAR_CIRCLE:
+                board.ClearCircle(cellPosition.x, cellPosition.y);
                 break;
             case BlockQuestType.CLEAR_LAZER:
+                board.ClearLazer((BlockBreed)UnityEngine.Random.Range(0, BattleSceneManager.GetInstance.stage.blockCount));
                 break;
             case BlockQuestType.CLEAR_HORZ_BUFF:
                 break;
@@ -406,7 +420,8 @@ public class Block : MonoBehaviour
     // 매치 체크.
     public bool MatchCheck(Block targetBlock)
     {
-        return IsSafeEqual(targetBlock) && status == BlockStatus.NORMAL && targetBlock.status == BlockStatus.NORMAL && !isSwiping && !isDroping;
+        //return IsSafeEqual(targetBlock) && status == BlockStatus.NORMAL && targetBlock.status == BlockStatus.NORMAL && !isSwiping && !isDroping;
+        return IsSafeEqual(targetBlock) && IsClearable() && targetBlock.IsClearable();
     }
 
     // 떨어질 수 있는 상태인지.

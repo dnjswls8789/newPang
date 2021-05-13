@@ -82,11 +82,11 @@ public class Board : MonoBehaviour
                 {
                     Block spawnBlock = BlockFactory.SpawnBlock(BlockType.BASIC, BattleSceneManager.GetInstance.stage.blockCount);
 
-                    spawnBlock?.SetCellPosition(row, maxCol - 1 - i);
-                    blocks[spawnBlock.cellPosition.x, spawnBlock.cellPosition.y] = spawnBlock;
-                    spawnBlock?.Move(initX + row, maxCol - 1 + initY + clearCount - i);
+                    spawnBlock.SetCellPosition(row, maxCol - 1 - i);
+                    //blocks[spawnBlock.cellPosition.x, spawnBlock.cellPosition.y] = spawnBlock;
+                    spawnBlock.Move(initX + row, maxCol - 1 + initY + clearCount - i);
 
-                    spawnBlock?.SpawnBlockDrop(clearCount - 1);
+                    spawnBlock.SpawnBlockDrop(clearCount - 1);
                 }
             }
         }
@@ -167,11 +167,11 @@ public class Board : MonoBehaviour
                     }
 
 
-                    spawnBlock?.SetCellPosition(row, col);
-                    blocks[spawnBlock.cellPosition.x, spawnBlock.cellPosition.y] = spawnBlock;
-                    spawnBlock?.Move(initX + row, initY + col + clearCount);
+                    spawnBlock.SetCellPosition(row, col);
+                    //blocks[spawnBlock.cellPosition.x, spawnBlock.cellPosition.y] = spawnBlock;
+                    spawnBlock.Move(initX + row, initY + col + clearCount);
 
-                    spawnBlock?.SpawnBlockDrop(clearCount - 1);
+                    spawnBlock.SpawnBlockDrop(clearCount - 1);
                 }
             }
 
@@ -278,8 +278,8 @@ public class Board : MonoBehaviour
 
             yield return new WaitForSeconds(Constants.SWIPE_DURATION);
 
-            blocks[nRow, nCol]?.Move(initX + nRow, initY + nCol);
-            blocks[nSwipeRow, nSwipeCol]?.Move(initX + nSwipeRow, initY + nSwipeCol);
+            blocks[nRow, nCol].Move(initX + nRow, initY + nCol);
+            blocks[nSwipeRow, nSwipeCol].Move(initX + nSwipeRow, initY + nSwipeCol);
 
             baseBlock.isSwiping = false;
             targetBlock.isSwiping = false;
@@ -288,6 +288,32 @@ public class Board : MonoBehaviour
             bool targetCheck = false;
             BlockPangCheck(nRow, nCol, out baseCheck, true);
             BlockPangCheck(nSwipeRow, nSwipeCol, out targetCheck, true);
+
+            if (baseBlock.type == BlockType.LAZER && targetBlock.type == BlockType.LAZER)
+            {
+
+            }
+            else if (baseBlock.type == BlockType.LAZER)
+            {
+                baseBlock.questType = BlockQuestType.NONE;
+                baseBlock.status = BlockStatus.MATCH;
+                baseBlock.DoActionClear(true);
+
+                ClearLazer(targetBlock.breed);
+                yield break;
+
+            }
+            else if (targetBlock.type == BlockType.LAZER)
+            {
+                targetBlock.questType = BlockQuestType.NONE;
+                targetBlock.status = BlockStatus.MATCH;
+                targetBlock.DoActionClear(true);
+
+                ClearLazer(baseBlock.breed);
+                yield break;
+            }
+
+
             //////////// 움직인 두개 매치 체크 하고 둘다 아니면 돌려보내기 ////////////////////
             if (!baseCheck && !targetCheck)
             {
@@ -442,7 +468,8 @@ public class Board : MonoBehaviour
                 if ((int)changedBlock.matchType >= (int)MatchType.FOUR && changedBlock == clearList[i])
                 {
                     clearList[i].status = BlockStatus.MATCH;
-                    clearList[i].DoActionClear(false, () => { changedBlock.MatchTypeUpdate(matchType, swiped ? horzMatch : !horzMatch); });
+                    clearList[i].DoActionClear(false, () => { changedBlock.MatchTypeUpdate(matchType, horzMatch); });
+                    //clearList[i].DoActionClear(false, () => { changedBlock.MatchTypeUpdate(matchType, swiped ? horzMatch : !horzMatch); });
                 }
                 else
                 {
@@ -915,177 +942,155 @@ public class Board : MonoBehaviour
     }
 
 
-    //private List<Block> GetRowBlock(int col)
-    //{
-    //    List<Block> blockRow = new List<Block>();
+    private List<Block> GetRowBlock(int col)
+    {
+        List<Block> blockRow = new List<Block>();
 
-    //    if (col < 0 || col >= maxCol) return blockRow;
+        if (col < 0 || col >= maxCol) 
+            return blockRow;
 
-    //    for (int i = 0; i < maxRow; i++)
-    //    {
-    //        Block block = blocks[i, col];
-    //        if (block == null || block.IsClearable()) continue;
-    //        if (block.IsEvaluatable())
-    //        {
-    //            blockRow.Add(block);
-    //        }
-    //    }
+        for (int i = 0; i < maxRow; i++)
+        {
+            Block block = blocks[i, col];
+            if (block == null || !block.IsClearable()) 
+                continue;
 
-    //    return blockRow;
-    //}
+            blockRow.Add(block);
+        }
 
-    //private List<Block> GetColBlock(int row)
-    //{
-    //    List<Block> blockCol = new List<Block>();
+        return blockRow;
+    }
 
-    //    if (row < 0 || row >= maxRow) return blockCol;
+    private List<Block> GetColBlock(int row)
+    {
+        List<Block> blockCol = new List<Block>();
 
-    //    for (int i = 0; i < maxCol; i++)
-    //    {
-    //        Block block = blocks[row, i];
-    //        if (block == null) continue;
-    //        if (block.IsEvaluatable())
-    //        {
-    //            blockCol.Add(block);
-    //        }
-    //    }
+        if (row < 0 || row >= maxRow) return blockCol;
 
-    //    return blockCol;
-    //}
+        for (int i = 0; i < maxCol; i++)
+        {
+            Block block = blocks[row, i];
+            if (block == null || !block.IsClearable())
+                continue;
 
-    //private List<List<Block>> GetCircleBlock(int row, int col)
-    //{
-    //    List<List<Block>> blockCircle = new List<List<Block>>();
+            blockCol.Add(block);
+        }
 
-    //    for (int i = -1; i < 2; i++)
-    //    {
-    //        int cRow = row + i;
-    //        if (cRow < 0 || cRow >= maxRow) continue;
+        return blockCol;
+    }
 
-    //        List<Block> colBlock = new List<Block>();
-    //        for (int j = -1; j < 2; j++)
-    //        {
-    //            int cCol = col + j;
-    //            if (cCol < 0 || cCol >= maxCol) continue;
+    private List<List<Block>> GetCircleBlock(int row, int col)
+    {
+        List<List<Block>> blockCircle = new List<List<Block>>();
 
-    //            Block block = blocks[cRow, cCol];
+        for (int i = -1; i < 2; i++)
+        {
+            int cRow = row + i;
+            if (cRow < 0 || cRow >= maxRow) continue;
 
-    //            if (block == null) continue;
-    //            if (block.IsEvaluatable())
-    //            {
-    //                colBlock.Add(block);
-    //            }
-    //        }
-    //        blockCircle.Add(colBlock);
-    //    }
+            List<Block> colBlock = new List<Block>();
+            for (int j = -1; j < 2; j++)
+            {
+                int cCol = col + j;
+                if (cCol < 0 || cCol >= maxCol) continue;
 
-    //    return blockCircle;
-    //}
+                Block block = blocks[cRow, cCol];
 
-    //private List<List<Block>> GetCircleDoubleBlock(int row, int col)
-    //{
-    //    List<List<Block>> blockCircle = new List<List<Block>>();
+                if (block == null || !block.IsClearable())
+                    continue;
 
-    //    for (int i = -2; i < 3; i++)
-    //    {
-    //        int cRow = row + i;
-    //        if (cRow < 0 || cRow >= maxRow) continue;
+                colBlock.Add(block);
+            }
+            blockCircle.Add(colBlock);
+        }
 
-    //        List<Block> colBlock = new List<Block>();
-    //        for (int j = -2; j < 3; j++)
-    //        {
-    //            int cCol = col + j;
-    //            if (cCol < 0 || cCol >= maxCol) continue;
+        return blockCircle;
+    }
 
-    //            Block block = blocks[cRow, cCol];
+    private List<List<Block>> GetCircleDoubleBlock(int row, int col)
+    {
+        List<List<Block>> blockCircle = new List<List<Block>>();
 
-    //            if (block == null) continue;
-    //            if (block.IsEvaluatable())
-    //            {
-    //                colBlock.Add(block);
-    //            }
-    //        }
-    //        blockCircle.Add(colBlock);
-    //    }
+        for (int i = -2; i < 3; i++)
+        {
+            int cRow = row + i;
+            if (cRow < 0 || cRow >= maxRow) continue;
 
-    //    return blockCircle;
-    //}
+            List<Block> colBlock = new List<Block>();
+            for (int j = -2; j < 3; j++)
+            {
+                int cCol = col + j;
+                if (cCol < 0 || cCol >= maxCol) continue;
 
-    //private List<Block> GetEqualBreed(BlockBreed targetBlock)
-    //{
-    //    List<Block> targetList = new List<Block>();
-    //    for (int i = 0; i < maxRow; i++)
-    //    {
-    //        for (int j = 0; j < maxCol; j++)
-    //        {
-    //            Block block = blocks[i, j];
-    //            if (block == null) continue;
-    //            if (blocks[i, j].breed == targetBlock)
-    //            {
-    //                targetList.Add(blocks[i, j]);
-    //            }
-    //        }
-    //    }
+                Block block = blocks[cRow, cCol];
 
-    //    return targetList;
-    //}
+                if (block == null || !block.IsClearable())
+                    continue;
 
-    //public void ClearVert(int row, int col)
-    //{
-    //    List<Block> blockRow = GetColBlock(row);
+                colBlock.Add(block);
+            }
+            blockCircle.Add(colBlock);
+        }
 
-    //    for (int i = 0; i < blockRow.Count; i++)
-    //    {
-    //        if (blockRow[i].status != BlockStatus.NORMAL) continue;
-    //        blockRow[i].status = BlockStatus.MATCH;
-    //        blockRow[i].DoEvaluation(m_Enumerator, i, row);
-    //    }
+        return blockCircle;
+    }
 
-    //    if (row < 0 || row >= maxRow || col < 0 || col >= maxCol) return;
+    private List<Block> GetEqualBreed(BlockBreed targetBreed)
+    {
+        List<Block> targetList = new List<Block>();
+        for (int i = 0; i < maxRow; i++)
+        {
+            for (int j = 0; j < maxCol; j++)
+            {
+                Block block = blocks[i, j];
+                if (block == null || !block.IsClearable())
+                    continue;
 
-    //    BattleSceneManager.GetInstance.gameObject.AddChildFromObjPool(
-    //        "Vertical",
-    //        blocks[row, col].blockBehaviour.transform.position,
-    //        Quaternion.Euler(0, 90, 0),
-    //        Vector3.one,
-    //        2f);
-    //}
+                if (blocks[i, j].breed == targetBreed)
+                {
+                    targetList.Add(blocks[i, j]);
+                }
+            }
+        }
 
-    //public void ClearHorz(int row, int col)
-    //{
-    //    List<Block> blockCol = GetRowBlock(col);
+        return targetList;
+    }
 
-    //    for (int i = 0; i < blockCol.Count; i++)
-    //    {
-    //        if (blockCol[i].status != BlockStatus.NORMAL) continue;
-    //        blockCol[i].status = BlockStatus.MATCH;
-    //        blockCol[i].DoEvaluation(m_Enumerator, col, i);
-    //    }
+    public void ClearVert(int col)
+    {
+        List<Block> blockRow = GetRowBlock(col);
 
-    //    if (row < 0 || row >= maxRow || col < 0 || col >= maxCol) return;
+        for (int i = 0; i < blockRow.Count; i++)
+        {
+            blockRow[i].status = BlockStatus.MATCH;
+            blockRow[i].DoActionClear(true);
+        }
+    }
 
-    //    BattleSceneManager.GetInstance.gameObject.AddChildFromObjPool(
-    //        "Vertical",
-    //        blocks[row, col].blockBehaviour.transform.position,
-    //        Quaternion.Euler(90, 90, 0),
-    //        Vector3.one,
-    //        2f);
-    //}
+    public void ClearHorz(int row)
+    {
+        List<Block> blockCol = GetColBlock(row);
 
-    //public void ClearCircle(int row, int col)
-    //{
-    //    List<List<Block>> blockCircle = GetCircleBlock(row, col);
+        for (int i = 0; i < blockCol.Count; i++)
+        {
+            blockCol[i].status = BlockStatus.MATCH;
+            blockCol[i].DoActionClear(true);
+        }
+    }
 
-    //    for (int i = 0; i < blockCircle.Count; i++)
-    //    {
-    //        for (int j = 0; j < blockCircle[i].Count; j++)
-    //        {
-    //            if (blockCircle[i][j].status != BlockStatus.NORMAL) continue;
-    //            blockCircle[i][j].status = BlockStatus.MATCH;
-    //            blockCircle[i][j].DoEvaluation(m_Enumerator, i, j);
-    //        }
-    //    }
-    //}
+    public void ClearCircle(int row, int col)
+    {
+        List<List<Block>> blockCircle = GetCircleBlock(row, col);
+
+        for (int i = 0; i < blockCircle.Count; i++)
+        {
+            for (int j = 0; j < blockCircle[i].Count; j++)
+            {
+                blockCircle[i][j].status = BlockStatus.MATCH;
+                blockCircle[i][j].DoActionClear(true);
+            }
+        }
+    }
 
     //public void ClearCircleDouble(int row, int col)
     //{
@@ -1102,22 +1107,15 @@ public class Board : MonoBehaviour
     //    }
     //}
 
-    //public void ClearLazer(BlockBreed targetBlock, float simpleScoreMul = 0.5f)
-    //{
-    //    List<Block> clearList = GetEqualBreed(targetBlock);
-    //    for (int i = 0; i < clearList.Count; i++)
-    //    {
-    //        if (clearList[i].status != BlockStatus.NORMAL) continue;
-
-    //        if (clearList[i].questType == BlockQuestType.CLEAR_SIMPLE)
-    //        {
-    //            clearList[i].score *= simpleScoreMul;
-    //        }
-
-    //        clearList[i].status = BlockStatus.MATCH;
-    //        clearList[i].DoEvaluation(m_Enumerator, clearList[i].cellPosition.x, clearList[i].cellPosition.y);
-    //    }
-    //}
+    public void ClearLazer(BlockBreed targetBreed)
+    {
+        List<Block> clearList = GetEqualBreed(targetBreed);
+        for (int i = 0; i < clearList.Count; i++)
+        {
+            clearList[i].status = BlockStatus.MATCH;
+            clearList[i].DoActionClear(true);
+        }
+    }
 
     //public void ChangeQuestWithBreed(BlockBreed breed, BlockQuestType quest, float scoreMul = 0.5f)
     //{
