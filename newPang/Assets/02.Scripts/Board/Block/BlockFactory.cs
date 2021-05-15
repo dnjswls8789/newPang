@@ -6,7 +6,7 @@ public static class BlockFactory
 {
     public static Block SpawnBlock(BlockType blockType, int blockCount, BlockBreed breed = BlockBreed.NA)
     {
-        Block block = BattleSceneManager.GetInstance.board.gameObject.AddChildFromObjPool("Block").GetComponent<Block>();
+        Block block = BattleSceneManager.GetInstance.board.blockParent.gameObject.AddChildFromObjPool("Block").GetComponent<Block>();
         block.board = BattleSceneManager.GetInstance.board;
 
         //Set Breed

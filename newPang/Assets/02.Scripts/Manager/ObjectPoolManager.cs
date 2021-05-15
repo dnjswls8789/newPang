@@ -41,6 +41,15 @@ public static class ExtentionGameObject_ObjPool
         return tmpGameObject;
     }
 
+    public static GameObject AddChildFromObjPool(this GameObject obj, string objPoolName, Vector3 pos, float invokeTime = -1.0f)
+    {
+        GameObject tmpGameObject = obj.AddChildFromObjPool(objPoolName, 1, -1, 1, invokeTime);
+
+        tmpGameObject.transform.position = pos;
+
+        return tmpGameObject;
+    }
+
     public static ObjectPoolTimer AddPoolingTimer(this GameObject gameObj, ObjectPool objPool, PoolItem poolItem)
     {
         ObjectPoolTimer objPoolTimer = gameObj.AddComponent<ObjectPoolTimer>();

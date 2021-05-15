@@ -60,8 +60,8 @@ MonoBehaviour:
   - {r: 0.10196079, g: 0.20000002, b: 0.20000002, a: 1}
   explosion:
   - {fileID: 2861438460690957853, guid: d93a234cb984ec44f889d1df1e9102af, type: 3}
-  - {fileID: 8132960832945420751, guid: c1da60478a7d11c4689e2e258b1581a0, type: 3}
-  - {fileID: 6873713167191644348, guid: b65cafe545f5b7d43ab7dc42977e3997, type: 3}
+  - {fileID: 2861438460690957853, guid: d93a234cb984ec44f889d1df1e9102af, type: 3}
+  - {fileID: 2861438460690957853, guid: d93a234cb984ec44f889d1df1e9102af, type: 3}
   - {fileID: 2861438460690957853, guid: d93a234cb984ec44f889d1df1e9102af, type: 3}
   - {fileID: 2861438460690957853, guid: d93a234cb984ec44f889d1df1e9102af, type: 3}
   - {fileID: 2861438460690957853, guid: d93a234cb984ec44f889d1df1e9102af, type: 3}

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8873585757527894342}
   - component: {fileID: 6153419537496512957}
   - component: {fileID: 663065395553528076}
+  - component: {fileID: 1665664103243285091}
   m_Layer: 0
   m_Name: Vertical
   m_TagString: Untagged
@@ -150,8 +151,8 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 50
-      minScalar: 35
+      scalar: 30
+      minScalar: 25
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -3569,7 +3570,7 @@ ParticleSystem:
   CollisionModule:
     enabled: 0
     serializedVersion: 3
-    type: 0
+    type: 1
     collisionMode: 0
     colliderForce: 0
     multiplyColliderForceByParticleSize: 0
@@ -3637,7 +3638,7 @@ ParticleSystem:
     m_Bounce:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1
+      scalar: 0
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -3749,7 +3750,7 @@ ParticleSystem:
     maxCollisionShapes: 256
     quality: 0
     voxelSize: 0.5
-    collisionMessages: 0
+    collisionMessages: 1
     collidesWithDynamic: 1
     interiorCollisions: 1
   TriggerModule:
@@ -4767,6 +4768,18 @@ ParticleSystemRenderer:
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
   m_MaskInteraction: 0
+--- !u!114 &1665664103243285091
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3330572315224960392}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 009de1e176b152647bc7adad14bb002d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6873713167191644348
 GameObject:
   m_ObjectHideFlags: 0
@@ -9592,6 +9605,7 @@ GameObject:
   - component: {fileID: 7003060306231469478}
   - component: {fileID: 7003060306217305572}
   - component: {fileID: 7003060306217370198}
+  - component: {fileID: 5461107495229698000}
   m_Layer: 0
   m_Name: Vertical
   m_TagString: Untagged
@@ -9731,8 +9745,8 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 50
-      minScalar: 35
+      scalar: 30
+      minScalar: 25
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -13150,7 +13164,7 @@ ParticleSystem:
   CollisionModule:
     enabled: 0
     serializedVersion: 3
-    type: 0
+    type: 1
     collisionMode: 0
     colliderForce: 0
     multiplyColliderForceByParticleSize: 0
@@ -13218,7 +13232,7 @@ ParticleSystem:
     m_Bounce:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1
+      scalar: 0
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -13330,7 +13344,7 @@ ParticleSystem:
     maxCollisionShapes: 256
     quality: 0
     voxelSize: 0.5
-    collisionMessages: 0
+    collisionMessages: 1
     collidesWithDynamic: 1
     interiorCollisions: 1
   TriggerModule:
@@ -14348,3 +14362,15 @@ ParticleSystemRenderer:
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
   m_MaskInteraction: 0
+--- !u!114 &5461107495229698000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7003060306231724960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 009de1e176b152647bc7adad14bb002d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -16,7 +16,7 @@ public class BlockConfig : ScriptableObject
 
     public GameObject GetExplosionObject(BlockQuestType questType)
     {
-        if (questType != BlockQuestType.NONE)
+        if (questType != BlockQuestType.NONE || questType != BlockQuestType.CLEAR_SIMPLE)
         {
             return explosion[(int)questType];
         }
