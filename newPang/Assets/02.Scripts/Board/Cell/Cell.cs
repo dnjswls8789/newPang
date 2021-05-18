@@ -6,6 +6,17 @@ public class Cell : MonoBehaviour
 {
     SpriteRenderer m_SpriteRenderer;
 
+    public Vector2Int m_cellPosition;
+    public Vector2Int cellPosition
+    {
+        get { return m_cellPosition; }
+        set { m_cellPosition = value; }
+    }
+    public void SetCellPosition(int x, int y)
+    {
+        cellPosition = new Vector2Int(x, y);
+    }
+
     protected CellType m_CellType;
     public CellType type
     {

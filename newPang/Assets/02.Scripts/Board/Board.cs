@@ -1118,7 +1118,7 @@ public class Board : MonoBehaviour
     {
         if (row < 0 || row >= maxRow || col < 0 || col >= maxCol) return;
 
-        GameObject cd = gameObject.AddChildFromObjPool("CircleCollision", cells[row, col].transform.position, 0.05f);
+        GameObject cd = gameObject.AddChildFromObjPool("CircleDoubleCollision", cells[row, col].transform.position, 0.05f);
 
         cd.GetComponent<SpecialBlockCollision>().InitScale();
 
@@ -1194,6 +1194,12 @@ public class Board : MonoBehaviour
             baseBlock.questType = BlockQuestType.CLEAR_SIMPLE;
             targetBlock.questType = BlockQuestType.CLEAR_SIMPLE;
 
+            baseBlock.status = BlockStatus.MATCH;
+            targetBlock.status = BlockStatus.MATCH;
+
+            baseBlock.DoActionClear(true);
+            targetBlock.DoActionClear(true);
+
             ClearHorz(baseBlock.cellPosition.x, baseBlock.cellPosition.y);
             ClearVert(baseBlock.cellPosition.x, baseBlock.cellPosition.y);
 
@@ -1207,6 +1213,12 @@ public class Board : MonoBehaviour
         {
             baseBlock.questType = BlockQuestType.CLEAR_SIMPLE;
             targetBlock.questType = BlockQuestType.CLEAR_SIMPLE;
+
+            baseBlock.status = BlockStatus.MATCH;
+            targetBlock.status = BlockStatus.MATCH;
+
+            baseBlock.DoActionClear(true);
+            targetBlock.DoActionClear(true);
 
             ClearHorz(baseBlock.cellPosition.x - 1, baseBlock.cellPosition.y);
             ClearHorz(baseBlock.cellPosition.x, baseBlock.cellPosition.y);
@@ -1271,7 +1283,13 @@ public class Board : MonoBehaviour
         {
             baseBlock.questType = BlockQuestType.CLEAR_SIMPLE;
             targetBlock.questType = BlockQuestType.CLEAR_SIMPLE;
-        
+
+            baseBlock.status = BlockStatus.MATCH;
+            targetBlock.status = BlockStatus.MATCH;
+
+            baseBlock.DoActionClear(true);
+            targetBlock.DoActionClear(true);
+
             ClearCircleDouble(baseBlock.cellPosition.x, baseBlock.cellPosition.y);
 
             return true;

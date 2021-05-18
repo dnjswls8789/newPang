@@ -14,10 +14,16 @@ public class Stage : MonoBehaviour
 
     InputManager m_InputManager;
 
-    //Event Members
+    ////Event Members
     bool m_bTouchDown;          //입력상태 처리 플래그, 유효한 블럭을 클릭한 경우 true
     BlockPos m_BlockDownPos;    //블럭 인덱스 (보드에 저장된 위치)
     Vector3 m_ClickPos;
+
+    // 터치
+    bool m_TouchDown;
+    //Vector3 m_ClickPos;
+    Vector3 m_CurPos;
+    Cell m_ClickCell;
 
     public void InitStage(StageInfo _stageInfo)
     {
@@ -30,6 +36,58 @@ public class Stage : MonoBehaviour
     private void Update()
     {
         OnInputHandler();
+
+        // InputUpdate();
+    }
+
+    void InputUpdate()
+    {
+        if (!m_TouchDown)
+        {
+
+            if (Input.GetMouseButtonDown(0))
+            {
+                Vector3 clickPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                RaycastHit hit;
+                int rayerMask = 1 << LayerMask.NameToLayer("Cell");
+
+                if (Physics.Raycast(clickPos, Vector3.forward, out hit, 100f, rayerMask))
+                {
+                    Debug.LogError(LayerMask.LayerToName(hit.transform.gameObject.layer));
+                    //해당 터치가 시작됐다면.
+                    m_ClickPos = clickPos;
+                    m_CurPos = m_ClickPos;
+                    m_TouchDown = true;
+
+                    m_ClickCell = hit.transform.GetComponent<Cell>();
+                }
+            }
+        }
+        else
+        {
+            m_CurPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+            Swipe swipeDir = EvalSwipeDir(m_ClickPos, m_CurPos);
+
+            if (swipeDir != Swipe.NA)
+            {
+                if (m_ClickCell != null)
+                {
+                    board.DoSwipeAction(m_ClickCell.cellPosition.x, m_ClickCell.cellPosition.y, swipeDir);
+                }
+                m_TouchDown = false;   //클릭 상태 플래그 OFF
+            }
+
+        }
+
+        if (Input.GetMouseButtonUp(0))
+        {
+            m_ClickPos = Vector3.zero;
+            m_CurPos = Vector3.zero;
+            m_TouchDown = false;
+            m_ClickCell = null;
+        }
+
     }
 
     void OnInputHandler()
@@ -107,9 +165,49 @@ public class Stage : MonoBehaviour
         blockPos = new BlockPos(nRow, nCol);
 
         //2. 스와이프 가능한 블럭인지 체크한다.
-        if (blocks[nRow, nCol] == null) 
+        if (blocks[nRow, nCol] == null)
             return false;
 
         return blocks[nRow, nCol].IsSwipeable();
+    }
+
+    public Swipe EvalSwipeDir(Vector2 vtStart, Vector2 vtEnd)
+    {
+        float angle = EvalDragAngle(vtStart, vtEnd);
+        if (angle < 0)
+            return Swipe.NA;
+
+        int swipe = (((int)angle + 45) % 360) / 90;
+
+        switch (swipe)
+        {
+            case 0: return Swipe.UP;
+            case 1: return Swipe.RIGHT;
+            case 2: return Swipe.DOWN;
+            case 3: return Swipe.LEFT;
+        }
+
+        return Swipe.NA;
+    }
+
+    /*
+     * 두 포인트 사이의 각도를 구한다.
+     * Input(마우스, 터치) 장치 드래그시에 드래그한 각도를 구하는데 활용한다.
+     */
+    float EvalDragAngle(Vector2 vtStart, Vector2 vtEnd)
+    {
+        Vector2 dragDirection = vtEnd - vtStart;
+        if (dragDirection.magnitude <= 0.3f)    // 스왑인식 거리
+            return -1f;
+
+        //Debug.Log($"eval angle : {vtStart} , {vtEnd}, magnitude = {dragDirection.magnitude}");
+
+        float aimAngle = Mathf.Atan2(dragDirection.y, dragDirection.x);
+        if (aimAngle < 0f)
+        {
+            aimAngle = Mathf.PI * 2 + aimAngle;
+        }
+
+        return aimAngle * Mathf.Rad2Deg;
     }
 }
