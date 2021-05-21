@@ -41,8 +41,19 @@ public class Block : MonoBehaviour
     SpriteRenderer m_SpriteRenderer;
 
     public BlockStatus status;
-
     public BlockBreed m_Breed;   //렌더링되는 블럭 캐린터(즉, 이미지 종류)
+
+    public BlockType m_BlockType;
+
+    public MatchType m_MatchType;
+
+    public BlockQuestType m_QuestType;
+
+    public Vector2Int m_cellPosition;
+    public int m_Durability;                 //내구도
+    public bool swiping;
+    public bool droping;
+
     public BlockBreed breed
     {
         get { return m_Breed; }
@@ -52,29 +63,21 @@ public class Block : MonoBehaviour
             UpdateView();
         }
     }
-
-    protected BlockType m_BlockType;
     public BlockType type
     {
         get { return m_BlockType; }
         set { m_BlockType = value; }
     }
-
-    protected MatchType m_MatchType;
     public MatchType matchType
     {
         get { return m_MatchType; }
         set { m_MatchType = value; }
     }
-
-    protected BlockQuestType m_QuestType;
     public BlockQuestType questType
     {
         get { return m_QuestType; }
         set { m_QuestType = value; }
     }
-
-    public Vector2Int m_cellPosition;
     public Vector2Int cellPosition
     {
         get { return m_cellPosition; }
@@ -85,21 +88,18 @@ public class Block : MonoBehaviour
         cellPosition = new Vector2Int(x, y);
     }
 
-    int m_Durability;                 //내구도
     public virtual int durability
     {
         get { return m_Durability; }
         set { m_Durability = value; }
     }
 
-    bool swiping;
     public bool isSwiping
     {
         get { return swiping; }
         set { swiping = value; }
     }
 
-    public bool droping;
     public bool isDroping
     {
         get { return droping; }
@@ -108,14 +108,14 @@ public class Block : MonoBehaviour
 
     public void InitBlock(BlockBreed _breed, BlockType _type, Vector2Int position)
     {
-        matchType = MatchType.NONE;
         status = BlockStatus.NORMAL;
+        breed = _breed;
 
+        matchType = MatchType.NONE;
+        type = _type;
         questType = BlockQuestType.CLEAR_SIMPLE;
 
-        type = _type;
         cellPosition = position;
-        breed = _breed;
 
         m_Durability = 1;
 
@@ -127,9 +127,10 @@ public class Block : MonoBehaviour
 
     public void ChangeBlock()
     {
-        matchType = MatchType.NONE;
         status = BlockStatus.NORMAL;
 
+        matchType = MatchType.NONE;
+        type = BlockType.BASIC;
         questType = BlockQuestType.CLEAR_SIMPLE;
 
         m_Durability = 1;
@@ -141,8 +142,6 @@ public class Block : MonoBehaviour
     {
         m_SpriteRenderer = GetComponent<SpriteRenderer>();
     }
-
-
 
     public void UpdateView()
     {
@@ -210,8 +209,8 @@ public class Block : MonoBehaviour
         if (bDestroy)
         {
             //3. 블럭 GameObject 객체 삭제 or make size zero
-            gameObject.InstantEnqueue();
             status = BlockStatus.CLEAR;
+            gameObject.InstantEnqueue();
         }
         else
         {
@@ -484,12 +483,12 @@ public class Block : MonoBehaviour
     }
 
     // 매칭 가능한 블럭인지.
-    public bool IsMatchable(bool dropingCheck = false)
+    public bool IsMatchable(bool movingCheck = false)
     {
-        if (!dropingCheck)
+        if (!movingCheck)
             return status == BlockStatus.NORMAL && !IsEmpty() && breed != BlockBreed.NA;
         else
-            return status == BlockStatus.NORMAL && !IsEmpty() && breed != BlockBreed.NA && !isDroping;
+            return status == BlockStatus.NORMAL && !IsEmpty() && breed != BlockBreed.NA && !isSwiping && !isDroping;
     }
 
     public bool IsClearable()

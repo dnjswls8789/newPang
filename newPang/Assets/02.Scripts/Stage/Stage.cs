@@ -35,9 +35,9 @@ public class Stage : MonoBehaviour
 
     private void Update()
     {
-        OnInputHandler();
+        //OnInputHandler();
 
-        // InputUpdate();
+        InputUpdate();
     }
 
     void InputUpdate()

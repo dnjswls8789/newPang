@@ -1057,8 +1057,8 @@ public class Board : MonoBehaviour
         GameObject cl = gameObject.AddChildFromObjPool("VerticalCollision", cells[row, col].transform.position, 0.4f);
         GameObject cr = gameObject.AddChildFromObjPool("VerticalCollision", cells[row, col].transform.position, 0.4f);
 
-        cl.GetComponent<SpecialBlockCollision>().InitScale();
-        cr.GetComponent<SpecialBlockCollision>().InitScale();
+        //cl.GetComponent<SpecialBlockCollision>().InitScale();
+        //cr.GetComponent<SpecialBlockCollision>().InitScale();
 
         StartCoroutine(Action2D.MoveTo(cl.transform, cl.transform.position + Vector3.left * 10, 0.4f));
         StartCoroutine(Action2D.MoveTo(cr.transform, cr.transform.position + Vector3.right * 10, 0.4f));
@@ -1082,8 +1082,8 @@ public class Board : MonoBehaviour
         GameObject ct = gameObject.AddChildFromObjPool("HorizonCollision", cells[row, col].transform.position, 0.4f);
         GameObject cb = gameObject.AddChildFromObjPool("HorizonCollision", cells[row, col].transform.position, 0.4f);
 
-        ct.GetComponent<SpecialBlockCollision>().InitScale();
-        cb.GetComponent<SpecialBlockCollision>().InitScale();
+        //ct.GetComponent<SpecialBlockCollision>().InitScale();
+        //cb.GetComponent<SpecialBlockCollision>().InitScale();
 
         StartCoroutine(Action2D.MoveTo(ct.transform, ct.transform.position + Vector3.up * 10, 0.4f));
         StartCoroutine(Action2D.MoveTo(cb.transform, cb.transform.position + Vector3.down * 10, 0.4f));
@@ -1107,22 +1107,40 @@ public class Board : MonoBehaviour
     {
         if (row < 0 || row >= maxRow || col < 0 || col >= maxCol) return;
 
-        GameObject cc = gameObject.AddChildFromObjPool("CircleCollision", cells[row, col].transform.position, 0.05f);
+        GameObject cc = gameObject.AddChildFromObjPool("CircleEffect", cells[row, col].transform.position, 1f);
 
-        cc.GetComponent<SpecialBlockCollision>().InitScale();
+        StartCoroutine(CreateCircleCollision(row, col, 0.25f));
+
+        //cc.GetComponent<SpecialBlockCollision>().InitScale();
 
         //StartCoroutine(Action2D.Scale(cc.transform, 2.5f, 0.02f));
+    }
+
+    IEnumerator CreateCircleCollision(int row, int col, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        GameObject cc = gameObject.AddChildFromObjPool("CircleCollision", cells[row, col].transform.position, 0.05f);
     }
 
     public void ClearCircleDouble(int row, int col)
     {
         if (row < 0 || row >= maxRow || col < 0 || col >= maxCol) return;
 
-        GameObject cd = gameObject.AddChildFromObjPool("CircleDoubleCollision", cells[row, col].transform.position, 0.05f);
+        GameObject cd = gameObject.AddChildFromObjPool("CircleDoubleEffect", cells[row, col].transform.position, 1f);
 
-        cd.GetComponent<SpecialBlockCollision>().InitScale();
+        StartCoroutine(CreateCircleDoubleCollision(row, col, 0.25f));
+
+        //cd.GetComponent<SpecialBlockCollision>().InitScale();
 
         //StartCoroutine(Action2D.Scale(cd.transform, 4.5f, 0.03f));
+    }
+
+    IEnumerator CreateCircleDoubleCollision(int row, int col, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        GameObject cd = gameObject.AddChildFromObjPool("CircleDoubleCollision", cells[row, col].transform.position, 0.05f);
     }
 
     public void ClearLazer(BlockBreed targetBreed)
@@ -1160,7 +1178,22 @@ public class Board : MonoBehaviour
         for (int i = 0; i < clearList.Count; i++)
         {
             if (clearList[i].questType != BlockQuestType.CLEAR_SIMPLE) continue;
-            clearList[i].SetQuestType(quest);
+            if (quest == BlockQuestType.CLEAR_HORZ || quest == BlockQuestType.CLEAR_VERT)
+            {
+                int random = UnityEngine.Random.Range(0, 2);
+                if (random == 0)
+                {
+                    clearList[i].SetQuestType(BlockQuestType.CLEAR_HORZ);
+                }
+                else
+                {
+                    clearList[i].SetQuestType(BlockQuestType.CLEAR_VERT);
+                }
+            }
+            else
+            {
+                clearList[i].SetQuestType(quest);
+            }
             clearList[i].status = BlockStatus.MATCH;
 
             yield return new WaitForSeconds(0.05f);
@@ -1219,6 +1252,8 @@ public class Board : MonoBehaviour
 
             baseBlock.DoActionClear(true);
             targetBlock.DoActionClear(true);
+
+            gameObject.AddChildFromObjPool("CircleEffect", cells[baseBlock.cellPosition.x, baseBlock.cellPosition.y].transform.position, 1f);
 
             ClearHorz(baseBlock.cellPosition.x - 1, baseBlock.cellPosition.y);
             ClearHorz(baseBlock.cellPosition.x, baseBlock.cellPosition.y);

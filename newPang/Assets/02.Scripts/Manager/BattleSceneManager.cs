@@ -11,7 +11,8 @@ public class BattleSceneManager : SingletonClass<BattleSceneManager>
     protected override void Awake()
     {
         ObjectPoolManager.GetInstance.LoadAllGameObject();
-        ObjectPoolManager.GetInstance.InitializeObjPool("Block", 1, 1, 500);
+        ObjectPoolManager.GetInstance.InitializeObjPool("Block", 1, 1, 100);
+        ObjectPoolManager.GetInstance.InitializeObjPool("Cell", 1, 1, 100);
 
         BuildStage(1);
     }
