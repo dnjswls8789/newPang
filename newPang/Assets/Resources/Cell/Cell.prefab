@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7854952908377182975}
   - component: {fileID: 7854952908377182974}
   - component: {fileID: 7719545714062170362}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Cell
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -95,6 +95,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86f200334eec64743afdc970277e299f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_cellPosition: {x: 0, y: 0}
 --- !u!65 &7719545714062170362
 BoxCollider:
   m_ObjectHideFlags: 0

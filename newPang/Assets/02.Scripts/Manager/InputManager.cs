@@ -17,8 +17,8 @@ public static class SwipeDirMethod
     {
         switch (swipeDir)
         {
-            case Swipe.DOWN: return -1; ;
-            case Swipe.UP: return 1;
+            case Swipe.LEFT: return -1; ;
+            case Swipe.RIGHT: return 1;
             default:
                 return 0;
         }
@@ -28,8 +28,8 @@ public static class SwipeDirMethod
     {
         switch (swipeDir)
         {
-            case Swipe.LEFT: return -1; ;
-            case Swipe.RIGHT: return 1;
+            case Swipe.DOWN: return -1; ;
+            case Swipe.UP: return 1;
             default:
                 return 0;
         }
@@ -71,7 +71,7 @@ public class InputManager
      * 터치 좌표(Screen 좌표)를 보드의 루트인 컨테이너 기준으로 변경된 2차원 좌표를 리턴한다
      * @param vtInput Screen 좌표 즉, 스크린 픽셀 기준 좌표 (좌하(0,0) -> 우상(Screen.Width, Screen.Height))
      * */
-    Vector2 TouchToPosition(Vector3 vtInput)
+    public Vector2 TouchToPosition(Vector3 vtInput)
     {
         //1. 스크린 좌표 -> 월드 좌표
         Vector3 vtMousePosW = Camera.main.ScreenToWorldPoint(vtInput);
@@ -115,6 +115,8 @@ public class InputManager
         Vector2 dragDirection = vtEnd - vtStart;
         if (dragDirection.magnitude <= 0.3f)    // 스왑인식 거리
             return -1f;
+
+        Debug.LogError(vtStart + " / " + vtEnd);
 
         //Debug.Log($"eval angle : {vtStart} , {vtEnd}, magnitude = {dragDirection.magnitude}");
 

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 9029067915963329019}
   - component: {fileID: 4020414022050389682}
   - component: {fileID: 3738118940832528602}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Block
   m_TagString: Block
   m_Icon: {fileID: 0}
@@ -99,7 +99,12 @@ MonoBehaviour:
   m_BlockConfig: {fileID: 11400000, guid: 63f1793891421334d9b12cfdefa4cd5c, type: 2}
   status: 0
   m_Breed: 0
+  m_BlockType: 0
+  m_MatchType: 0
+  m_QuestType: 0
   m_cellPosition: {x: 0, y: 0}
+  m_Durability: 0
+  swiping: 0
   droping: 0
 --- !u!65 &3738118940832528602
 BoxCollider:

@@ -210,6 +210,7 @@ public class Board : MonoBehaviour
             {
                 //3.1 Cell GameObject 생성을 요청한다.GameObject가 생성되지 않는 경우에 null을 리턴한다.
                 Cell cell = m_Cells[nRow, nCol];
+                cell?.SetCellPosition(nRow, nCol);
                 cell?.Move(initX + nRow, initY + nCol);
 
                 //3.2 Block GameObject 생성을 요청한다.
@@ -1120,27 +1121,23 @@ public class Board : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
 
-        GameObject cc = gameObject.AddChildFromObjPool("CircleCollision", cells[row, col].transform.position, 0.05f);
+        gameObject.AddChildFromObjPool("CircleCollision", cells[row, col].transform.position, 0.05f);
     }
 
     public void ClearCircleDouble(int row, int col)
     {
         if (row < 0 || row >= maxRow || col < 0 || col >= maxCol) return;
 
-        GameObject cd = gameObject.AddChildFromObjPool("CircleDoubleEffect", cells[row, col].transform.position, 1f);
+        gameObject.AddChildFromObjPool("CircleDoubleEffect", cells[row, col].transform.position, 1f);
 
         StartCoroutine(CreateCircleDoubleCollision(row, col, 0.25f));
-
-        //cd.GetComponent<SpecialBlockCollision>().InitScale();
-
-        //StartCoroutine(Action2D.Scale(cd.transform, 4.5f, 0.03f));
     }
 
     IEnumerator CreateCircleDoubleCollision(int row, int col, float delay)
     {
         yield return new WaitForSeconds(delay);
 
-        GameObject cd = gameObject.AddChildFromObjPool("CircleDoubleCollision", cells[row, col].transform.position, 0.05f);
+        gameObject.AddChildFromObjPool("CircleDoubleCollision", cells[row, col].transform.position, 0.05f);
     }
 
     public void ClearLazer(BlockBreed targetBreed)

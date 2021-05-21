@@ -44,7 +44,6 @@ public class Stage : MonoBehaviour
     {
         if (!m_TouchDown)
         {
-
             if (Input.GetMouseButtonDown(0))
             {
                 Vector3 clickPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -53,7 +52,6 @@ public class Stage : MonoBehaviour
 
                 if (Physics.Raycast(clickPos, Vector3.forward, out hit, 100f, rayerMask))
                 {
-                    Debug.LogError(LayerMask.LayerToName(hit.transform.gameObject.layer));
                     //해당 터치가 시작됐다면.
                     m_ClickPos = clickPos;
                     m_CurPos = m_ClickPos;
@@ -177,14 +175,14 @@ public class Stage : MonoBehaviour
         if (angle < 0)
             return Swipe.NA;
 
-        int swipe = (((int)angle + 45) % 360) / 90;
+        int swipe = ((int)(angle + 45)) % 360 / 90;
 
         switch (swipe)
         {
-            case 0: return Swipe.UP;
-            case 1: return Swipe.RIGHT;
-            case 2: return Swipe.DOWN;
-            case 3: return Swipe.LEFT;
+            case 0: return Swipe.RIGHT;
+            case 1: return Swipe.UP;
+            case 2: return Swipe.LEFT;
+            case 3: return Swipe.DOWN;
         }
 
         return Swipe.NA;
@@ -200,9 +198,11 @@ public class Stage : MonoBehaviour
         if (dragDirection.magnitude <= 0.3f)    // 스왑인식 거리
             return -1f;
 
+        //dragDirection.Normalize();
         //Debug.Log($"eval angle : {vtStart} , {vtEnd}, magnitude = {dragDirection.magnitude}");
 
         float aimAngle = Mathf.Atan2(dragDirection.y, dragDirection.x);
+
         if (aimAngle < 0f)
         {
             aimAngle = Mathf.PI * 2 + aimAngle;

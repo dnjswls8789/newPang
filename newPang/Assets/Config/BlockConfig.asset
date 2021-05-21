@@ -13,15 +13,15 @@ MonoBehaviour:
   m_Name: BlockConfig
   m_EditorClassIdentifier: 
   dropSpeed:
-  - 0.2
-  - 0.3
-  - 0.35
+  - 0.225
+  - 0.32
+  - 0.36
   - 0.4
   - 0.425
   - 0.45
-  - 0.475
   - 0.5
-  - 0.525
+  - 0.54
+  - 0.575
   lazerSprite: {fileID: 21300000, guid: 97a206ad283f0c241adbbdbab0c59542, type: 3}
   basicBlockSprites:
   - {fileID: 21300000, guid: d41dda32c8eb8489ca685fa8ac3618e7, type: 3}

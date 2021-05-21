@@ -41,9 +41,9 @@ public class Block : MonoBehaviour
     SpriteRenderer m_SpriteRenderer;
 
     public BlockStatus status;
-    public BlockBreed m_Breed;   //렌더링되는 블럭 캐린터(즉, 이미지 종류)
-
     public BlockType m_BlockType;
+
+    public BlockBreed m_Breed;   //렌더링되는 블럭 캐린터(즉, 이미지 종류)
 
     public MatchType m_MatchType;
 
@@ -54,6 +54,11 @@ public class Block : MonoBehaviour
     public bool swiping;
     public bool droping;
 
+    public BlockType type
+    {
+        get { return m_BlockType; }
+        set { m_BlockType = value; }
+    }
     public BlockBreed breed
     {
         get { return m_Breed; }
@@ -62,11 +67,6 @@ public class Block : MonoBehaviour
             m_Breed = value;
             UpdateView();
         }
-    }
-    public BlockType type
-    {
-        get { return m_BlockType; }
-        set { m_BlockType = value; }
     }
     public MatchType matchType
     {
@@ -109,11 +109,12 @@ public class Block : MonoBehaviour
     public void InitBlock(BlockBreed _breed, BlockType _type, Vector2Int position)
     {
         status = BlockStatus.NORMAL;
-        breed = _breed;
 
         matchType = MatchType.NONE;
         type = _type;
         questType = BlockQuestType.CLEAR_SIMPLE;
+
+        breed = _breed;
 
         cellPosition = position;
 
@@ -211,6 +212,7 @@ public class Block : MonoBehaviour
             //3. 블럭 GameObject 객체 삭제 or make size zero
             status = BlockStatus.CLEAR;
             gameObject.InstantEnqueue();
+            //InitBlock()
         }
         else
         {
