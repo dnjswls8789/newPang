@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Stage : MonoBehaviour
 {
@@ -46,6 +47,8 @@ public class Stage : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(0))
             {
+                if (EventSystem.current.IsPointerOverGameObject()) return;
+
                 Vector3 clickPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 RaycastHit hit;
                 int rayerMask = 1 << LayerMask.NameToLayer("Cell");

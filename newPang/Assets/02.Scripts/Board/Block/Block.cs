@@ -213,6 +213,8 @@ public class Block : MonoBehaviour
             status = BlockStatus.CLEAR;
             gameObject.InstantEnqueue();
             //InitBlock()
+
+            BattleSceneManager.GetInstance.AddScore(100);
         }
         else
         {

@@ -65,6 +65,10 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
     private RoomOptions roomOptions;    // 현재 룸 옵션
     private TypedLobby lobbyType;       // 현재 로비
+    public string lobbyName
+    {
+        get { return lobbyType.Name; }
+    }
 
     private long mmr;       // 내 mmr
     private long mmrWidth;  // 매치 mmr 최대범위
@@ -110,10 +114,20 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
     private string customRoomName;
     private bool isMakeCustomRoom;
+    public string gameSceneName = "BattleScene";
+    public string lobbySceneName = "MatchTestScene";
 
     private void Awake()
     {
-        DontDestroyOnLoad(gameObject);
+        var obj = FindObjectsOfType(typeof(LobbyManager));
+        if (obj.Length == 1)
+        {
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
 
         PhotonNetwork.MinimalTimeScaleToDispatchInFixedUpdate = 0.0005f;
 
@@ -152,6 +166,8 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
         //ClearOnConnectedToMasterCallback();
 
+        nickname = "nickname";
+        mmr = 0;
         PhotonNetwork.LocalPlayer.CustomProperties.SetStringToByte("name", nickname);
         PhotonNetwork.LocalPlayer.CustomProperties["mmr"] = mmr;
         StopCoroutine("ServerReconnect");
@@ -473,12 +489,58 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
         PhotonNetwork.ConnectUsingSettings();
     }
+    //////////////////////////////// 싱글? /////////////////////////////////////////////////////////////
+
+    public void JoinSingleRoomWithCheckPhoton()
+    {
+        AllClearCallbackDelegate();
+
+        lobbyType = new TypedLobby("SingleLobby", LobbyType.SqlLobby);
+
+        if (!PhotonNetwork.IsConnected)
+        {
+            // 서버 연결완료 콜백 // 에 방 찾는 함수 넣고 서버 연결 시도한다.
+            AddOnConnectedToMasterCallback(MakeSingleRoom);
+            // 방 접속완료 콜백 // 게임 씬으로 넘어갔는지 체크하는 코루틴.
+            AddOnJoinedRoomCallback(() => { StartCoroutine("WaitGameStart"); });
+            JoinToMaster();
+        }
+        else
+        {
+            // 정상이면 서버에 연결 중인 경우는 없다. 안전하게 서버 연결 끊고 함수 다시 부른다.
+            AddOnDisconnectedCallback(JoinSingleRoomWithCheckPhoton);
+            PhotonNetwork.Disconnect();
+        }
+    }
+
+    private void MakeSingleRoom()
+    {
+        Debug.LogWarning("MakeSingleRoom");
+        AllClearCallbackDelegate();
+
+        AddOnJoinedRoomCallback(() => { SceneManager.LoadScene(gameSceneName); });
+
+        roomOptions = new RoomOptions();
+        roomOptions.IsVisible = true;
+        roomOptions.MaxPlayers = 1;
+        roomOptions.PlayerTtl = 5000;
+        roomOptions.EmptyRoomTtl = 0;
+        roomOptions.CleanupCacheOnLeave = false;
+
+        roomOptions.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable() { { "C0", 0 } };
+        roomOptions.CustomRoomPropertiesForLobby = new string[] { "C0" };
+
+        currentRoomProperty = roomOptions.CustomRoomProperties;
+
+        PhotonNetwork.CreateRoom(null, roomOptions, lobbyType);
+    }
+
 
     //////////////////////////////// 노말 //////////////////////////////////////////////////////////////////////
 
     public void JoinNormalRoomWithCheckPhoton()
     {
-        if (!isMatching) return;
+        //if (!isMatching) return;
 
         Debug.LogWarning("JoinNormalRoomWithCheckPhoton");
         //isMatching = true;
@@ -585,7 +647,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
             AddOnConnectedToMasterCallback(JoinAIRoom);
             // 방 접속완료 콜백 // 게임 씬으로 넘어갔는지 체크하는 코루틴.
             AddOnJoinedRoomCallback(() => { StartCoroutine("WaitGameStart"); },
-                    () => { SceneManager.LoadScene("MainGameScene"); });
+                    () => { SceneManager.LoadScene(gameSceneName); });
             JoinToMaster();
         }
         else
@@ -886,7 +948,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
             PhotonNetwork.CurrentRoom.SetCustomProperties(currentRoomProperty);
 
-            PhotonNetwork.LoadLevel("MainGameScene");
+            PhotonNetwork.LoadLevel(gameSceneName);
 
             if (newPlayer != PhotonNetwork.LocalPlayer)
             {
@@ -900,7 +962,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     IEnumerator WaitGameStart()
     {
         // 게임 씬으로 넘어가면 isGameStart = true;
-        yield return new WaitUntil(() => SceneManager.GetActiveScene().name != "MainLobbyScene");
+        yield return new WaitUntil(() => SceneManager.GetActiveScene().name != lobbySceneName);
 
         CancelInvoke("JoinNormalAIRoomWithCheckPhoton");
 
@@ -910,23 +972,23 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
     public void LeaveMatch()
     {
-        //if (PhotonNetwork.IsConnected)
-        //{
-        //    AddOnDisconnectedCallback(
-        //        () =>
-        //        {
-        //            LoadingScene.SceneLoad("MainLobbyScene", false);
-        //            isGameStart = false;
-        //            internetEntireTerm = 0f;
-        //        });
-        //    PhotonNetwork.Disconnect();
-        //}
-        //else
-        //{
-        //    LoadingScene.SceneLoad("MainLobbyScene", false);
-        //    isGameStart = false;
-        //    internetEntireTerm = 0f;
-        //}
+        if (PhotonNetwork.IsConnected)
+        {
+            AddOnDisconnectedCallback(
+                () =>
+                {
+                    SceneManager.LoadScene(lobbySceneName);
+                    isGameStart = false;
+                    internetEntireTerm = 0f;
+                });
+            PhotonNetwork.Disconnect();
+        }
+        else
+        {
+            SceneManager.LoadScene(lobbySceneName);
+            isGameStart = false;
+            internetEntireTerm = 0f;
+        }
     }
 
     public void MatchingCancel(bool pause = false)
@@ -985,14 +1047,14 @@ public class LobbyManager : MonoBehaviourPunCallbacks
                 internetTerm = 0f;
             }
 
-            if (SceneManager.GetActiveScene().name == "MainLobbyScene")
+            if (SceneManager.GetActiveScene().name == lobbySceneName)
             {
                 if (internetMaxTerm < internetTerm)
                 {
                     //UIManager.GetInstance.NetworkNotReachable();
                 }
             }
-            else if (SceneManager.GetActiveScene().name == "MainGameScene")
+            else if (SceneManager.GetActiveScene().name == gameSceneName)
             {
                 if (Application.internetReachability == NetworkReachability.NotReachable)
                 {
@@ -1067,6 +1129,10 @@ public class LobbyManager : MonoBehaviourPunCallbacks
             {
                 JoinNormalAIRoomWithCheckPhoton();
             }
+            else if (lobbyType.Name == "SingleLobby")
+            {
+                JoinSingleRoomWithCheckPhoton();
+            }
         }
     }
     private void OnApplicationPause(bool pause)
@@ -1111,6 +1177,10 @@ public class LobbyManager : MonoBehaviourPunCallbacks
                 else if (lobbyType.Name == "AILobby")
                 {
                     JoinNormalAIRoomWithCheckPhoton();
+                }
+                else if (lobbyType.Name == "SingleLobby")
+                {
+                    JoinSingleRoomWithCheckPhoton();
                 }
             }
         }
