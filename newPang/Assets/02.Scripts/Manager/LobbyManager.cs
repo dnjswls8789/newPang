@@ -80,10 +80,10 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     private int rankMatchingCount = 0;
     private int maxRankMatchingCount = 5;
 
-    private string uid;         // 내 uid. 안씀
+    //private string uid;         // 내 uid. 안씀
     private string nickname;    // 내 닉네임
 
-    public bool initAd;
+    //public bool initAd; 
 
     ExitGames.Client.Photon.Hashtable currentRoomProperty;
 
@@ -1024,12 +1024,12 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     }
 
 
-    public void LogInPhoton(string _name, string _userId, long _mmr)
-    {
-        nickname = _name;
-        uid = _userId;
-        mmr = _mmr;
-    }
+    //public void LogInPhoton(string _name, string _userId, long _mmr)
+    //{
+    //    nickname = _name;
+    //    uid = _userId;
+    //    mmr = _mmr;
+    //}
 
 
     IEnumerator CheckInternet()

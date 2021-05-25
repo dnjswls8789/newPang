@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "498905851512",
+    "project_id": "pang-5afe0",
+    "storage_bucket": "pang-5afe0.appspot.com",
+    "firebase_url": "https://pang-5afe0-default-rtdb.firebaseio.com/"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:498905851512:android:1736b892db021a72b8af8d",
+        "android_client_info": {
+          "package_name": "com.onwStudio.Pang"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "498905851512-knhmvkjqeatmtfanvidet1ntes65t3j2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyACvJjr7pG4bgtW1E17r-T9x-jQr0lVzKk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "498905851512-knhmvkjqeatmtfanvidet1ntes65t3j2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
