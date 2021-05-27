@@ -83,7 +83,7 @@ public class Board : MonoBehaviour
 
                 for (int i = 0; i < clearCount; i++)
                 {
-                    Block spawnBlock = BlockFactory.SpawnBlock(BlockType.BASIC, BattleSceneManager.GetInstance.stage.blockCount);
+                    Block spawnBlock = BlockFactory.SpawnBlock(BlockType.BASIC, MainGameManager.GetInstance.stage.blockCount);
 
                     spawnBlock.SetCellPosition(row, maxCol - 1 - i);
                     //blocks[spawnBlock.cellPosition.x, spawnBlock.cellPosition.y] = spawnBlock;
@@ -135,36 +135,36 @@ public class Board : MonoBehaviour
                         {
                             baseBreed = targetBlock.breed;
 
-                            BlockBreed newBreed = (BlockBreed)UnityEngine.Random.Range(0, BattleSceneManager.GetInstance.stage.blockCount);
+                            BlockBreed newBreed = (BlockBreed)UnityEngine.Random.Range(0, MainGameManager.GetInstance.stage.blockCount);
 
                             // 대상 블럭이랑 다른 블럭 생성.
                             while (baseBreed == newBreed)
                             {
-                                newBreed = (BlockBreed)UnityEngine.Random.Range(0, BattleSceneManager.GetInstance.stage.blockCount);
+                                newBreed = (BlockBreed)UnityEngine.Random.Range(0, MainGameManager.GetInstance.stage.blockCount);
                             }
 
-                            spawnBlock = BlockFactory.SpawnBlock(BlockType.BASIC, BattleSceneManager.GetInstance.stage.blockCount, newBreed);
+                            spawnBlock = BlockFactory.SpawnBlock(BlockType.BASIC, MainGameManager.GetInstance.stage.blockCount, newBreed);
                             spawnCount++;
 
                         }
                         else
                         {
                             // 랜덤생성 하고 넘어가기.
-                            spawnBlock = BlockFactory.SpawnBlock(BlockType.BASIC, BattleSceneManager.GetInstance.stage.blockCount);
+                            spawnBlock = BlockFactory.SpawnBlock(BlockType.BASIC, MainGameManager.GetInstance.stage.blockCount);
                         }
                     }
                     // 2, 3 번째 생성
                     else if (spawnCount > 0 && spawnCount < 3)
                     {
                         // 2, 3 번째 블럭은 baseBreed 랑 같은 블럭 생성.
-                        spawnBlock = BlockFactory.SpawnBlock(BlockType.BASIC, BattleSceneManager.GetInstance.stage.blockCount, baseBreed);
+                        spawnBlock = BlockFactory.SpawnBlock(BlockType.BASIC, MainGameManager.GetInstance.stage.blockCount, baseBreed);
                         spawnCount++;
 
                     }
                     // 그 뒤는 랜덤
                     else
                     {
-                        spawnBlock = BlockFactory.SpawnBlock(BlockType.BASIC, BattleSceneManager.GetInstance.stage.blockCount);
+                        spawnBlock = BlockFactory.SpawnBlock(BlockType.BASIC, MainGameManager.GetInstance.stage.blockCount);
                         spawnCount++;
 
                     }
@@ -471,7 +471,7 @@ public class Board : MonoBehaviour
         {
             for (int row = 0; row < m_Row; row++)
             {
-                blocks[row, col].breed = (BlockBreed)UnityEngine.Random.Range(0, BattleSceneManager.GetInstance.stage.blockCount);
+                blocks[row, col].breed = (BlockBreed)UnityEngine.Random.Range(0, MainGameManager.GetInstance.stage.blockCount);
             }
         }
     }
@@ -501,7 +501,7 @@ public class Board : MonoBehaviour
                             }
                         }
 
-                        BlockBreed newBreed = (BlockBreed)UnityEngine.Random.Range(0, BattleSceneManager.GetInstance.stage.blockCount);
+                        BlockBreed newBreed = (BlockBreed)UnityEngine.Random.Range(0, MainGameManager.GetInstance.stage.blockCount);
                         // 혹시 모르니 왼쪽과 아래의 블럭과 다른 블럭으로 변경.
                         while (true)
                         {
@@ -512,7 +512,7 @@ public class Board : MonoBehaviour
                                 // 왼쪽, 아래 블럭과 같으면 다시 랜덤
                                 if (newBreed == m_Blocks[row - 1, col].breed || newBreed == m_Blocks[row, col - 1].breed)
                                 {
-                                    newBreed = (BlockBreed)UnityEngine.Random.Range(0, BattleSceneManager.GetInstance.stage.blockCount);
+                                    newBreed = (BlockBreed)UnityEngine.Random.Range(0, MainGameManager.GetInstance.stage.blockCount);
                                 }
                                 // 왼쪽 아래랑 다르면 브리드 바꾸고 나가자
                                 else
@@ -527,7 +527,7 @@ public class Board : MonoBehaviour
                                 // 왼쪽과 같으면 다시 랜덤
                                 if (newBreed == m_Blocks[row - 1, col].breed)
                                 {
-                                    newBreed = (BlockBreed)UnityEngine.Random.Range(0, BattleSceneManager.GetInstance.stage.blockCount);
+                                    newBreed = (BlockBreed)UnityEngine.Random.Range(0, MainGameManager.GetInstance.stage.blockCount);
                                 }
                                 // 왼쪽이랑 다르면 브리드 바꾸고 나가자
                                 else
@@ -561,7 +561,7 @@ public class Board : MonoBehaviour
                             }
                         }
 
-                        BlockBreed newBreed = (BlockBreed)UnityEngine.Random.Range(0, BattleSceneManager.GetInstance.stage.blockCount);
+                        BlockBreed newBreed = (BlockBreed)UnityEngine.Random.Range(0, MainGameManager.GetInstance.stage.blockCount);
                         // 혹시 모르니 왼쪽과 아래의 블럭과 다른 블럭으로 변경.
                         while (true)
                         {
@@ -572,7 +572,7 @@ public class Board : MonoBehaviour
                                 // 왼쪽, 아래 블럭과 같으면 다시 랜덤
                                 if (newBreed == m_Blocks[row - 1, col].breed || newBreed == m_Blocks[row, col - 1].breed)
                                 {
-                                    newBreed = (BlockBreed)UnityEngine.Random.Range(0, BattleSceneManager.GetInstance.stage.blockCount);
+                                    newBreed = (BlockBreed)UnityEngine.Random.Range(0, MainGameManager.GetInstance.stage.blockCount);
                                 }
                                 // 왼쪽 아래랑 다르면 브리드 바꾸고 나가자
                                 else
@@ -587,7 +587,7 @@ public class Board : MonoBehaviour
                                 // 아래랑 같으면 다시 랜덤
                                 if (newBreed == m_Blocks[row, col - 1].breed)
                                 {
-                                    newBreed = (BlockBreed)UnityEngine.Random.Range(0, BattleSceneManager.GetInstance.stage.blockCount);
+                                    newBreed = (BlockBreed)UnityEngine.Random.Range(0, MainGameManager.GetInstance.stage.blockCount);
                                 }
                                 // 아래랑 다르면 브리드 바꾸고 나가자
                                 else

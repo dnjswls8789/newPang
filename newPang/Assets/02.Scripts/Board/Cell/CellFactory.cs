@@ -14,7 +14,7 @@ public static class CellFactory
 
     public static Cell SpawnCell(CellType cellType)
     {
-        Cell cell = BattleSceneManager.GetInstance.board.cellParent.gameObject.AddChildFromObjPool("Cell").GetComponent<Cell>();
+        Cell cell = MainGameManager.GetInstance.board.cellParent.gameObject.AddChildFromObjPool("Cell").GetComponent<Cell>();
         cell.InitCell(cellType);
         return cell;
     }

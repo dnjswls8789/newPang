@@ -1,25 +1,47 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public enum GameType
 {
     Battle,
     CoOp
 }
-public class MainGameManager : MonoBehaviour
+public class MainGameManager : SingletonClass<MainGameManager>
 {
-    GameType gameType;
+    public PhotonView pv;
 
-    // Start is called before the first frame update
-    void Start()
+    public GameType gameType;
+
+    StageBuilder stageBuilder;
+    public Stage stage;
+    public Board board;
+
+    protected override void Awake()
     {
-        
+        pv = GetComponent<PhotonView>();
+
+        ObjectPoolManager.GetInstance.LoadAllGameObject();
+        ObjectPoolManager.GetInstance.InitializeObjPool("Block", 1, 1, 200);
+        ObjectPoolManager.GetInstance.InitializeObjPool("Cell", 1, 1, 100);
+
+        BuildStage(1);
+
     }
 
-    // Update is called once per frame
-    void Update()
+    void BuildStage(int stageNumber)
     {
-        
+        stageBuilder = new StageBuilder(stageNumber); // 스테이지 번호
+        stageBuilder.ComposeStage(stage);
+
+        board.SetCellPosition();
+        board.MatchingCheckShuffle();
+
+        while (!board.PangCheck())
+        {
+            board.AllShuffle();
+            board.MatchingCheckShuffle();
+        }
     }
 }

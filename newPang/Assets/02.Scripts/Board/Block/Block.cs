@@ -196,7 +196,7 @@ public class Block : MonoBehaviour
         yield return Action2D.Scale(transform, Constants.BLOCK_DESTROY_SCALE, 0.2f);
 
         //2. 폭파시키는 효과 연출 : 블럭 자체의 Clear 효과를 연출한다.
-        GameObject explosionObj = BattleSceneManager.GetInstance.gameObject.AddChildFromObjPool(m_BlockConfig.GetExplosionObject(questType).name, 2f);
+        GameObject explosionObj = MainGameManager.GetInstance.gameObject.AddChildFromObjPool(m_BlockConfig.GetExplosionObject(questType).name, 2f);
         ParticleSystem.MainModule newModule = explosionObj.GetComponent<ParticleSystem>().main;
         newModule.startColor = m_BlockConfig.GetBlockColor(breed);
 
@@ -214,7 +214,14 @@ public class Block : MonoBehaviour
             gameObject.InstantEnqueue();
             //InitBlock()
 
-            BattleSceneManager.GetInstance.AddScore(100);
+            if (MainGameManager.GetInstance.gameType == GameType.Battle)
+            {
+                BattleSceneManager.GetInstance.AddScore(100);
+            }
+            else
+            {
+
+            }
         }
         else
         {
@@ -434,7 +441,7 @@ public class Block : MonoBehaviour
                 board.ClearCircle(cellPosition.x, cellPosition.y);
                 break;
             case BlockQuestType.CLEAR_LAZER:
-                board.ClearLazer((BlockBreed)UnityEngine.Random.Range(0, BattleSceneManager.GetInstance.stage.blockCount));
+                board.ClearLazer((BlockBreed)UnityEngine.Random.Range(0, MainGameManager.GetInstance.stage.blockCount));
                 break;
             case BlockQuestType.CLEAR_HORZ_BUFF:
                 break;
