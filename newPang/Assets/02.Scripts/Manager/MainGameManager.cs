@@ -26,7 +26,20 @@ public class MainGameManager : SingletonClass<MainGameManager>
         ObjectPoolManager.GetInstance.InitializeObjPool("Block", 1, 1, 200);
         ObjectPoolManager.GetInstance.InitializeObjPool("Cell", 1, 1, 100);
 
-        BuildStage(1);
+        switch (gameType)
+        {
+            case GameType.Battle:
+                BuildStage(1);
+                break;
+            case GameType.CoOp:
+                if (PhotonNetwork.IsMasterClient)
+                {
+                    BuildStage(1);
+                }
+                break;
+            default:
+                break;
+        }
 
     }
 

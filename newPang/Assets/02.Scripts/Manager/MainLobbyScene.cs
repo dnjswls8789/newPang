@@ -18,4 +18,9 @@ public class MainLobbyScene : SingletonClass<MainLobbyScene>
     {
         LobbyManager.GetInstance.JoinSingleRoomWithCheckPhoton();
     }
+
+    public void CoOpMatching()
+    {
+        LobbyManager.GetInstance.JoinCoOpRoomWithCheckPhoton();
+    }
 }

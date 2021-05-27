@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public static class ExtentionGameObject_ObjPool
 {
@@ -224,12 +225,27 @@ public class ObjectPoolTimer : MonoBehaviour
         Invoke("DeActivateObjectPool", _invokeTimer);
     }
 
+    [PunRPC]
     public void DeActivateObjectPool()
     {
         if (!linkedGameObject) return;
         if (linkedObjectPool == null) return;
         if (isEnqueue) return;
         CancelInvoke("DeActivateObjectPool");
+
+        //
+        PhotonView pv = linkedGameObject.GetComponent<PhotonView>();
+
+
+        if (pv != null)
+        {
+            if (PhotonNetwork.GetPhotonView(pv.ViewID) != null)
+            {
+                PhotonNetwork.LocalCleanPhotonView(pv);
+            }
+            pv.ViewID = 0;
+        }
+        //
 
         linkedGameObject.PoolingSwitch(false);
 

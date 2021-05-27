@@ -2,8 +2,8 @@
     "m_SelectedDeviceId": "LMG710Ne88b2b42",
     "m_SelectedPackage": {
         "deviceId": "LMG710Ne88b2b42",
-        "name": "com.DefaultCompany.newPang",
-        "processId": 20160,
+        "name": "com.onwStudio.Pang",
+        "processId": 11633,
         "exited": false
     },
     "m_SelectedPriority": 0,
@@ -18,6 +18,48 @@
             "deviceId": "LMG710Ne88b2b42",
             "name": "com.DefaultCompany.newPang",
             "processId": 20160,
+            "exited": false
+        },
+        {
+            "deviceId": "LMG710Ne88b2b42",
+            "name": "com.onwStudio.Pang",
+            "processId": 6881,
+            "exited": false
+        },
+        {
+            "deviceId": "LMG710Ne88b2b42",
+            "name": "com.onwStudio.Pang",
+            "processId": 7387,
+            "exited": false
+        },
+        {
+            "deviceId": "LMG710Ne88b2b42",
+            "name": "com.onwStudio.Pang",
+            "processId": 9350,
+            "exited": false
+        },
+        {
+            "deviceId": "LMG710Ne88b2b42",
+            "name": "com.onwStudio.Pang",
+            "processId": 9758,
+            "exited": false
+        },
+        {
+            "deviceId": "LMG710Ne88b2b42",
+            "name": "com.onwStudio.Pang",
+            "processId": 10474,
+            "exited": false
+        },
+        {
+            "deviceId": "LMG710Ne88b2b42",
+            "name": "com.onwStudio.Pang",
+            "processId": 10762,
+            "exited": false
+        },
+        {
+            "deviceId": "LMG710Ne88b2b42",
+            "name": "com.onwStudio.Pang",
+            "processId": 11633,
             "exited": false
         }
     ],

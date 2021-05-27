@@ -6,7 +6,16 @@ public static class BlockFactory
 {
     public static Block SpawnBlock(BlockType blockType, int blockCount, BlockBreed breed = BlockBreed.NA)
     {
-        Block block = MainGameManager.GetInstance.board.blockParent.gameObject.AddChildFromObjPool("Block").GetComponent<Block>();
+        Block block = null;
+        if (MainGameManager.GetInstance.gameType == GameType.Battle)
+        {
+            block = MainGameManager.GetInstance.board.blockParent.gameObject.AddChildFromObjPool("Block").GetComponent<Block>();
+        }
+        else if (MainGameManager.GetInstance.gameType == GameType.CoOp)
+        {
+            block = PhotonManager.GetInstance.InstantiateWithPhoton(MainGameManager.GetInstance.board.blockParent, "Block", Vector3.right * 100).GetComponent<Block>();
+        }
+
         block.board = MainGameManager.GetInstance.board;
 
         //Set Breed

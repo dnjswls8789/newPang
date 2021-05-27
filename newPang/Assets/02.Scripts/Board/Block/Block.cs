@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public struct BlockPos
 {
@@ -36,6 +37,8 @@ public struct BlockPos
 }
 public class Block : MonoBehaviour
 {
+    public PhotonView pv;
+
     public Board board;
     [SerializeField] BlockConfig m_BlockConfig;
     SpriteRenderer m_SpriteRenderer;
@@ -141,9 +144,11 @@ public class Block : MonoBehaviour
 
     private void Awake()
     {
+        pv = GetComponent<PhotonView>();
         m_SpriteRenderer = GetComponent<SpriteRenderer>();
     }
 
+    [PunRPC]
     public void UpdateView()
     {
         switch (type)
@@ -211,16 +216,20 @@ public class Block : MonoBehaviour
         {
             //3. 블럭 GameObject 객체 삭제 or make size zero
             status = BlockStatus.CLEAR;
-            gameObject.InstantEnqueue();
+
             //InitBlock()
 
             if (MainGameManager.GetInstance.gameType == GameType.Battle)
             {
                 BattleSceneManager.GetInstance.AddScore(100);
+                gameObject.InstantEnqueue();
             }
             else
             {
-
+                if (pv.Owner == PhotonNetwork.LocalPlayer)
+                {
+                    pv.RPC("DeActivateObjectPool", RpcTarget.All);
+                }
             }
         }
         else

@@ -536,6 +536,92 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     }
 
 
+    //////////////////////////////// 협동 //////////////////////////////////////////////////////////////////////
+    public void JoinCoOpRoomWithCheckPhoton()
+    {
+        //if (!isMatching) return;
+
+        Debug.LogWarning("JoinCoOpRoomWithCheckPhoton");
+        //isMatching = true;
+        AllClearCallbackDelegate();
+
+        // 일반게임 매칭 돌리는데 방을 못찾았을 경우 콜백.
+        AddOnJoinRandomFailedCallback(RandomJoinNormalRoomFailed);
+
+        lobbyType = new TypedLobby("CoOpLobby", LobbyType.SqlLobby);
+
+        if (!PhotonNetwork.IsConnected)
+        {
+            // 서버 연결완료 콜백 // 에 방 찾는 함수 넣고 서버 연결 시도한다.
+            AddOnConnectedToMasterCallback(RandomJoinNormalRoom);
+            // 방 접속완료 콜백 // 게임 씬으로 넘어갔는지 체크하는 코루틴.
+            AddOnJoinedRoomCallback(() => { StartCoroutine("WaitGameStart"); });
+            JoinToMaster();
+        }
+        else
+        {
+            // 정상이면 서버에 연결 중인 경우는 없다. 안전하게 서버 연결 끊고 함수 다시 부른다.
+            AddOnDisconnectedCallback(JoinCoOpRoomWithCheckPhoton);
+            PhotonNetwork.Disconnect();
+        }
+    }
+
+    private void RandomJoinCoOpRoom()
+    {
+        //C0 : 게임 시작여부 뭔지 잘 모르겠음..
+        PhotonNetwork.JoinRandomRoom(null, 2, MatchmakingMode.RandomMatching, lobbyType, "C0 = 0");
+    }
+
+    private void MakeCoOpRoom()
+    {
+        Debug.LogWarning("MakeCoOpRoom");
+        AllClearCallbackDelegate();
+
+        // 방 만든 사람한테만 인원체크 후 게임시작 콜백 넣으면 ??
+        AddOnPlayerEnteredRoomCallback(PlayerNumberCheck);
+
+        roomOptions = new RoomOptions();
+        roomOptions.IsVisible = true;
+        roomOptions.MaxPlayers = 2;
+        roomOptions.PlayerTtl = 5000;
+        roomOptions.EmptyRoomTtl = 0;
+        roomOptions.CleanupCacheOnLeave = false;
+
+        roomOptions.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable() { { "C0", 0 } };
+        roomOptions.CustomRoomPropertiesForLobby = new string[] { "C0" };
+
+        currentRoomProperty = roomOptions.CustomRoomProperties;
+
+        PhotonNetwork.CreateRoom(null, roomOptions, lobbyType);
+    }
+
+    private void RandomJoinCoOpRoomFailed()
+    {
+        AllClearCallbackDelegate();
+
+        if (PhotonNetwork.IsConnected)
+        {
+            if (!PhotonNetwork.InRoom)
+            {
+                // 일반 게임 방 찾기 실패 했을 때, 서버에 정상적으로 연결 중이면 대기 중인 방이 없는 것. 내가 방 만든다.
+                MakeCoOpRoom();
+            }
+            else
+            {
+                // 방에 들어가있는 상태라면 뭔가 잘못된 것. 서버 연결 끊고 일반 매칭 처음부터 다시 시도.
+                AddOnDisconnectedCallback(JoinCoOpRoomWithCheckPhoton);
+                PhotonNetwork.Disconnect();
+            }
+        }
+        else
+        {
+            // 방 찾기 실패 했는데 서버 연결이 안돼있으면 // 서버 연결완료 콜백 // 에 일반게임 랜덤매칭 함수 넣고 서버 연결 시도. 연결 될 때까지 반복.
+            // 네트워크 멀쩡한데 포톤이 문제라서 서버 연결이 안될 땐???
+            AddOnConnectedToMasterCallback(RandomJoinCoOpRoom);
+            JoinToMaster();
+        }
+    }
+
     //////////////////////////////// 노말 //////////////////////////////////////////////////////////////////////
 
     public void JoinNormalRoomWithCheckPhoton()
@@ -948,7 +1034,14 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
             PhotonNetwork.CurrentRoom.SetCustomProperties(currentRoomProperty);
 
-            PhotonNetwork.LoadLevel(gameSceneName);
+            if (lobbyName == "NormalLooby")
+            {
+                PhotonNetwork.LoadLevel(gameSceneName);
+            }
+            else if (lobbyName == "CoOpLobby")
+            {
+                PhotonNetwork.LoadLevel("CoOpScene");
+            }
 
             if (newPlayer != PhotonNetwork.LocalPlayer)
             {

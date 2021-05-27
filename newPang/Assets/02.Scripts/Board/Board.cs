@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 [System.Serializable]
 public class TestBlocks
@@ -10,6 +11,7 @@ public class TestBlocks
 
 public class Board : MonoBehaviour
 {
+    public PhotonView pv;
     public TestBlocks[] testBlocks;
 
     public GameObject cellParent;
@@ -26,6 +28,11 @@ public class Board : MonoBehaviour
 
     Block[,] m_Blocks;
     public Block[,] blocks { get { return m_Blocks; } }
+
+    private void Awake()
+    {
+        pv = GetComponent<PhotonView>();
+    }
 
     public void InitBoard(int row, int col)
     {

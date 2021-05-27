@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Photon.Pun;
 
 public class Stage : MonoBehaviour
 {
+    public PhotonView pv;
+
     public Board board;
     public int maxRow { get { return board.maxRow; } }
     public int maxCol { get { return board.maxCol; } }
@@ -25,6 +28,11 @@ public class Stage : MonoBehaviour
     //Vector3 m_ClickPos;
     Vector3 m_CurPos;
     Cell m_ClickCell;
+
+    private void Awake()
+    {
+        pv = GetComponent<PhotonView>();
+    }
 
     public void InitStage(StageInfo _stageInfo)
     {
