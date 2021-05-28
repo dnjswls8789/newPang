@@ -23,7 +23,7 @@ public class StageBuilder
         //0. 스테이지 정보를 로드한다.(보드 크기, Cell/블럭 정보 등)
         m_StageInfo = LoadStage(m_nStage);
 
-        stage.InitStage(m_StageInfo);
+        stage.InitStage(m_StageInfo.row, m_StageInfo.col, m_StageInfo.blockCount);
 
         //2. Cell,Block 초기 값을 생성한다.
         for (int nCol = 0; nCol < m_StageInfo.col; nCol++)

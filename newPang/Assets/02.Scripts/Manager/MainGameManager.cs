@@ -11,6 +11,7 @@ public enum GameType
 public class MainGameManager : SingletonClass<MainGameManager>
 {
     public PhotonView pv;
+    bool host;
 
     public GameType gameType;
 
@@ -34,6 +35,7 @@ public class MainGameManager : SingletonClass<MainGameManager>
             case GameType.CoOp:
                 if (PhotonNetwork.IsMasterClient)
                 {
+                    host = true;
                     BuildStage(1);
                 }
                 break;
@@ -56,5 +58,15 @@ public class MainGameManager : SingletonClass<MainGameManager>
             board.AllShuffle();
             board.MatchingCheckShuffle();
         }
+    }
+
+    public bool IsHost()
+    {
+        return host;
+    }
+
+    public bool IsCoOpHost()
+    {
+        return gameType == GameType.CoOp && IsHost();
     }
 }

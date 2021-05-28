@@ -52,8 +52,11 @@ public class Board : MonoBehaviour
 
     private void Update()
     {
+        if (!MainGameManager.GetInstance.IsHost()) return;
+
         BoardUpdate();
 
+        ////////////////// 인스펙터에서 보기 위함 ///////////////////////
         for (int i = 0; i < maxCol; i++)
         {
             for (int j = 0; j < maxRow; j++)
@@ -61,6 +64,7 @@ public class Board : MonoBehaviour
                 testBlocks[j].block[i] = blocks[i, j];
             }
         }
+        ////////////////// 나중에 지우기 ////////////////////////////////
     }
 
     public void BoardUpdate()
@@ -1117,7 +1121,7 @@ public class Board : MonoBehaviour
 
         GameObject cc = gameObject.AddChildFromObjPool("CircleEffect", cells[row, col].transform.position, 1f);
 
-        StartCoroutine(CreateCircleCollision(row, col, 0.25f));
+        StartCoroutine(CreateCircleCollision(row, col, 0.2f));
 
         //cc.GetComponent<SpecialBlockCollision>().InitScale();
 

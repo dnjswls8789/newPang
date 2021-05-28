@@ -35,6 +35,7 @@ MonoBehaviour:
   RpcList:
   - CharacterInstantiate
   - ClickRpc
+  - DeActivateObjectPool
   - DestroyRpc
   - DestroySpaceship
   - Fire
@@ -43,8 +44,15 @@ MonoBehaviour:
   - RespawnSpaceship
   - SetEnemyScore
   - SetLoadSceneParam
-  - DeActivateObjectPool
   - UpdateView
+  - SetBlockBreed
+  - SetBlockType
+  - SetCellPosition
+  - SetIsDroping
+  - SetIsSwiping
+  - InitStage
+  - Move
+  - SetBoardBlock
   DisableAutoOpenWizard: 1
-  ShowSettings: 1
+  ShowSettings: 0
   DevRegionSetOnce: 1

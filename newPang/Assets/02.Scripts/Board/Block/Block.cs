@@ -60,17 +60,45 @@ public class Block : MonoBehaviour
     public BlockType type
     {
         get { return m_BlockType; }
-        set { m_BlockType = value; }
+        set 
+        {
+            if (MainGameManager.GetInstance.IsCoOpHost())
+            {
+                pv.RPC("SetBlockType", RpcTarget.Others, value);
+            }
+            m_BlockType = value;
+            UpdateView();
+        }
     }
+
+    [PunRPC]
+    public void SetBlockType(BlockType value)
+    {
+        m_BlockType = value;
+        UpdateView();
+    }
+
     public BlockBreed breed
     {
         get { return m_Breed; }
         set
         {
+            if (MainGameManager.GetInstance.IsCoOpHost())
+            {
+                pv.RPC("SetBlockBreed", RpcTarget.Others, value);
+            }
             m_Breed = value;
             UpdateView();
         }
     }
+
+    [PunRPC]
+    public void SetBlockBreed(BlockBreed value)
+    {
+        m_Breed = value;
+        UpdateView();
+    }
+
     public MatchType matchType
     {
         get { return m_MatchType; }
@@ -86,8 +114,14 @@ public class Block : MonoBehaviour
         get { return m_cellPosition; }
         set { m_cellPosition = value; }
     }
+
+    [PunRPC]
     public void SetCellPosition(int x, int y)
     {
+        if (MainGameManager.GetInstance.IsCoOpHost())
+        {
+            pv.RPC("SetCellPosition", RpcTarget.Others, x, y);
+        }
         cellPosition = new Vector2Int(x, y);
     }
 
@@ -100,26 +134,60 @@ public class Block : MonoBehaviour
     public bool isSwiping
     {
         get { return swiping; }
-        set { swiping = value; }
+        set 
+        { 
+            if(MainGameManager.GetInstance.IsCoOpHost())
+            {
+                pv.RPC("SetIsSwiping", RpcTarget.Others, value);
+            }
+            swiping = value; 
+        }
+    }
+
+    [PunRPC]
+    public void SetIsSwiping(bool value)
+    {
+        swiping = value;
     }
 
     public bool isDroping
     {
         get { return droping; }
-        set { droping = value; }
+        set 
+        {
+            if (MainGameManager.GetInstance.IsCoOpHost())
+            {
+                pv.RPC("SetIsDroping", RpcTarget.Others, value);
+            }
+            droping = value; 
+        }
     }
 
-    public void InitBlock(BlockBreed _breed, BlockType _type, Vector2Int position)
+    [PunRPC]
+    public void SetIsDroping(bool value)
     {
+        droping = value;
+    }
+
+    [PunRPC]
+    public void SetBoardBlock(int x, int y)
+    {
+        board.blocks[x, y] = this;
+    }
+
+    public void InitBlock(BlockBreed _breed, BlockType _type, int x, int y)
+    {
+        board = MainGameManager.GetInstance.board;
+
         status = BlockStatus.NORMAL;
+
+        breed = _breed;
 
         matchType = MatchType.NONE;
         type = _type;
         questType = BlockQuestType.CLEAR_SIMPLE;
 
-        breed = _breed;
-
-        cellPosition = position;
+        SetCellPosition(x, y);
 
         m_Durability = 1;
 
@@ -174,10 +242,20 @@ public class Block : MonoBehaviour
             default:
                 break;
         }
+
+        if (MainGameManager.GetInstance.IsCoOpHost())
+        {
+            pv.RPC("UpdateView", RpcTarget.Others);
+        }
     }
 
+    [PunRPC]
     public void Move(float x, float y)
     {
+        if (MainGameManager.GetInstance.IsCoOpHost())
+        {
+            pv.RPC("Move", RpcTarget.Others, x, y);
+        }
         transform.position = new Vector3(x, y);
     }
 
@@ -226,7 +304,7 @@ public class Block : MonoBehaviour
             }
             else
             {
-                if (pv.Owner == PhotonNetwork.LocalPlayer)
+                if (MainGameManager.GetInstance.IsCoOpHost())
                 {
                     pv.RPC("DeActivateObjectPool", RpcTarget.All);
                 }
@@ -407,8 +485,10 @@ public class Block : MonoBehaviour
         switch (questType)
         {
             case BlockQuestType.NONE:
+                type = BlockType.BASIC;
                 break;
             case BlockQuestType.CLEAR_SIMPLE:
+                type = BlockType.BASIC;
                 break;
             case BlockQuestType.CLEAR_HORZ:
                 type = BlockType.HORZ;
@@ -420,6 +500,7 @@ public class Block : MonoBehaviour
                 type = BlockType.CIRCLE;
                 break;
             case BlockQuestType.CLEAR_LAZER:
+                type = BlockType.LAZER;
                 break;
             case BlockQuestType.CLEAR_HORZ_BUFF:
                 break;
@@ -433,8 +514,8 @@ public class Block : MonoBehaviour
                 break;
         }
 
-
         UpdateView();
+
     }
     public void Quest()
     {

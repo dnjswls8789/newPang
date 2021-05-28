@@ -34,10 +34,16 @@ public class Stage : MonoBehaviour
         pv = GetComponent<PhotonView>();
     }
 
-    public void InitStage(StageInfo _stageInfo)
+    [PunRPC]
+    public void InitStage(int row, int col, int blockCount)
     {
-        board.InitBoard(_stageInfo.row, _stageInfo.col);
-        m_BlockCount = _stageInfo.blockCount;
+        if (MainGameManager.GetInstance.IsCoOpHost())
+        {
+            pv.RPC("InitStage", RpcTarget.Others, row, col, blockCount);
+        }
+
+        board.InitBoard(row, col);
+        m_BlockCount = blockCount;
 
         m_InputManager = new InputManager(transform);
     }
