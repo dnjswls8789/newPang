@@ -246,7 +246,9 @@ public class ObjectPoolTimer : MonoBehaviour
             pv.ViewID = 0;
         }
         //
-
+        //
+        StopAllCoroutines();
+        //
         linkedGameObject.PoolingSwitch(false);
 
         //풀 부모 오브젝트로 반환

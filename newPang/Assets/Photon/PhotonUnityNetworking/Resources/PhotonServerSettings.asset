@@ -33,17 +33,22 @@ MonoBehaviour:
   RunInBackground: 1
   StartInOfflineMode: 0
   RpcList:
+  - CharacterInstantiate
   - ClickRpc
+  - DeActivateObjectPool
   - DestroyRpc
   - DestroySpaceship
+  - DoSwipeAction
   - Fire
-  - RespawnSpaceship
-  - CharacterInstantiate
-  - DeActivateObjectPool
   - InitializeObjPoolWithPhoton
   - InitStage
   - InstantiatePrefabWithPhoton
   - Move
+  - MoveTo
+  - RespawnSpaceship
+  - RPCMoveToAction
+  - RPCScaleAction
+  - Scale
   - SetBlockBreed
   - SetBlockType
   - SetBoardBlock
@@ -52,13 +57,8 @@ MonoBehaviour:
   - SetIsDroping
   - SetIsSwiping
   - SetLoadSceneParam
-  - UpdateView
-  - RPCMoveToAction
-  - RPCScaleAction
   - SetScale
-  - MoveTo
-  - Scale
-  - DoSwipeAction
+  - UpdateView
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

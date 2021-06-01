@@ -13,15 +13,19 @@ public class SpecialBlockCollision : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        if (MainGameManager.GetInstance.IsCoOpRemote()) return;
         if (collision.gameObject.CompareTag("Block"))
         {
             Block block = collision.gameObject.GetComponent<Block>();
 
-            // 이 블럭이 보드 안에 있는지 체크해야한다.
             if (block != null && block.IsClearable())
             {
-                block.status = BlockStatus.MATCH;
-                block.DoActionClear(true);
+                    // 이 블럭이 보드 안에 있는지 체크해야한다.
+                if (MainGameManager.GetInstance.stage.IsInsideBoard(block.transform.position))
+                {
+                    block.status = BlockStatus.MATCH;
+                    block.DoActionClear(true);
+                }
             }
 
         }

@@ -300,8 +300,8 @@ public class Board : MonoBehaviour
 
             yield return new WaitForSeconds(Constants.SWIPE_DURATION);
 
-            blocks[nRow, nCol].Move(initX + nRow, initY + nCol);
-            blocks[nSwipeRow, nSwipeCol].Move(initX + nSwipeRow, initY + nSwipeCol);
+            //blocks[nRow, nCol].Move(initX + nRow, initY + nCol);
+            //blocks[nSwipeRow, nSwipeCol].Move(initX + nSwipeRow, initY + nSwipeCol);
 
             baseBlock.isSwiping = false;
             targetBlock.isSwiping = false;
@@ -346,8 +346,8 @@ public class Board : MonoBehaviour
 
                 yield return new WaitForSeconds(Constants.SWIPE_DURATION);
 
-                blocks[nRow, nCol]?.Move(initX + nRow, initY + nCol);
-                blocks[nSwipeRow, nSwipeCol]?.Move(initX + nSwipeRow, initY + nSwipeCol);
+                //blocks[nRow, nCol]?.Move(initX + nRow, initY + nCol);
+                //blocks[nSwipeRow, nSwipeCol]?.Move(initX + nSwipeRow, initY + nSwipeCol);
 
                 baseBlock.isSwiping = false;
                 targetBlock.isSwiping = false;

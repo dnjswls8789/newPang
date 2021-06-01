@@ -138,7 +138,7 @@ public class Block : MonoBehaviour
         { 
             if(MainGameManager.GetInstance.IsCoOpHost())
             {
-                pv.RPC("SetIsSwiping", RpcTarget.Others, value);
+                //pv.RPC("SetIsSwiping", RpcTarget.Others, value);
             }
             swiping = value; 
         }
@@ -157,7 +157,7 @@ public class Block : MonoBehaviour
         {
             if (MainGameManager.GetInstance.IsCoOpHost())
             {
-                pv.RPC("SetIsDroping", RpcTarget.Others, value);
+                //pv.RPC("SetIsDroping", RpcTarget.Others, value);
             }
             droping = value; 
         }
@@ -205,12 +205,13 @@ public class Block : MonoBehaviour
     [PunRPC]
     public void SetScale(Vector3 scale)
     {
+        transform.localScale = scale;
+
         if (scaleCoroutine != null)
         {
             StopCoroutine(scaleCoroutine);
             scaleCoroutine = null;
         }
-        transform.localScale = scale;
     }
 
     public void ChangeBlock()
@@ -285,6 +286,8 @@ public class Block : MonoBehaviour
 
     public void DoActionClear(bool bDestroy, System.Action callBack = null)
     {
+        if (MainGameManager.GetInstance.IsCoOpRemote()) return;
+
         if (gameObject.activeSelf)
         {
             StartCoroutine(CoStartSimpleExplosion(bDestroy, callBack));
@@ -299,9 +302,9 @@ public class Block : MonoBehaviour
         //1. 크기가 줄어드는 액션 실행한다 : 폭파되면서 자연스럽게 소멸되는 모양 연출, 1 -> 0.3으로 줄어든다.
         if (MainGameManager.GetInstance.IsCoOpHost())
         {
-            pv.RPC("RPCScaleAction", RpcTarget.Others, Constants.BLOCK_DESTROY_SCALE, 0.2f);
+            pv.RPC("RPCScaleAction", RpcTarget.Others, Constants.BLOCK_DESTROY_SCALE, 0.2f, bDestroy);
         }
-        yield return Action2D.Scale(transform, Constants.BLOCK_DESTROY_SCALE, 0.2f);
+        yield return Action2D.Scale(transform, Constants.BLOCK_DESTROY_SCALE, 0.2f, bDestroy);
 
         //2. 폭파시키는 효과 연출 : 블럭 자체의 Clear 효과를 연출한다.
         //GameObject explosionObj = MainGameManager.GetInstance.gameObject.AddChildFromObjPool(m_BlockConfig.GetExplosionObject(questType).name, 2f);
@@ -356,7 +359,7 @@ public class Block : MonoBehaviour
 
     Coroutine scaleCoroutine;
     [PunRPC]
-    public void RPCScaleAction(float toScale, float duration)
+    public void RPCScaleAction(float toScale, float duration, bool bSelfRemove)
     {
         if (scaleCoroutine != null)
         {
@@ -364,7 +367,7 @@ public class Block : MonoBehaviour
             scaleCoroutine = null;
         }
 
-        scaleCoroutine = StartCoroutine(Action2D.Scale(transform, toScale, duration));
+        scaleCoroutine = StartCoroutine(Action2D.Scale(transform, toScale, duration, bSelfRemove));
     }
 
     public void BlockDropCheck()
@@ -428,7 +431,7 @@ public class Block : MonoBehaviour
             baseBlock.pv.RPC("RPCMoveToAction", RpcTarget.Others, to, duration);
         }
 
-        targetBlock?.Move(initX + targetBlock.cellPosition.x, initY + targetBlock.cellPosition.y);
+        //targetBlock?.Move(initX + targetBlock.cellPosition.x, initY + targetBlock.cellPosition.y);
 
         yield return new WaitForSeconds(duration);
 

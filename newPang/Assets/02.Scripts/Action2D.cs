@@ -29,7 +29,7 @@ public static class Action2D
         target.transform.position = to;
 
         if (bSelfRemove)
-            Object.Destroy(target.gameObject, 0.1f);
+            target.gameObject.InstantEnqueue();
 
         yield break;
 
@@ -39,7 +39,7 @@ public static class Action2D
      * param toScale 커지는(줄어지는) 크기, 예를 들어, 0.5인 경우 현재 크기에서 절반으로 줄어든다.
      * param speed 초당 커지는 속도. 예를 들어, 2인 경우 초당 2배 만큼 커지거나 줄어든다. 
      */
-    public static IEnumerator Scale(Transform target, float toScale, float duration)
+    public static IEnumerator Scale(Transform target, float toScale, float duration, bool bSelfRemove = false)
     {
         ////1. 방향 결정 : 커지는 방향이면 +, 줄어드는 방향이면 -
         //bool bInc = target.localScale.x < toScale;
@@ -72,6 +72,9 @@ public static class Action2D
         }
 
         target.localScale = endScale;
+
+        //if (bSelfRemove)
+            //target.gameObject.InstantEnqueue();
 
         yield break;
     }
