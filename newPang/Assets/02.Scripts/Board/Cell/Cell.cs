@@ -1,9 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class Cell : MonoBehaviour
 {
+    public PhotonView pv;
     SpriteRenderer m_SpriteRenderer;
 
     public Vector2Int m_cellPosition;
@@ -12,8 +14,14 @@ public class Cell : MonoBehaviour
         get { return m_cellPosition; }
         set { m_cellPosition = value; }
     }
+
+    [PunRPC]
     public void SetCellPosition(int x, int y)
     {
+        if (MainGameManager.GetInstance.IsCoOpHost())
+        {
+            pv.RPC("SetCellPosition", RpcTarget.Others, x, y);
+        }
         cellPosition = new Vector2Int(x, y);
     }
 
@@ -31,6 +39,7 @@ public class Cell : MonoBehaviour
 
     private void Awake()
     {
+        pv = GetComponent<PhotonView>();
         m_SpriteRenderer = GetComponent<SpriteRenderer>();
 
         //UpdateView();

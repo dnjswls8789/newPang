@@ -30,6 +30,7 @@ public class MainGameManager : SingletonClass<MainGameManager>
         switch (gameType)
         {
             case GameType.Battle:
+                host = true;
                 BuildStage(1);
                 break;
             case GameType.CoOp:
@@ -68,5 +69,10 @@ public class MainGameManager : SingletonClass<MainGameManager>
     public bool IsCoOpHost()
     {
         return gameType == GameType.CoOp && IsHost();
+    }
+
+    public bool IsCoOpRemote()
+    {
+        return gameType == GameType.CoOp && !IsHost();
     }
 }

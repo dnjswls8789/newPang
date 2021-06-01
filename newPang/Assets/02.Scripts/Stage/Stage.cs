@@ -88,7 +88,14 @@ public class Stage : MonoBehaviour
             {
                 if (m_ClickCell != null)
                 {
-                    board.DoSwipeAction(m_ClickCell.cellPosition.x, m_ClickCell.cellPosition.y, swipeDir);
+                    if (MainGameManager.GetInstance.IsCoOpRemote())
+                    {
+                        board.pv.RPC("DoSwipeAction", RpcTarget.Others, m_ClickCell.cellPosition.x, m_ClickCell.cellPosition.y, swipeDir);
+                    }
+                    else
+                    {
+                        board.DoSwipeAction(m_ClickCell.cellPosition.x, m_ClickCell.cellPosition.y, swipeDir);
+                    }
                 }
                 m_TouchDown = false;   //클릭 상태 플래그 OFF
             }

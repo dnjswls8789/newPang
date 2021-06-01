@@ -3,41 +3,11 @@
     "m_SelectedPackage": {
         "deviceId": "LMG710Ne88b2b42",
         "name": "com.onwStudio.Pang",
-        "processId": 27071,
+        "processId": 7003,
         "exited": false
     },
     "m_SelectedPriority": 0,
     "m_KnownPackagesForSerialization": [
-        {
-            "deviceId": "LMG710Ne88b2b42",
-            "name": "com.onwStudio.Pang",
-            "processId": 17237,
-            "exited": true
-        },
-        {
-            "deviceId": "LMG710Ne88b2b42",
-            "name": "com.onwStudio.Pang",
-            "processId": 18452,
-            "exited": true
-        },
-        {
-            "deviceId": "LMG710Ne88b2b42",
-            "name": "com.onwStudio.Pang",
-            "processId": 19446,
-            "exited": true
-        },
-        {
-            "deviceId": "LMG710Ne88b2b42",
-            "name": "com.onwStudio.Pang",
-            "processId": 19805,
-            "exited": true
-        },
-        {
-            "deviceId": "LMG710Ne88b2b42",
-            "name": "com.onwStudio.Pang",
-            "processId": 19967,
-            "exited": true
-        },
         {
             "deviceId": "LMG710Ne88b2b42",
             "name": "com.lge.launcher3",
@@ -47,13 +17,37 @@
         {
             "deviceId": "LMG710Ne88b2b42",
             "name": "com.onwStudio.Pang",
-            "processId": 23013,
-            "exited": false
+            "processId": 687,
+            "exited": true
         },
         {
             "deviceId": "LMG710Ne88b2b42",
             "name": "com.onwStudio.Pang",
-            "processId": 27071,
+            "processId": 2169,
+            "exited": true
+        },
+        {
+            "deviceId": "LMG710Ne88b2b42",
+            "name": "com.onwStudio.Pang",
+            "processId": 2556,
+            "exited": true
+        },
+        {
+            "deviceId": "LMG710Ne88b2b42",
+            "name": "com.onwStudio.Pang",
+            "processId": 3214,
+            "exited": true
+        },
+        {
+            "deviceId": "LMG710Ne88b2b42",
+            "name": "com.onwStudio.Pang",
+            "processId": 6515,
+            "exited": true
+        },
+        {
+            "deviceId": "LMG710Ne88b2b42",
+            "name": "com.onwStudio.Pang",
+            "processId": 7003,
             "exited": false
         }
     ],

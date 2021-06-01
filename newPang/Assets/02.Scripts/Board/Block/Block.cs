@@ -195,6 +195,22 @@ public class Block : MonoBehaviour
         isDroping = false;
 
         transform.localScale = Vector3.one;
+
+        if (MainGameManager.GetInstance.IsCoOpHost())
+        {
+            pv.RPC("SetScale", RpcTarget.Others, Vector3.one);
+        }
+    }
+
+    [PunRPC]
+    public void SetScale(Vector3 scale)
+    {
+        if (scaleCoroutine != null)
+        {
+            StopCoroutine(scaleCoroutine);
+            scaleCoroutine = null;
+        }
+        transform.localScale = scale;
     }
 
     public void ChangeBlock()
@@ -208,6 +224,11 @@ public class Block : MonoBehaviour
         m_Durability = 1;
 
         transform.localScale = Vector3.one;
+
+        if (MainGameManager.GetInstance.IsCoOpHost())
+        {
+            pv.RPC("SetScale", RpcTarget.Others, Vector3.one);
+        }
     }
 
     private void Awake()
@@ -276,15 +297,23 @@ public class Block : MonoBehaviour
     IEnumerator CoStartSimpleExplosion(bool bDestroy, System.Action callBack)
     {
         //1. 크기가 줄어드는 액션 실행한다 : 폭파되면서 자연스럽게 소멸되는 모양 연출, 1 -> 0.3으로 줄어든다.
+        if (MainGameManager.GetInstance.IsCoOpHost())
+        {
+            pv.RPC("RPCScaleAction", RpcTarget.Others, Constants.BLOCK_DESTROY_SCALE, 0.2f);
+        }
         yield return Action2D.Scale(transform, Constants.BLOCK_DESTROY_SCALE, 0.2f);
 
         //2. 폭파시키는 효과 연출 : 블럭 자체의 Clear 효과를 연출한다.
-        GameObject explosionObj = MainGameManager.GetInstance.gameObject.AddChildFromObjPool(m_BlockConfig.GetExplosionObject(questType).name, 2f);
-        ParticleSystem.MainModule newModule = explosionObj.GetComponent<ParticleSystem>().main;
-        newModule.startColor = m_BlockConfig.GetBlockColor(breed);
+        //GameObject explosionObj = MainGameManager.GetInstance.gameObject.AddChildFromObjPool(m_BlockConfig.GetExplosionObject(questType).name, 2f);
+        GameObject explosionObj = PhotonManager.GetInstance.InstantiateWithPhoton(MainGameManager.GetInstance.gameObject,
+            m_BlockConfig.GetSimpleExplosionEffect(breed).name,
+            transform.position,
+            2f);
+        //ParticleSystem.MainModule newModule = explosionObj.GetComponent<ParticleSystem>().main;
+        //newModule.startColor = m_BlockConfig.GetBlockColor(breed);
 
-        explosionObj.SetActive(true);
-        explosionObj.transform.position = transform.position;
+        //explosionObj.SetActive(true);
+        //explosionObj.transform.position = transform.position;
 
         Quest();
 
@@ -316,6 +345,26 @@ public class Block : MonoBehaviour
         }
 
         callBack?.Invoke();
+    }
+
+    [PunRPC]
+    public void RPCMoveToAction(Vector3 to, float duration)
+    {
+        StartCoroutine(Action2D.MoveTo(transform, to, duration));
+    }
+
+
+    Coroutine scaleCoroutine;
+    [PunRPC]
+    public void RPCScaleAction(float toScale, float duration)
+    {
+        if (scaleCoroutine != null)
+        {
+            StopCoroutine(scaleCoroutine);
+            scaleCoroutine = null;
+        }
+
+        scaleCoroutine = StartCoroutine(Action2D.Scale(transform, toScale, duration));
     }
 
     public void BlockDropCheck()
@@ -371,7 +420,14 @@ public class Block : MonoBehaviour
         board.blocks[baseBlock.cellPosition.x, baseBlock.cellPosition.y] = baseBlock;
         board.blocks[targetBlock.cellPosition.x, targetBlock.cellPosition.y] = targetBlock;
 
-        StartCoroutine(Action2D.MoveTo(baseBlock.transform, new Vector3(initX + baseBlock.cellPosition.x, initY + baseBlock.cellPosition.y), duration));
+        Vector3 to = new Vector3(initX + baseBlock.cellPosition.x, initY + baseBlock.cellPosition.y);
+        StartCoroutine(Action2D.MoveTo(baseBlock.transform, to, duration));
+
+        if (MainGameManager.GetInstance.IsCoOpHost())
+        {
+            baseBlock.pv.RPC("RPCMoveToAction", RpcTarget.Others, to, duration);
+        }
+
         targetBlock?.Move(initX + targetBlock.cellPosition.x, initY + targetBlock.cellPosition.y);
 
         yield return new WaitForSeconds(duration);
@@ -395,7 +451,12 @@ public class Block : MonoBehaviour
 
         board.blocks[cellPosition.x, cellPosition.y] = this;
 
-        StartCoroutine(Action2D.MoveTo(transform, new Vector3(initX + cellPosition.x, initY + cellPosition.y), duration));
+        Vector3 to = new Vector3(initX + cellPosition.x, initY + cellPosition.y);
+        StartCoroutine(Action2D.MoveTo(transform, to, duration));
+        if (MainGameManager.GetInstance.IsCoOpHost())
+        {
+            pv.RPC("RPCMoveToAction", RpcTarget.Others, to, duration);
+        }
 
         yield return new WaitForSeconds(duration);
 

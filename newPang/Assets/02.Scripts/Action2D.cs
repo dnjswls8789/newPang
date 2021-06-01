@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public static class Action2D
 {
@@ -12,6 +13,7 @@ public static class Action2D
      * @param duration 이동 시간
      * @param bSelfRemove 애니메이션 종류 후 타겟 GameObject 삭제 여부 플래그
      */
+
     public static IEnumerator MoveTo(Transform target, Vector3 to, float duration, bool bSelfRemove = false)
     {
         Vector2 startPos = target.transform.position;

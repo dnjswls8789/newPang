@@ -13,6 +13,7 @@ public class BlockConfig : ScriptableObject
     public Sprite[] circleBlockSprites;
     public Color[] blockColors;
     public GameObject[] explosion;
+    public GameObject[] simpleExplosionColor;
 
     public GameObject GetExplosionObject(BlockQuestType questType)
     {
@@ -27,15 +28,15 @@ public class BlockConfig : ScriptableObject
 
     }
 
-    public Color GetBlockColor(BlockBreed breed)
+    public GameObject GetSimpleExplosionEffect(BlockBreed breed)
     {
         if ((int)breed < 0)
         {
-            return Color.white;
+            return explosion[0];
         }
         else
         {
-            return blockColors[(int)breed];
+            return simpleExplosionColor[(int)breed];
         }
     }
 }

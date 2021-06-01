@@ -245,6 +245,7 @@ public class Board : MonoBehaviour
         return -m_Row / 2.0f + offset;
     }
 
+    [PunRPC]
     public void DoSwipeAction(int nRow, int nCol, Swipe swipeDir)
     {
         StartCoroutine(CoDoSwipeAction(nRow, nCol, swipeDir));
@@ -280,6 +281,12 @@ public class Board : MonoBehaviour
 
             StartCoroutine(Action2D.MoveTo(baseBlock.transform, targetPos, Constants.SWIPE_DURATION));
             StartCoroutine(Action2D.MoveTo(targetBlock.transform, basePos, Constants.SWIPE_DURATION));
+
+            if (MainGameManager.GetInstance.IsCoOpHost())
+            {
+                baseBlock.pv.RPC("RPCMoveToAction", RpcTarget.Others, targetPos, Constants.SWIPE_DURATION);
+                targetBlock.pv.RPC("RPCMoveToAction", RpcTarget.Others, basePos, Constants.SWIPE_DURATION);
+            }
 
             baseBlock.isSwiping = true;
             targetBlock.isSwiping = true;
@@ -320,6 +327,12 @@ public class Board : MonoBehaviour
 
                 StartCoroutine(Action2D.MoveTo(baseBlock.transform, targetPos, Constants.SWIPE_DURATION));
                 StartCoroutine(Action2D.MoveTo(targetBlock.transform, basePos, Constants.SWIPE_DURATION));
+
+                if (MainGameManager.GetInstance.IsCoOpHost())
+                {
+                    baseBlock.pv.RPC("RPCMoveToAction", RpcTarget.Others, targetPos, Constants.SWIPE_DURATION);
+                    targetBlock.pv.RPC("RPCMoveToAction", RpcTarget.Others, basePos, Constants.SWIPE_DURATION);
+                }
 
                 baseBlock.isSwiping = true;
                 targetBlock.isSwiping = true;
@@ -1066,14 +1079,39 @@ public class Board : MonoBehaviour
     {
         if (row < 0 || row >= maxRow || col < 0 || col >= maxCol) return;
 
-        GameObject cl = gameObject.AddChildFromObjPool("VerticalCollision", cells[row, col].transform.position, 0.4f);
-        GameObject cr = gameObject.AddChildFromObjPool("VerticalCollision", cells[row, col].transform.position, 0.4f);
+        GameObject cl = PhotonManager.GetInstance.InstantiateWithPhoton(gameObject,
+            "VerticalCollision",
+            cells[row, col].transform.position,
+            0.4f);
+        GameObject cr = PhotonManager.GetInstance.InstantiateWithPhoton(gameObject,
+            "VerticalCollision",
+            cells[row, col].transform.position,
+            0.4f);
+
+        //GameObject cl = gameObject.AddChildFromObjPool("VerticalCollision", cells[row, col].transform.position, 0.4f);
+        //GameObject cr = gameObject.AddChildFromObjPool("VerticalCollision", cells[row, col].transform.position, 0.4f);
 
         //cl.GetComponent<SpecialBlockCollision>().InitScale();
         //cr.GetComponent<SpecialBlockCollision>().InitScale();
 
         StartCoroutine(Action2D.MoveTo(cl.transform, cl.transform.position + Vector3.left * 10, 0.4f));
         StartCoroutine(Action2D.MoveTo(cr.transform, cr.transform.position + Vector3.right * 10, 0.4f));
+
+        if (MainGameManager.GetInstance.IsCoOpHost())
+        {
+            ActionMono cla = cl.GetComponent<ActionMono>();
+            ActionMono cra = cr.GetComponent<ActionMono>();
+
+            if (cla != null)
+            {
+                cla.pv.RPC("MoveTo", RpcTarget.Others, cl.transform.position + Vector3.left * 10, 0.4f);
+            }
+
+            if (cra != null)
+            {
+                cra.pv.RPC("MoveTo", RpcTarget.Others, cr.transform.position + Vector3.right * 10, 0.4f);
+            }
+        }
     }
 
     //public void ClearHorz(int row)
@@ -1091,14 +1129,39 @@ public class Board : MonoBehaviour
     {
         if (row < 0 || row >= maxRow || col < 0 || col >= maxCol) return;
 
-        GameObject ct = gameObject.AddChildFromObjPool("HorizonCollision", cells[row, col].transform.position, 0.4f);
-        GameObject cb = gameObject.AddChildFromObjPool("HorizonCollision", cells[row, col].transform.position, 0.4f);
+        GameObject ct = PhotonManager.GetInstance.InstantiateWithPhoton(gameObject,
+            "HorizonCollision",
+            cells[row, col].transform.position,
+            0.4f);
+        GameObject cb = PhotonManager.GetInstance.InstantiateWithPhoton(gameObject,
+            "HorizonCollision",
+            cells[row, col].transform.position,
+            0.4f);
+
+        //GameObject ct = gameObject.AddChildFromObjPool("HorizonCollision", cells[row, col].transform.position, 0.4f);
+        //GameObject cb = gameObject.AddChildFromObjPool("HorizonCollision", cells[row, col].transform.position, 0.4f);
 
         //ct.GetComponent<SpecialBlockCollision>().InitScale();
         //cb.GetComponent<SpecialBlockCollision>().InitScale();
 
         StartCoroutine(Action2D.MoveTo(ct.transform, ct.transform.position + Vector3.up * 10, 0.4f));
         StartCoroutine(Action2D.MoveTo(cb.transform, cb.transform.position + Vector3.down * 10, 0.4f));
+
+        if (MainGameManager.GetInstance.IsCoOpHost())
+        {
+            ActionMono cta = ct.GetComponent<ActionMono>();
+            ActionMono cba = cb.GetComponent<ActionMono>();
+
+            if (cta != null)
+            {
+                cta.pv.RPC("MoveTo", RpcTarget.Others, ct.transform.position + Vector3.up * 10, 0.4f);
+            }
+
+            if (cba != null)
+            {
+                cba.pv.RPC("MoveTo", RpcTarget.Others, cb.transform.position + Vector3.down * 10, 0.4f);
+            }
+        }
     }
 
     //public void ClearCircle(int row, int col)
@@ -1119,7 +1182,11 @@ public class Board : MonoBehaviour
     {
         if (row < 0 || row >= maxRow || col < 0 || col >= maxCol) return;
 
-        GameObject cc = gameObject.AddChildFromObjPool("CircleEffect", cells[row, col].transform.position, 1f);
+        GameObject cc = PhotonManager.GetInstance.InstantiateWithPhoton(gameObject,
+            "CircleEffect",
+            cells[row, col].transform.position,
+            1f);
+        //GameObject cc = gameObject.AddChildFromObjPool("CircleEffect", cells[row, col].transform.position, 1f);
 
         StartCoroutine(CreateCircleCollision(row, col, 0.2f));
 
@@ -1139,7 +1206,11 @@ public class Board : MonoBehaviour
     {
         if (row < 0 || row >= maxRow || col < 0 || col >= maxCol) return;
 
-        gameObject.AddChildFromObjPool("CircleDoubleEffect", cells[row, col].transform.position, 1f);
+        PhotonManager.GetInstance.InstantiateWithPhoton(gameObject,
+            "CircleDoubleEffect",
+            cells[row, col].transform.position,
+            1f);
+        //gameObject.AddChildFromObjPool("CircleDoubleEffect", cells[row, col].transform.position, 1f);
 
         StartCoroutine(CreateCircleDoubleCollision(row, col, 0.25f));
     }
