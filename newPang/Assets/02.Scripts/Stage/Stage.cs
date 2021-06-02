@@ -112,54 +112,54 @@ public class Stage : MonoBehaviour
 
     }
 
-    void OnInputHandler()
-    {
-        //1. Touch Down 
-        if (!m_bTouchDown && m_InputManager.isTouchDown)
-        {
-            //1.1 보드 기준 Local 좌표를 구한다.
-            Vector2 point = m_InputManager.touch2BoardPosition;
-
-            //1.2 Play 영역(보드)에서 클릭하지 않는 경우는 무시
-            if (!IsInsideBoard(point))
-                return;
-
-            //1.3 클릭한 위치의 블럭이 스왑 가능한지.
-            BlockPos blockPos;
-            if (IsOnValideBlock(point, out blockPos))
-            {
-                //1.3.1 유효한(스와이프 가능한) 블럭에서 클릭한 경우
-                m_bTouchDown = true;        //클릭 상태 플래그 ON
-                m_BlockDownPos = blockPos;  //클릭한 블럭의 위치(row, col) 저장
-                m_ClickPos = point;         //클릭한 Local 좌표 저장
-                                            //Debug.Log($"Mouse Down In Board : (blockPos})");
-
-            }
-        }
-        //2. Touch UP : 유효한 블럭 위에서 Down 후에만 UP 이벤트 처리
-        else if (m_bTouchDown)// && m_InputManager.isTouchUp)
-        {
-            //2.1 보드 기준 Local 좌표를 구한다.
-            Vector2 point = m_InputManager.touch2BoardPosition;
-
-            //2.2 스와이프 방향을 구한다.
-            Swipe swipeDir = m_InputManager.EvalSwipeDir(m_ClickPos, point);
-
-            //Debug.Log($"Swipe : {swipeDir} , Block = {m_BlockDownPos}");
-
-            if (swipeDir != Swipe.NA)
-            {
-                board.DoSwipeAction(m_BlockDownPos.row, m_BlockDownPos.col, swipeDir);
-                m_bTouchDown = false;   //클릭 상태 플래그 OFF
-            }
-
-        }
-
-        if (m_bTouchDown && m_InputManager.isTouchUp)
-        {
-            m_bTouchDown = false;   //클릭 상태 플래그 OFF
-        }
-    }
+    //void OnInputHandler()
+    //{
+    //    //1. Touch Down 
+    //    if (!m_bTouchDown && m_InputManager.isTouchDown)
+    //    {
+    //        //1.1 보드 기준 Local 좌표를 구한다.
+    //        Vector2 point = m_InputManager.touch2BoardPosition;
+    //
+    //        //1.2 Play 영역(보드)에서 클릭하지 않는 경우는 무시
+    //        if (!IsInsideBoard(point))
+    //            return;
+    //
+    //        //1.3 클릭한 위치의 블럭이 스왑 가능한지.
+    //        BlockPos blockPos;
+    //        if (IsOnValideBlock(point, out blockPos))
+    //        {
+    //            //1.3.1 유효한(스와이프 가능한) 블럭에서 클릭한 경우
+    //            m_bTouchDown = true;        //클릭 상태 플래그 ON
+    //            m_BlockDownPos = blockPos;  //클릭한 블럭의 위치(row, col) 저장
+    //            m_ClickPos = point;         //클릭한 Local 좌표 저장
+    //                                        //Debug.Log($"Mouse Down In Board : (blockPos})");
+    //
+    //        }
+    //    }
+    //    //2. Touch UP : 유효한 블럭 위에서 Down 후에만 UP 이벤트 처리
+    //    else if (m_bTouchDown)// && m_InputManager.isTouchUp)
+    //    {
+    //        //2.1 보드 기준 Local 좌표를 구한다.
+    //        Vector2 point = m_InputManager.touch2BoardPosition;
+    //
+    //        //2.2 스와이프 방향을 구한다.
+    //        Swipe swipeDir = m_InputManager.EvalSwipeDir(m_ClickPos, point);
+    //
+    //        //Debug.Log($"Swipe : {swipeDir} , Block = {m_BlockDownPos}");
+    //
+    //        if (swipeDir != Swipe.NA)
+    //        {
+    //            board.DoSwipeAction(m_BlockDownPos.row, m_BlockDownPos.col, swipeDir);
+    //            m_bTouchDown = false;   //클릭 상태 플래그 OFF
+    //        }
+    //
+    //    }
+    //
+    //    if (m_bTouchDown && m_InputManager.isTouchUp)
+    //    {
+    //        m_bTouchDown = false;   //클릭 상태 플래그 OFF
+    //    }
+    //}
 
     /*
          * 보드안에서 발생한 이벤트인지 체크한다       

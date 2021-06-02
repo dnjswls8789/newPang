@@ -13,7 +13,6 @@ public class SpecialBlockCollision : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (MainGameManager.GetInstance.IsCoOpRemote()) return;
         if (collision.gameObject.CompareTag("Block"))
         {
             Block block = collision.gameObject.GetComponent<Block>();

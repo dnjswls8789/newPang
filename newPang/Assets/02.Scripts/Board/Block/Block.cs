@@ -138,7 +138,7 @@ public class Block : MonoBehaviour
         { 
             if(MainGameManager.GetInstance.IsCoOpHost())
             {
-                //pv.RPC("SetIsSwiping", RpcTarget.Others, value);
+                pv.RPC("SetIsSwiping", RpcTarget.Others, value);
             }
             swiping = value; 
         }
@@ -157,7 +157,7 @@ public class Block : MonoBehaviour
         {
             if (MainGameManager.GetInstance.IsCoOpHost())
             {
-                //pv.RPC("SetIsDroping", RpcTarget.Others, value);
+                pv.RPC("SetIsDroping", RpcTarget.Others, value);
             }
             droping = value; 
         }
@@ -350,10 +350,17 @@ public class Block : MonoBehaviour
         callBack?.Invoke();
     }
 
+    Coroutine moveToCoroutine;
     [PunRPC]
     public void RPCMoveToAction(Vector3 to, float duration)
     {
-        StartCoroutine(Action2D.MoveTo(transform, to, duration));
+        if (moveToCoroutine != null)
+        {
+            StopCoroutine(moveToCoroutine);
+            moveToCoroutine = null;
+        }
+
+        moveToCoroutine = StartCoroutine(Action2D.MoveTo(transform, to, duration));
     }
 
 

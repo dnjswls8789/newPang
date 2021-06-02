@@ -13,9 +13,22 @@ public static class Action2D
      * @param duration 이동 시간
      * @param bSelfRemove 애니메이션 종류 후 타겟 GameObject 삭제 여부 플래그
      */
+    //static bool[] c = new bool[10000];
 
     public static IEnumerator MoveTo(Transform target, Vector3 to, float duration, bool bSelfRemove = false)
     {
+        //bool s = false;
+        //PhotonView pv = target.GetComponent<PhotonView>();
+        //if (pv != null)
+        //{
+        //    if (c[pv.ViewID])
+        //    {
+        //        Debug.LogError(pv.ViewID + " / 진행 중");
+        //        s = true;
+        //    }
+        //    c[pv.ViewID] = true;
+        //}
+
         Vector2 startPos = target.transform.position;
         float elapsed = 0.0f;
         while (elapsed < duration)
@@ -25,6 +38,16 @@ public static class Action2D
 
             yield return null;
         }
+
+        //if (pv != null)
+        //{
+        //    if (s && c[pv.ViewID])
+        //    {
+        //        Debug.LogError(pv.ViewID + " / 뒤에 놈이 먼저 끝남");
+        //    }
+        //
+        //    c[pv.ViewID] = false;
+        //}
 
         target.transform.position = to;
 

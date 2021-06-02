@@ -30,7 +30,6 @@ public class MainGameManager : SingletonClass<MainGameManager>
         switch (gameType)
         {
             case GameType.Battle:
-                host = true;
                 BuildStage(1);
                 break;
             case GameType.CoOp:

@@ -52,7 +52,7 @@ public class Board : MonoBehaviour
 
     private void Update()
     {
-        if (!MainGameManager.GetInstance.IsHost()) return;
+        if (MainGameManager.GetInstance.IsCoOpRemote()) return;
 
         BoardUpdate();
 
