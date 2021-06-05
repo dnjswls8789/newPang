@@ -1034,7 +1034,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
             PhotonNetwork.CurrentRoom.SetCustomProperties(currentRoomProperty);
 
-            if (lobbyName == "NormalLooby")
+            if (lobbyName == "NormalLobby")
             {
                 PhotonNetwork.LoadLevel(gameSceneName);
             }

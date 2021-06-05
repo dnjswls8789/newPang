@@ -28,6 +28,7 @@ public class Board : MonoBehaviour
 
     Block[,] m_Blocks;
     public Block[,] blocks { get { return m_Blocks; } }
+    
 
     private void Awake()
     {
@@ -246,19 +247,28 @@ public class Board : MonoBehaviour
     }
 
     [PunRPC]
-    public void DoSwipeAction(int nRow, int nCol, Swipe swipeDir)
+    public void DoSwipeActionToRemote(int nRow, int nCol, Swipe swipeDir)
     {
-        StartCoroutine(CoDoSwipeAction(nRow, nCol, swipeDir));
+        StartCoroutine(CoDoSwipeActionToRemote(nRow, nCol, swipeDir));
     }
 
-    IEnumerator CoDoSwipeAction(int nRow, int nCol, Swipe swipeDir)
+    [PunRPC]
+    public void DoSwipeActionFromRemote(int nRow, int nCol, Swipe swipeDir)
+    {
+        StartCoroutine(CoDoSwipeActionFromRemote(nRow, nCol, swipeDir));
+    }
+
+    [PunRPC]
+    public void DoSwipeActionToHost(int nRow, int nCol, Swipe swipeDir)
+    {
+        StartCoroutine(CoDoSwipeActionToHost(nRow, nCol, swipeDir));
+    }
+
+    IEnumerator CoDoSwipeActionToRemote(int nRow, int nCol, Swipe swipeDir)
     {
         int nSwipeRow = nRow, nSwipeCol = nCol;
         nSwipeRow += swipeDir.GetTargetRow(); //Right : +1, LEFT : -1
         nSwipeCol += swipeDir.GetTargetCol(); //UP : +1, DOWN : -1
-
-        float initX = CalcInitX(0.5f);
-        float initY = CalcInitY(0.5f);
 
         if (nSwipeRow < 0 || nSwipeRow >= maxRow || nSwipeCol < 0 || nSwipeCol >= maxCol)
         {
@@ -292,8 +302,137 @@ public class Board : MonoBehaviour
             targetBlock.isSwiping = true;
 
             //2.2.2 Board에 저장된 블럭의 위치를 교환한다
-            blocks[nRow, nCol] = targetBlock;
-            blocks[nSwipeRow, nSwipeCol] = baseBlock;
+            //blocks[nRow, nCol] = targetBlock;
+            //blocks[nSwipeRow, nSwipeCol] = baseBlock;
+
+            baseBlock.SetBoardBlock(nSwipeRow, nSwipeCol);
+            targetBlock.SetBoardBlock(nRow, nCol);
+
+            if (MainGameManager.GetInstance.IsCoOpHost() || MainGameManager.GetInstance.IsCoOpRemote())
+            {
+                baseBlock.pv.RPC("SetBoardBlock", RpcTarget.Others, nSwipeRow, nSwipeCol);
+                targetBlock.pv.RPC("SetBoardBlock", RpcTarget.Others, nRow, nCol);
+            }
+
+            baseBlock.SetCellPosition(nSwipeRow, nSwipeCol);
+            targetBlock.SetCellPosition(nRow, nCol);
+
+            yield return new WaitForSeconds(Constants.SWIPE_DURATION);
+
+            //blocks[nRow, nCol].Move(initX + nRow, initY + nCol);
+            //blocks[nSwipeRow, nSwipeCol].Move(initX + nSwipeRow, initY + nSwipeCol);
+
+            baseBlock.isSwiping = false;
+            targetBlock.isSwiping = false;
+
+            bool baseCheck = false;
+            bool targetCheck = false;
+            BlockPangCheck(nRow, nCol, out baseCheck, true);
+            BlockPangCheck(nSwipeRow, nSwipeCol, out targetCheck, true);
+
+            if (SwipQuest(baseBlock, targetBlock))
+            {
+                MainGameManager.GetInstance.combo++;
+                yield break;
+            }
+
+            //////////// 움직인 두개 매치 체크 하고 둘다 아니면 돌려보내기 ////////////////////
+            if (!baseCheck && !targetCheck)
+            {
+                MainGameManager.GetInstance.combo = 0;
+
+                baseBlock = blocks[nRow, nCol];
+                targetBlock = blocks[nSwipeRow, nSwipeCol];
+
+                basePos = baseBlock.transform.position;
+                targetPos = targetBlock.transform.position;
+
+                StartCoroutine(Action2D.MoveTo(baseBlock.transform, targetPos, Constants.SWIPE_DURATION));
+                StartCoroutine(Action2D.MoveTo(targetBlock.transform, basePos, Constants.SWIPE_DURATION));
+
+                if (MainGameManager.GetInstance.IsCoOpHost())
+                {
+                    baseBlock.pv.RPC("RPCMoveToAction", RpcTarget.Others, targetPos, Constants.SWIPE_DURATION);
+                    targetBlock.pv.RPC("RPCMoveToAction", RpcTarget.Others, basePos, Constants.SWIPE_DURATION);
+                }
+
+                baseBlock.isSwiping = true;
+                targetBlock.isSwiping = true;
+
+                //2.2.2 Board에 저장된 블럭의 위치를 교환한다
+                //blocks[nRow, nCol] = targetBlock;
+                //blocks[nSwipeRow, nSwipeCol] = baseBlock;
+
+                baseBlock.SetBoardBlock(nSwipeRow, nSwipeCol);
+                targetBlock.SetBoardBlock(nRow, nCol);
+
+                if (MainGameManager.GetInstance.IsCoOpHost() || MainGameManager.GetInstance.IsCoOpRemote())
+                {
+                    baseBlock.pv.RPC("SetBoardBlock", RpcTarget.Others, nSwipeRow, nSwipeCol);
+                    targetBlock.pv.RPC("SetBoardBlock", RpcTarget.Others, nRow, nCol);
+                }
+
+                targetBlock.SetCellPosition(nRow, nCol);
+                baseBlock.SetCellPosition(nSwipeRow, nSwipeCol);
+
+                yield return new WaitForSeconds(Constants.SWIPE_DURATION);
+
+                //blocks[nRow, nCol]?.Move(initX + nRow, initY + nCol);
+                //blocks[nSwipeRow, nSwipeCol]?.Move(initX + nSwipeRow, initY + nSwipeCol);
+
+                baseBlock.isSwiping = false;
+                targetBlock.isSwiping = false;
+
+                BlockPangCheck(nRow, nCol, out baseCheck, true);
+                BlockPangCheck(nSwipeRow, nSwipeCol, out targetCheck, true);
+            }
+        }
+
+    }
+
+    IEnumerator CoDoSwipeActionFromRemote(int nRow, int nCol, Swipe swipeDir)
+    {
+        int nSwipeRow = nRow, nSwipeCol = nCol;
+        nSwipeRow += swipeDir.GetTargetRow(); //Right : +1, LEFT : -1
+        nSwipeCol += swipeDir.GetTargetCol(); //UP : +1, DOWN : -1
+
+        if (nSwipeRow < 0 || nSwipeRow >= maxRow || nSwipeCol < 0 || nSwipeCol >= maxCol)
+        {
+            yield break;
+        }
+
+        if (blocks[nRow, nCol] == null || blocks[nSwipeRow, nSwipeCol] == null)
+        {
+            yield break;
+        }
+
+        // 두 블럭 다 스왑 가능한지.
+        if (blocks[nRow, nCol].IsSwipeable() && blocks[nSwipeRow, nSwipeCol].IsSwipeable())
+        {
+            Block baseBlock = blocks[nRow, nCol];
+            Block targetBlock = blocks[nSwipeRow, nSwipeCol];
+
+            Vector3 basePos = baseBlock.transform.position;
+            Vector3 targetPos = targetBlock.transform.position;
+
+            StartCoroutine(Action2D.MoveTo(baseBlock.transform, targetPos, Constants.SWIPE_DURATION));
+            StartCoroutine(Action2D.MoveTo(targetBlock.transform, basePos, Constants.SWIPE_DURATION));
+
+            baseBlock.isSwiping = true;
+            targetBlock.isSwiping = true;
+
+            //2.2.2 Board에 저장된 블럭의 위치를 교환한다
+            //blocks[nRow, nCol] = targetBlock;
+            //blocks[nSwipeRow, nSwipeCol] = baseBlock;
+
+            baseBlock.SetBoardBlock(nSwipeRow, nSwipeCol);
+            targetBlock.SetBoardBlock(nRow, nCol);
+
+            if (MainGameManager.GetInstance.IsCoOpHost() || MainGameManager.GetInstance.IsCoOpRemote())
+            {
+                baseBlock.pv.RPC("SetBoardBlock", RpcTarget.Others, nSwipeRow, nSwipeCol);
+                targetBlock.pv.RPC("SetBoardBlock", RpcTarget.Others, nRow, nCol);
+            }
 
             targetBlock.SetCellPosition(nRow, nCol);
             baseBlock.SetCellPosition(nSwipeRow, nSwipeCol);
@@ -313,6 +452,7 @@ public class Board : MonoBehaviour
 
             if (SwipQuest(baseBlock, targetBlock))
             {
+                MainGameManager.GetInstance.combo++;
                 yield break;
             }
 
@@ -338,8 +478,17 @@ public class Board : MonoBehaviour
                 targetBlock.isSwiping = true;
 
                 //2.2.2 Board에 저장된 블럭의 위치를 교환한다
-                blocks[nRow, nCol] = targetBlock;
-                blocks[nSwipeRow, nSwipeCol] = baseBlock;
+                //blocks[nRow, nCol] = targetBlock;
+                //blocks[nSwipeRow, nSwipeCol] = baseBlock;
+
+                baseBlock.SetBoardBlock(nSwipeRow, nSwipeCol);
+                targetBlock.SetBoardBlock(nRow, nCol);
+
+                if (MainGameManager.GetInstance.IsCoOpHost() || MainGameManager.GetInstance.IsCoOpRemote())
+                {
+                    baseBlock.pv.RPC("SetBoardBlock", RpcTarget.Others, nSwipeRow, nSwipeCol);
+                    targetBlock.pv.RPC("SetBoardBlock", RpcTarget.Others, nRow, nCol);
+                }
 
                 targetBlock.SetCellPosition(nRow, nCol);
                 baseBlock.SetCellPosition(nSwipeRow, nSwipeCol);
@@ -357,6 +506,69 @@ public class Board : MonoBehaviour
             }
         }
 
+    }
+
+    IEnumerator CoDoSwipeActionToHost(int nRow, int nCol, Swipe swipeDir)
+    {
+        int nSwipeRow = nRow, nSwipeCol = nCol;
+        nSwipeRow += swipeDir.GetTargetRow(); //Right : +1, LEFT : -1
+        nSwipeCol += swipeDir.GetTargetCol(); //UP : +1, DOWN : -1
+
+        if (nSwipeRow < 0 || nSwipeRow >= maxRow || nSwipeCol < 0 || nSwipeCol >= maxCol)
+        {
+            yield break;
+        }
+
+        if (blocks[nRow, nCol] == null || blocks[nSwipeRow, nSwipeCol] == null)
+        {
+            yield break;
+        }
+
+        // 두 블럭 다 스왑 가능한지.
+        if (blocks[nRow, nCol].IsSwipeable() && blocks[nSwipeRow, nSwipeCol].IsSwipeable())
+        {
+            Block baseBlock = blocks[nRow, nCol];
+            Block targetBlock = blocks[nSwipeRow, nSwipeCol];
+
+            Vector3 basePos = baseBlock.transform.position;
+            Vector3 targetPos = targetBlock.transform.position;
+
+            StartCoroutine(Action2D.MoveTo(baseBlock.transform, targetPos, Constants.SWIPE_DURATION));
+            StartCoroutine(Action2D.MoveTo(targetBlock.transform, basePos, Constants.SWIPE_DURATION));
+
+            if (MainGameManager.GetInstance.IsCoOpRemote())
+            {
+                pv.RPC("DoSwipeActionFromRemote", RpcTarget.Others, nRow, nCol, swipeDir);
+            }
+
+            baseBlock.isSwiping = true;
+            targetBlock.isSwiping = true;
+
+            //2.2.2 Board에 저장된 블럭의 위치를 교환한다
+            //blocks[nRow, nCol] = targetBlock;
+            //blocks[nSwipeRow, nSwipeCol] = baseBlock;
+
+            baseBlock.SetBoardBlock(nSwipeRow, nSwipeCol);
+            targetBlock.SetBoardBlock(nRow, nCol);
+
+            if (MainGameManager.GetInstance.IsCoOpHost() || MainGameManager.GetInstance.IsCoOpRemote())
+            {
+                baseBlock.pv.RPC("SetBoardBlock", RpcTarget.Others, nSwipeRow, nSwipeCol);
+                targetBlock.pv.RPC("SetBoardBlock", RpcTarget.Others, nRow, nCol);
+            }
+
+            targetBlock.SetCellPosition(nRow, nCol);
+            baseBlock.SetCellPosition(nSwipeRow, nSwipeCol);
+
+            yield return new WaitForSeconds(Constants.SWIPE_DURATION);
+
+            //blocks[nRow, nCol].Move(initX + nRow, initY + nCol);
+            //blocks[nSwipeRow, nSwipeCol].Move(initX + nSwipeRow, initY + nSwipeCol);
+
+            baseBlock.isSwiping = false;
+            targetBlock.isSwiping = false;
+
+        }         
     }
 
     // 특수블럭 생성 시 스와이프 매치체크랑 일반 매치체크랑 나눠야한다.
@@ -460,6 +672,8 @@ public class Board : MonoBehaviour
 
         if (found)
         {
+            MainGameManager.GetInstance.combo++;
+
             Block changedBlock = clearList[0];
             for (int i = 1; i < clearList.Count; i++)
             {
@@ -473,6 +687,8 @@ public class Board : MonoBehaviour
 
             for (int i = 0; i < clearList.Count; i++)
             {
+                clearList[i].score = (int)(Mathf.Pow(MainGameManager.GetInstance.combo, 2f) * 10);
+
                 if ((int)changedBlock.matchType >= (int)MatchType.FOUR && changedBlock == clearList[i])
                 {
                     clearList[i].status = BlockStatus.MATCH;
@@ -1228,6 +1444,7 @@ public class Board : MonoBehaviour
         for (int i = 0; i < clearList.Count; i++)
         {
             clearList[i].status = BlockStatus.MATCH;
+            clearList[i].score = MainGameManager.GetInstance.combo * 100;
             clearList[i].DoActionClear(true);
         }
     }
@@ -1243,6 +1460,7 @@ public class Board : MonoBehaviour
                     continue;
 
                 blocks[j, i].status = BlockStatus.MATCH;
+                blocks[j, i].score = MainGameManager.GetInstance.combo * 100;
                 blocks[j, i].DoActionClear(true);
 
                 yield return new WaitForSeconds(0.01f);
@@ -1306,11 +1524,11 @@ public class Board : MonoBehaviour
             baseBlock.questType = BlockQuestType.CLEAR_SIMPLE;
             targetBlock.questType = BlockQuestType.CLEAR_SIMPLE;
 
-            baseBlock.status = BlockStatus.MATCH;
-            targetBlock.status = BlockStatus.MATCH;
-
-            baseBlock.DoActionClear(true);
-            targetBlock.DoActionClear(true);
+            //baseBlock.status = BlockStatus.MATCH;
+            //targetBlock.status = BlockStatus.MATCH;
+            //
+            //baseBlock.DoActionClear(true);
+            //targetBlock.DoActionClear(true);
 
             ClearHorz(baseBlock.cellPosition.x, baseBlock.cellPosition.y);
             ClearVert(baseBlock.cellPosition.x, baseBlock.cellPosition.y);
@@ -1326,11 +1544,11 @@ public class Board : MonoBehaviour
             baseBlock.questType = BlockQuestType.CLEAR_SIMPLE;
             targetBlock.questType = BlockQuestType.CLEAR_SIMPLE;
 
-            baseBlock.status = BlockStatus.MATCH;
-            targetBlock.status = BlockStatus.MATCH;
-
-            baseBlock.DoActionClear(true);
-            targetBlock.DoActionClear(true);
+            //baseBlock.status = BlockStatus.MATCH;
+            //targetBlock.status = BlockStatus.MATCH;
+            //
+            //baseBlock.DoActionClear(true);
+            //targetBlock.DoActionClear(true);
 
             gameObject.AddChildFromObjPool("CircleEffect", cells[baseBlock.cellPosition.x, baseBlock.cellPosition.y].transform.position, 1f);
 
@@ -1398,11 +1616,11 @@ public class Board : MonoBehaviour
             baseBlock.questType = BlockQuestType.CLEAR_SIMPLE;
             targetBlock.questType = BlockQuestType.CLEAR_SIMPLE;
 
-            baseBlock.status = BlockStatus.MATCH;
-            targetBlock.status = BlockStatus.MATCH;
-
-            baseBlock.DoActionClear(true);
-            targetBlock.DoActionClear(true);
+           //baseBlock.status = BlockStatus.MATCH;
+           //targetBlock.status = BlockStatus.MATCH;
+           //
+           //baseBlock.DoActionClear(true);
+           //targetBlock.DoActionClear(true);
 
             ClearCircleDouble(baseBlock.cellPosition.x, baseBlock.cellPosition.y);
 

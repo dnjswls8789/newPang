@@ -30,7 +30,15 @@ public class StageBuilder
         {
             for (int nRow = 0; nRow < m_StageInfo.row; nRow++)
             {
-                stage.board.blocks[nRow, nCol] = SpawnBlockForStage(nRow, nCol);
+                Block block = SpawnBlockForStage(nRow, nCol);
+                block.SetBoardBlock(nRow, nCol);
+
+                if (MainGameManager.GetInstance.IsCoOpHost())
+                {
+                    block.pv.RPC("SetBoardBlock", Photon.Pun.RpcTarget.Others, nRow, nCol);
+                }
+
+                //stage.board.blocks[nRow, nCol] = SpawnBlockForStage(nRow, nCol);
                 stage.board.cells[nRow, nCol] = SpawnCellForStage(nRow, nCol);
 
                 stage.board.blocks[nRow, nCol].UpdateView();

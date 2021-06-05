@@ -10,6 +10,7 @@ public enum BlockType
     VERT = 3,
     CIRCLE = 4,
     LAZER = 5,
+    SHUFFLE = 6,
 }
 
 public enum BlockBreed

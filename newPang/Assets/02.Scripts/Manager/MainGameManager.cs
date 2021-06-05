@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Photon.Pun;
 
 public enum GameType
@@ -18,6 +19,34 @@ public class MainGameManager : SingletonClass<MainGameManager>
     StageBuilder stageBuilder;
     public Stage stage;
     public Board board;
+
+    public Text comboText;
+
+    int m_Combo;
+    public int combo
+    {
+        get { return m_Combo; }
+        set
+        {
+            CancelInvoke("BreakCombo");
+            if (value > 0)
+            {
+                Invoke("BreakCombo", 2f);
+            }
+
+            m_Combo = value;
+
+            if (comboText != null)
+            {
+                comboText.text = m_Combo.ToString();
+            }
+        }
+    }
+
+    private void BreakCombo()
+    {
+        combo = 0;
+    }
 
     protected override void Awake()
     {

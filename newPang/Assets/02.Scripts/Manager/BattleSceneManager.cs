@@ -9,12 +9,13 @@ public class BattleSceneManager : SingletonClass<BattleSceneManager>
 {
     public PhotonView pv;
 
-    public const float winPoint = 30000f;
+    public const float winPoint = 3000000f;
     int playerScore;
     int enemyScore;
 
     [SerializeField] Slider battleSlider;
-    [SerializeField] Text scoreText;
+    [SerializeField] Text playerScoreText;
+    [SerializeField] Text EnemyScoreText;
 
     //
     [SerializeField] GameObject resultTap;
@@ -23,6 +24,8 @@ public class BattleSceneManager : SingletonClass<BattleSceneManager>
 
     protected override void Awake()
     {
+        pv = GetComponent<PhotonView>();
+
         if (LobbyManager.GetInstance.lobbyName != "SingleLobby")
         {
             battleSlider.minValue = 0;
@@ -37,7 +40,8 @@ public class BattleSceneManager : SingletonClass<BattleSceneManager>
 
     private void Update()
     {
-        scoreText.text = playerScore.ToString();
+        playerScoreText.text = playerScore.ToString();
+        EnemyScoreText.text = enemyScore.ToString();
 
         if (LobbyManager.GetInstance.lobbyName != "SingleLobby")
         {
@@ -65,6 +69,7 @@ public class BattleSceneManager : SingletonClass<BattleSceneManager>
     public void AddScore(int score)
     {
         playerScore += score;
+        //playerScore += (int)(Mathf.Pow(MainGameManager.GetInstance.combo, 2f) * score);
 
         if (LobbyManager.GetInstance.lobbyName != "SingleLobby")
         {

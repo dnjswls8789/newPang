@@ -24,11 +24,11 @@ MonoBehaviour:
   - 0.575
   lazerSprite: {fileID: 21300000, guid: 97a206ad283f0c241adbbdbab0c59542, type: 3}
   basicBlockSprites:
-  - {fileID: 21300000, guid: d41dda32c8eb8489ca685fa8ac3618e7, type: 3}
-  - {fileID: 21300000, guid: b3fd567a9dce84bf48b0c4607ed40d05, type: 3}
-  - {fileID: 21300000, guid: c7c406757850f4eb9b62b6e8d99d8c19, type: 3}
-  - {fileID: 21300000, guid: 21604808ef1294d4996d607b17e012c8, type: 3}
-  - {fileID: 21300000, guid: b2675aa6f38e14b16b8e6f5dc2fb2500, type: 3}
+  - {fileID: 21300000, guid: 466a21707f05c8140a749ca62d52e547, type: 3}
+  - {fileID: 21300000, guid: 4ae3f75525af25642a90ddf315e68cfa, type: 3}
+  - {fileID: 21300000, guid: f7f2e497f5d4ad4419bf54b77203b02c, type: 3}
+  - {fileID: 21300000, guid: 13e676b59d7899847b72ae5fa5ed0177, type: 3}
+  - {fileID: 21300000, guid: c5a260bb2ce1a984d9fd229a18a4fecd, type: 3}
   - {fileID: 21300000, guid: a6a939ec3a316490fa4474595a16b1ce, type: 3}
   vertBlockSprites:
   - {fileID: 21300000, guid: 7f17600c580f82c4b973efc7c1b573dd, type: 3}

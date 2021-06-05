@@ -23,6 +23,7 @@ public class SpecialBlockCollision : MonoBehaviour
                 if (MainGameManager.GetInstance.stage.IsInsideBoard(block.transform.position))
                 {
                     block.status = BlockStatus.MATCH;
+                    block.score = MainGameManager.GetInstance.combo * 100;
                     block.DoActionClear(true);
                 }
             }

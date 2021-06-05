@@ -90,11 +90,12 @@ public class Stage : MonoBehaviour
                 {
                     if (MainGameManager.GetInstance.IsCoOpRemote())
                     {
-                        board.pv.RPC("DoSwipeAction", RpcTarget.Others, m_ClickCell.cellPosition.x, m_ClickCell.cellPosition.y, swipeDir);
+                        //board.DoSwipeActionToHost(m_ClickCell.cellPosition.x, m_ClickCell.cellPosition.y, swipeDir);
+                        board.pv.RPC("DoSwipeActionToRemote", RpcTarget.Others, m_ClickCell.cellPosition.x, m_ClickCell.cellPosition.y, swipeDir);
                     }
                     else
                     {
-                        board.DoSwipeAction(m_ClickCell.cellPosition.x, m_ClickCell.cellPosition.y, swipeDir);
+                        board.DoSwipeActionToRemote(m_ClickCell.cellPosition.x, m_ClickCell.cellPosition.y, swipeDir);
                     }
                 }
                 m_TouchDown = false;   //클릭 상태 플래그 OFF

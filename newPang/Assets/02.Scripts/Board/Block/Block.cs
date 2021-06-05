@@ -43,7 +43,7 @@ public class Block : MonoBehaviour
     [SerializeField] BlockConfig m_BlockConfig;
     SpriteRenderer m_SpriteRenderer;
 
-    public BlockStatus status;
+    public BlockStatus m_Status;
     public BlockType m_BlockType;
 
     public BlockBreed m_Breed;   //렌더링되는 블럭 캐린터(즉, 이미지 종류)
@@ -56,6 +56,26 @@ public class Block : MonoBehaviour
     public int m_Durability;                 //내구도
     public bool swiping;
     public bool droping;
+    public int score;
+
+    public BlockStatus status
+    {
+        get { return m_Status; }
+        set {
+            if (MainGameManager.GetInstance.IsCoOpHost())
+            {
+                pv.RPC("SetStatus", RpcTarget.Others, value);
+            }
+
+            m_Status = value; 
+        }
+    }
+
+    [PunRPC]
+    public void SetStatus(BlockStatus value)
+    {
+        m_Status = value;
+    }
 
     public BlockType type
     {
@@ -177,7 +197,7 @@ public class Block : MonoBehaviour
 
     public void InitBlock(BlockBreed _breed, BlockType _type, int x, int y)
     {
-        board = MainGameManager.GetInstance.board;
+        //board = MainGameManager.GetInstance.board;
 
         status = BlockStatus.NORMAL;
 
@@ -236,6 +256,7 @@ public class Block : MonoBehaviour
     {
         pv = GetComponent<PhotonView>();
         m_SpriteRenderer = GetComponent<SpriteRenderer>();
+        board = MainGameManager.GetInstance.board;
     }
 
     [PunRPC]
@@ -304,6 +325,12 @@ public class Block : MonoBehaviour
         {
             pv.RPC("RPCScaleAction", RpcTarget.Others, Constants.BLOCK_DESTROY_SCALE, 0.2f, bDestroy);
         }
+
+        if (MainGameManager.GetInstance.gameType == GameType.Battle)
+        {
+            BattleSceneManager.GetInstance.AddScore(score);
+        }
+
         yield return Action2D.Scale(transform, Constants.BLOCK_DESTROY_SCALE, 0.2f, bDestroy);
 
         //2. 폭파시키는 효과 연출 : 블럭 자체의 Clear 효과를 연출한다.
@@ -331,7 +358,6 @@ public class Block : MonoBehaviour
 
             if (MainGameManager.GetInstance.gameType == GameType.Battle)
             {
-                BattleSceneManager.GetInstance.AddScore(100);
                 gameObject.InstantEnqueue();
             }
             else
@@ -427,8 +453,18 @@ public class Block : MonoBehaviour
         targetBlock.SetCellPosition(cellPosition.x, cellPosition.y);
         baseBlock.SetCellPosition(cellPosition.x, cellPosition.y - dropIndex);
         
-        board.blocks[baseBlock.cellPosition.x, baseBlock.cellPosition.y] = baseBlock;
-        board.blocks[targetBlock.cellPosition.x, targetBlock.cellPosition.y] = targetBlock;
+        //board.blocks[baseBlock.cellPosition.x, baseBlock.cellPosition.y] = baseBlock;
+        //board.blocks[targetBlock.cellPosition.x, targetBlock.cellPosition.y] = targetBlock;
+
+        baseBlock.SetBoardBlock(baseBlock.cellPosition.x, baseBlock.cellPosition.y);
+        targetBlock.SetBoardBlock(targetBlock.cellPosition.x, targetBlock.cellPosition.y);
+
+        if (MainGameManager.GetInstance.IsCoOpHost() || MainGameManager.GetInstance.IsCoOpRemote())
+        {
+            baseBlock.pv.RPC("SetBoardBlock", RpcTarget.Others, baseBlock.cellPosition.x, baseBlock.cellPosition.y);
+            targetBlock.pv.RPC("SetBoardBlock", RpcTarget.Others, targetBlock.cellPosition.x, targetBlock.cellPosition.y);
+        }
+
 
         Vector3 to = new Vector3(initX + baseBlock.cellPosition.x, initY + baseBlock.cellPosition.y);
         StartCoroutine(Action2D.MoveTo(baseBlock.transform, to, duration));
@@ -459,7 +495,14 @@ public class Block : MonoBehaviour
         float initX = board.CalcInitX(0.5f);
         float initY = board.CalcInitX(0.5f);
 
-        board.blocks[cellPosition.x, cellPosition.y] = this;
+        //board.blocks[cellPosition.x, cellPosition.y] = this;
+
+        SetBoardBlock(cellPosition.x, cellPosition.y);
+
+        if (MainGameManager.GetInstance.IsCoOpHost() || MainGameManager.GetInstance.IsCoOpRemote())
+        {
+            pv.RPC("SetBoardBlock", RpcTarget.Others, cellPosition.x, cellPosition.y);
+        }
 
         Vector3 to = new Vector3(initX + cellPosition.x, initY + cellPosition.y);
         StartCoroutine(Action2D.MoveTo(transform, to, duration));
