@@ -40,6 +40,28 @@ public class MainGameManager : SingletonClass<MainGameManager>
             {
                 comboText.text = m_Combo.ToString();
             }
+
+            if (gameType == GameType.Battle)
+            {
+                if (m_Combo > 0 && m_Combo % 10 == 0)
+                {
+                    while (true)
+                    {
+                        int row = Random.Range(0, board.maxRow);
+                        int col = Random.Range(0, board.maxCol);
+
+                        if (!board.blocks[row, col].IsMatchable(true) || board.blocks[row, col].type != BlockType.BASIC)
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            board.blocks[row, col].SetQuestType(BlockQuestType.SHUFFLE);
+                            break;
+                        }
+                    }
+                }
+            }
         }
     }
 

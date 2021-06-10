@@ -18,6 +18,8 @@ public class Stage : MonoBehaviour
 
     InputManager m_InputManager;
 
+    bool swipable;
+
     ////Event Members
     bool m_bTouchDown;          //입력상태 처리 플래그, 유효한 블럭을 클릭한 경우 true
     BlockPos m_BlockDownPos;    //블럭 인덱스 (보드에 저장된 위치)

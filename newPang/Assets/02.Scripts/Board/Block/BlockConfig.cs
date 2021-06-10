@@ -11,6 +11,7 @@ public class BlockConfig : ScriptableObject
     public Sprite[] vertBlockSprites;
     public Sprite[] horzBlockSprites;
     public Sprite[] circleBlockSprites;
+    public Sprite[] shuffleBlockSprites;
     public Color[] blockColors;
     public GameObject[] explosion;
     public GameObject[] simpleExplosionColor;

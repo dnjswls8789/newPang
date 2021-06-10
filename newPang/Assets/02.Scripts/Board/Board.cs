@@ -66,7 +66,12 @@ public class Board : MonoBehaviour
             }
         }
         ////////////////// 나중에 지우기 ////////////////////////////////
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            BoardShuffle();
+        }
     }
+
 
     public void BoardUpdate()
     {
@@ -571,6 +576,89 @@ public class Board : MonoBehaviour
         }         
     }
 
+    public bool BlockPangCheck(int nRow, int nCol)
+    {
+        bool found = false;
+
+        Block baseBlock = blocks[nRow, nCol];
+        if (baseBlock == null || baseBlock.status != BlockStatus.NORMAL || baseBlock.type != BlockType.BASIC) return found;
+
+        List<Block> matchedBlockList = new List<Block>();
+
+        matchedBlockList.Add(baseBlock);
+
+        //1. 가로 블럭 검색
+        Block block;
+
+        //1.1 오른쪽 방향
+        for (int i = nRow + 1; i < maxRow; i++)
+        {
+            block = m_Blocks[i, nCol];
+            if (block == null) break;
+            if (!block.MatchCheck(baseBlock))
+                break;
+
+            matchedBlockList.Add(block);
+        }
+
+        //1.2 왼쪽 방향
+        for (int i = nRow - 1; i >= 0; i--)
+        {
+            block = m_Blocks[i, nCol];
+            if (block == null) break;
+            if (!block.MatchCheck(baseBlock))
+                break;
+
+            matchedBlockList.Add(block);
+        }
+
+        //1.3 매치된 상태인지 판단한다
+        //    기준 블럭(baseBlock)을 제외하고 좌우에 2개이상이면 기준블럭 포함해서 3개이상 매치되는 경우로 판단할 수 있다
+        if (matchedBlockList.Count >= 3)
+        {
+            found = true;
+            return found;
+        }
+
+
+        matchedBlockList.Clear();
+
+        //2. 세로 블럭 검색
+        matchedBlockList.Add(baseBlock);
+
+        //2.1 위쪽 검색
+        for (int i = nCol + 1; i < maxCol; i++)
+        {
+            block = m_Blocks[nRow, i];
+            if (block == null) break;
+            if (!block.MatchCheck(baseBlock))
+                break;
+
+            matchedBlockList.Add(block);
+        }
+
+        //2.2 아래쪽 검색
+        for (int i = nCol - 1; i >= 0; i--)
+        {
+            block = m_Blocks[nRow, i];
+            if (block == null) break;
+            if (!block.MatchCheck(baseBlock))
+                break;
+
+            matchedBlockList.Add(block);
+        }
+
+        //2.3 매치된 상태인지 판단한다
+        //    기준 블럭(baseBlock)을 제외하고 상하에 2개이상이면 기준블럭 포함해서 3개이상 매치되는 경우로 판단할 수 있다
+        if (matchedBlockList.Count >= 3)
+        {
+            found = true;
+        }
+
+        return found;
+    }
+
+
     // 특수블럭 생성 시 스와이프 매치체크랑 일반 매치체크랑 나눠야한다.
     // 스와이프 시엔 스와이프 블럭이 특수블럭으로 변경.
     // 일반 매치땐 왼쪽 아래 블럭이 특수블럭으로 변경.
@@ -712,6 +800,56 @@ public class Board : MonoBehaviour
             for (int row = 0; row < m_Row; row++)
             {
                 blocks[row, col].breed = (BlockBreed)UnityEngine.Random.Range(0, MainGameManager.GetInstance.stage.blockCount);
+            }
+        }
+    }
+
+    [PunRPC]
+    public void BoardShuffle()
+    {
+        for (int col = 0; col < m_Col; col++)
+        {
+            for (int row = 0; row < m_Row; row++)
+            {
+                if (m_Blocks[row, col] != null && m_Blocks[row, col].IsMatchable(true) && m_Blocks[row, col].type == BlockType.BASIC)
+                {
+                    BlockBreed newBreed = (BlockBreed)UnityEngine.Random.Range(0, MainGameManager.GetInstance.stage.blockCount);
+                    m_Blocks[row, col].SetBlockBreed(newBreed);
+                }
+            }
+        }
+
+        bool check = true;
+        while (check)
+        {
+            check = false;
+            //{
+            for (int row = 0; row < maxRow; row++)
+            {
+                for (int col = 0; col < maxCol; col++)
+                {
+                    if (!m_Blocks[row, col].IsMatchable(true)) continue;
+
+                    if (BlockPangCheck(row, col))
+                    {
+                        BlockBreed newBreed = (BlockBreed)UnityEngine.Random.Range(0, MainGameManager.GetInstance.stage.blockCount);
+                        m_Blocks[row, col].SetBlockBreed(newBreed);
+
+                        check = true;
+                    }
+                }
+            }
+        }
+
+        for (int row = 0; row < maxRow; row++)
+        {
+            for (int col = 0; col < maxCol; col++)
+            {
+                if (!m_Blocks[row, col].IsMatchable(true)) continue;
+                if (BlockPangCheck(row, col))
+                {
+                    BoardShuffle();
+                }
             }
         }
     }
@@ -1345,14 +1483,30 @@ public class Board : MonoBehaviour
     {
         if (row < 0 || row >= maxRow || col < 0 || col >= maxCol) return;
 
-        GameObject ct = PhotonManager.GetInstance.InstantiateWithPhoton(gameObject,
-            "HorizonCollision",
-            cells[row, col].transform.position,
-            0.4f);
-        GameObject cb = PhotonManager.GetInstance.InstantiateWithPhoton(gameObject,
-            "HorizonCollision",
-            cells[row, col].transform.position,
-            0.4f);
+        GameObject ct;
+        GameObject cb;
+        if (MainGameManager.GetInstance.gameType == GameType.CoOp)
+        {
+            ct = PhotonManager.GetInstance.InstantiateWithPhoton(gameObject,
+                "HorizonCollision",
+                cells[row, col].transform.position,
+                0.4f);
+            cb = PhotonManager.GetInstance.InstantiateWithPhoton(gameObject,
+                "HorizonCollision",
+                cells[row, col].transform.position,
+                0.4f);
+        }
+        else
+        {
+            ct = MainGameManager.GetInstance.gameObject.AddChildFromObjPool(
+                "HorizonCollision",
+                cells[row, col].transform.position,
+                0.4f);
+            cb = MainGameManager.GetInstance.gameObject.AddChildFromObjPool(
+                "HorizonCollision",
+                cells[row, col].transform.position,
+                0.4f);
+        }
 
         //GameObject ct = gameObject.AddChildFromObjPool("HorizonCollision", cells[row, col].transform.position, 0.4f);
         //GameObject cb = gameObject.AddChildFromObjPool("HorizonCollision", cells[row, col].transform.position, 0.4f);
@@ -1398,10 +1552,21 @@ public class Board : MonoBehaviour
     {
         if (row < 0 || row >= maxRow || col < 0 || col >= maxCol) return;
 
-        GameObject cc = PhotonManager.GetInstance.InstantiateWithPhoton(gameObject,
+        GameObject cc;
+        if (MainGameManager.GetInstance.gameType == GameType.CoOp)
+        {
+            cc = PhotonManager.GetInstance.InstantiateWithPhoton(gameObject,
             "CircleEffect",
             cells[row, col].transform.position,
             1f);
+        }
+        else
+        {
+            cc = MainGameManager.GetInstance.gameObject.AddChildFromObjPool(
+                "CircleEffect",
+                cells[row, col].transform.position,
+                1f);
+        }
         //GameObject cc = gameObject.AddChildFromObjPool("CircleEffect", cells[row, col].transform.position, 1f);
 
         StartCoroutine(CreateCircleCollision(row, col, 0.2f));
@@ -1422,10 +1587,21 @@ public class Board : MonoBehaviour
     {
         if (row < 0 || row >= maxRow || col < 0 || col >= maxCol) return;
 
-        PhotonManager.GetInstance.InstantiateWithPhoton(gameObject,
-            "CircleDoubleEffect",
-            cells[row, col].transform.position,
-            1f);
+        GameObject cc;
+        if (MainGameManager.GetInstance.gameType == GameType.CoOp)
+        {
+            cc = PhotonManager.GetInstance.InstantiateWithPhoton(gameObject,
+                "CircleDoubleEffect",
+                cells[row, col].transform.position,
+                1f);
+        }
+        else
+        {
+            cc = MainGameManager.GetInstance.gameObject.AddChildFromObjPool(
+                "CircleDoubleEffect",
+                cells[row, col].transform.position,
+                1f);
+        }
         //gameObject.AddChildFromObjPool("CircleDoubleEffect", cells[row, col].transform.position, 1f);
 
         StartCoroutine(CreateCircleDoubleCollision(row, col, 0.25f));
@@ -1658,7 +1834,7 @@ public class Board : MonoBehaviour
             return true;
         }
         // 레이저 + 심플    해당 브리드 블럭 폭발.
-        else if (baseBlock.questType == BlockQuestType.CLEAR_LAZER && targetBlock.questType == BlockQuestType.CLEAR_SIMPLE)
+        else if (baseBlock.questType == BlockQuestType.CLEAR_LAZER && (targetBlock.questType == BlockQuestType.CLEAR_SIMPLE || targetBlock.questType == BlockQuestType.SHUFFLE))
         {
             baseBlock.questType = BlockQuestType.CLEAR_SIMPLE;
             baseBlock.status = BlockStatus.MATCH;
@@ -1668,7 +1844,7 @@ public class Board : MonoBehaviour
 
             return true;
         }
-        else if (targetBlock.questType == BlockQuestType.CLEAR_LAZER && baseBlock.questType == BlockQuestType.CLEAR_SIMPLE)
+        else if (targetBlock.questType == BlockQuestType.CLEAR_LAZER && (baseBlock.questType == BlockQuestType.CLEAR_SIMPLE || baseBlock.questType == BlockQuestType.SHUFFLE))
         {
             targetBlock.questType = BlockQuestType.CLEAR_SIMPLE;
             targetBlock.status = BlockStatus.MATCH;

@@ -55,7 +55,8 @@ public enum BlockQuestType  //블럭 클리어 발동 효과
     CLEAR_HORZ_BUFF = 5,    // HORZ + CIRCLE 조합
     CLEAR_VERT_BUFF = 6,    // VERT + CIRCLE 조합    
     CLEAR_CIRCLE_BUFF = 7,  // CIRCLE + CIRCLE 조합
-    CLEAR_LAZER_BUFF = 8    // LAZER + LAZER 조합
+    CLEAR_LAZER_BUFF = 8,    // LAZER + LAZER 조합
+    SHUFFLE = 9    // LAZER + LAZER 조합
 }
 
 //static class BlockMethod

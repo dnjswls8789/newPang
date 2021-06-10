@@ -29,35 +29,42 @@ MonoBehaviour:
   - {fileID: 21300000, guid: f7f2e497f5d4ad4419bf54b77203b02c, type: 3}
   - {fileID: 21300000, guid: 13e676b59d7899847b72ae5fa5ed0177, type: 3}
   - {fileID: 21300000, guid: c5a260bb2ce1a984d9fd229a18a4fecd, type: 3}
-  - {fileID: 21300000, guid: a6a939ec3a316490fa4474595a16b1ce, type: 3}
+  - {fileID: 21300000, guid: 32cfb55d1bb8c4b4ea5e133cab92ebf0, type: 3}
   vertBlockSprites:
-  - {fileID: 21300000, guid: 7f17600c580f82c4b973efc7c1b573dd, type: 3}
-  - {fileID: 21300000, guid: 6b4fd8e572b28f94da1a3afbe9a6ed3d, type: 3}
-  - {fileID: 21300000, guid: e39e450875c6c374e8a94c45265f5d20, type: 3}
-  - {fileID: 21300000, guid: 569a6d4eeffb7664897ce5695e468f6b, type: 3}
-  - {fileID: 21300000, guid: 48e0f057b44351540beb5afc9ec8f4bb, type: 3}
-  - {fileID: 21300000, guid: 2ee550b050b144b4d9fbea7a2b9edb81, type: 3}
+  - {fileID: 21300000, guid: 97cbaa6b42e3ed24f971c2597303dced, type: 3}
+  - {fileID: 21300000, guid: b702933886a2a7c42bfffdaf8d9023ef, type: 3}
+  - {fileID: 21300000, guid: 09f76ed9da882734a85e2ddb629b1ee6, type: 3}
+  - {fileID: 21300000, guid: c744dfbcbac7ef047bd4fc3a1a5fc580, type: 3}
+  - {fileID: 21300000, guid: dbe588b7b4202784792b6f6b7c1b9631, type: 3}
+  - {fileID: 21300000, guid: 3c0e63a5e32acbc44b00242c12205276, type: 3}
   horzBlockSprites:
-  - {fileID: 21300000, guid: 998d96a52ff4c2f4cbee03eb585401de, type: 3}
-  - {fileID: 21300000, guid: 53d0cb55d0844ee4c9cf68ff1a398770, type: 3}
-  - {fileID: 21300000, guid: 9dae2a8476a4a27428a880b117a7ea06, type: 3}
-  - {fileID: 21300000, guid: 58df5b7a4c86bd24e805d5397e08d660, type: 3}
-  - {fileID: 21300000, guid: f43c680f34bea5240abcaf9c59dc0609, type: 3}
-  - {fileID: 21300000, guid: 283b09e787980154f896110e074bd47c, type: 3}
+  - {fileID: 21300000, guid: ab76239758412c9488d56e42ceb7041f, type: 3}
+  - {fileID: 21300000, guid: 9257cd97c5bdf8845ba41be2e5e62ea4, type: 3}
+  - {fileID: 21300000, guid: 8a2416054f463a84f8c25850aea484d3, type: 3}
+  - {fileID: 21300000, guid: 1190a54084ae87042a43459e0d38899e, type: 3}
+  - {fileID: 21300000, guid: 5dbf2d4b5e6737d479d810f290a1d694, type: 3}
+  - {fileID: 21300000, guid: 9bfcea1a89d17d848941ecf82d8d5dfa, type: 3}
   circleBlockSprites:
-  - {fileID: 21300000, guid: be9b7e79f7d45db4faa847b6aed17ad1, type: 3}
-  - {fileID: 21300000, guid: 8fab58555844bf1439d40bab0b7e6a1a, type: 3}
-  - {fileID: 21300000, guid: cce5a3ea32fcf864b995dea2cdc6b6a3, type: 3}
-  - {fileID: 21300000, guid: fa1d200b9e1bb0e43864fa2048a8e7a8, type: 3}
-  - {fileID: 21300000, guid: 8999a2bbe9f50e340925512c7fea2cc2, type: 3}
-  - {fileID: 21300000, guid: 9b8329e0e365f5d4c817f6015801ecf8, type: 3}
+  - {fileID: 21300000, guid: 2c3466a46fe31364a9ac05ea0e271c04, type: 3}
+  - {fileID: 21300000, guid: 8726a32a55172b94d80673c50bc69696, type: 3}
+  - {fileID: 21300000, guid: 1d1753499a88ab24c8308cd171b183c6, type: 3}
+  - {fileID: 21300000, guid: 8aa543e8cd8fe3a44a19f19965149a8d, type: 3}
+  - {fileID: 21300000, guid: b9d740aef55f75d4990a2a7b21ebf404, type: 3}
+  - {fileID: 21300000, guid: 3ac2ddec911b3004fb54e841c8bb0995, type: 3}
+  shuffleBlockSprites:
+  - {fileID: 21300000, guid: 90ce76fce8dad3140ac7ce782c142e59, type: 3}
+  - {fileID: 21300000, guid: 7ccdc87041ebcef4a9dcccaebc6fc9ee, type: 3}
+  - {fileID: 21300000, guid: 7860872a2a68ff946b6edc87c80a664c, type: 3}
+  - {fileID: 21300000, guid: c38501aca052de744ac0471e24c7ebba, type: 3}
+  - {fileID: 21300000, guid: 57a6dcae748f06746b3c20fe9b01ec8c, type: 3}
+  - {fileID: 21300000, guid: 6fdb8a4f06e6b6a4da4a6052d94d7cd1, type: 3}
   blockColors:
-  - {r: 0.37647063, g: 0.26666668, b: 0, a: 1}
-  - {r: 0.10196079, g: 0.5294118, b: 0.27058825, a: 1}
-  - {r: 0.36862746, g: 0.3803922, b: 0.3803922, a: 1}
-  - {r: 0.10196079, g: 0.10196079, b: 0.10196079, a: 1}
-  - {r: 0.6, g: 0.10980393, b: 0, a: 1}
-  - {r: 0.10196079, g: 0.20000002, b: 0.20000002, a: 1}
+  - {r: 0.7490196, g: 0.039215688, b: 0.023529414, a: 1}
+  - {r: 0.5058824, g: 0.007843138, b: 0.8117648, a: 1}
+  - {r: 0.039215688, g: 0.77647066, b: 0.11764707, a: 1}
+  - {r: 0.81568635, g: 0.6784314, b: 0.043137256, a: 1}
+  - {r: 0.019607844, g: 0.50980395, b: 0.8000001, a: 1}
+  - {r: 0.3921569, g: 0.3921569, b: 0.3921569, a: 1}
   explosion:
   - {fileID: 2861438460690957853, guid: 3a2ab2335becbef4ea30d7cdfcbc5632, type: 3}
   - {fileID: 2861438460690957853, guid: 3a2ab2335becbef4ea30d7cdfcbc5632, type: 3}

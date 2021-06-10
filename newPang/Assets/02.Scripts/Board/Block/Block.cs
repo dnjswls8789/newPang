@@ -282,6 +282,9 @@ public class Block : MonoBehaviour
             case BlockType.LAZER:
                 m_SpriteRenderer.sprite = m_BlockConfig.lazerSprite;
                 break;
+            case BlockType.SHUFFLE:
+                m_SpriteRenderer.sprite = m_BlockConfig.shuffleBlockSprites[(int)breed];
+                break;
             default:
                 break;
         }
@@ -335,10 +338,20 @@ public class Block : MonoBehaviour
 
         //2. 폭파시키는 효과 연출 : 블럭 자체의 Clear 효과를 연출한다.
         //GameObject explosionObj = MainGameManager.GetInstance.gameObject.AddChildFromObjPool(m_BlockConfig.GetExplosionObject(questType).name, 2f);
-        GameObject explosionObj = PhotonManager.GetInstance.InstantiateWithPhoton(MainGameManager.GetInstance.gameObject,
-            m_BlockConfig.GetSimpleExplosionEffect(breed).name,
-            transform.position,
-            2f);
+        if (MainGameManager.GetInstance.IsCoOpHost())
+        {
+            GameObject explosionObj = PhotonManager.GetInstance.InstantiateWithPhoton(MainGameManager.GetInstance.gameObject,
+                m_BlockConfig.GetSimpleExplosionEffect(breed).name,
+                transform.position,
+                2f);
+        }
+        else
+        {
+            GameObject explosionObj = MainGameManager.GetInstance.gameObject.AddChildFromObjPool(
+                m_BlockConfig.GetSimpleExplosionEffect(breed).name,
+                transform.position,
+                2f);
+        }
         //ParticleSystem.MainModule newModule = explosionObj.GetComponent<ParticleSystem>().main;
         //newModule.startColor = m_BlockConfig.GetBlockColor(breed);
 
@@ -616,6 +629,9 @@ public class Block : MonoBehaviour
             case BlockQuestType.CLEAR_LAZER:
                 type = BlockType.LAZER;
                 break;
+            case BlockQuestType.SHUFFLE:
+                type = BlockType.SHUFFLE;
+                break;
             case BlockQuestType.CLEAR_HORZ_BUFF:
                 break;
             case BlockQuestType.CLEAR_VERT_BUFF:
@@ -646,6 +662,12 @@ public class Block : MonoBehaviour
                 break;
             case BlockQuestType.CLEAR_LAZER:
                 board.ClearLazer((BlockBreed)UnityEngine.Random.Range(0, MainGameManager.GetInstance.stage.blockCount));
+                break;
+            case BlockQuestType.SHUFFLE:
+                if (MainGameManager.GetInstance.gameType == GameType.Battle)
+                {
+                    board.pv.RPC("BoardShuffle", RpcTarget.Others);
+                }
                 break;
             case BlockQuestType.CLEAR_HORZ_BUFF:
                 break;
