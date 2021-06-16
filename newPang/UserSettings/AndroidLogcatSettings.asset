@@ -2,8 +2,8 @@
     "m_SelectedDeviceId": "LMG710Ne88b2b42",
     "m_SelectedPackage": {
         "deviceId": "LMG710Ne88b2b42",
-        "name": "com.onwStudio.Pang",
-        "processId": 29154,
+        "name": "com.onwStudio.SubiPang",
+        "processId": 18296,
         "exited": false
     },
     "m_SelectedPriority": 0,
@@ -48,6 +48,12 @@
             "deviceId": "LMG710Ne88b2b42",
             "name": "com.onwStudio.Pang",
             "processId": 29154,
+            "exited": false
+        },
+        {
+            "deviceId": "LMG710Ne88b2b42",
+            "name": "com.onwStudio.SubiPang",
+            "processId": 18296,
             "exited": false
         }
     ],
