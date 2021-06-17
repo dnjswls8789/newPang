@@ -7,7 +7,10 @@ public class MainLobbySceneManager : SingletonClass<MainLobbySceneManager>
     [SerializeField] GameObject mainView;
     [SerializeField] GameObject characterView;
 
-    [SerializeField] GameObject loadingPopip;
+    [SerializeField] GameObject loadingPopup;
+
+    [SerializeField] GameObject characterInner;
+    [SerializeField] GameObject ItemInner;
 
     Stack<GameObject> uiStack;
 
@@ -33,13 +36,13 @@ public class MainLobbySceneManager : SingletonClass<MainLobbySceneManager>
     public void PVPMatching()
     {
         ClosePopup();
-        Popup(loadingPopip);
+        Popup(loadingPopup);
         LobbyManager.GetInstance.JoinNormalRoomWithCheckPhoton();
     }
     public void CoOpMatching()
     {
         ClosePopup();
-        Popup(loadingPopip);
+        Popup(loadingPopup);
         LobbyManager.GetInstance.JoinCoOpRoomWithCheckPhoton();
     }
 
@@ -63,5 +66,24 @@ public class MainLobbySceneManager : SingletonClass<MainLobbySceneManager>
     {
         characterView.SetActive(false);
         mainView.SetActive(true);
+        //ToggleCharacterInner(true);
+    }
+
+    public void ToggleCharacterInner(bool isOn)
+    {
+        if (isOn)
+        {
+            ItemInner.SetActive(false);
+            characterInner.SetActive(true);
+        }
+    }
+
+    public void ToggleItemInner(bool isOn)
+    {
+        if (isOn)
+        {
+            characterInner.SetActive(false);
+            ItemInner.SetActive(true);
+        }
     }
 }
