@@ -22,7 +22,7 @@ MonoBehaviour:
     Server: 
     Port: 0
     ProxyServer: 
-    Protocol: 1
+    Protocol: 0
     EnableProtocolFallback: 1
     AuthMode: 0
     EnableLobbyStatistics: 0
@@ -32,37 +32,7 @@ MonoBehaviour:
   EnableSupportLogger: 0
   RunInBackground: 1
   StartInOfflineMode: 0
-  RpcList:
-  - BoardShuffle
-  - CharacterInstantiate
-  - ClickRpc
-  - DeActivateObjectPool
-  - DestroyRpc
-  - DestroySpaceship
-  - DoSwipeActionFromRemote
-  - DoSwipeActionToHost
-  - DoSwipeActionToRemote
-  - Fire
-  - InitializeObjPoolWithPhoton
-  - InitStage
-  - InstantiatePrefabWithPhoton
-  - Move
-  - MoveTo
-  - RespawnSpaceship
-  - RPCMoveToAction
-  - RPCScaleAction
-  - Scale
-  - SetBlockBreed
-  - SetBlockType
-  - SetBoardBlock
-  - SetCellPosition
-  - SetEnemyScore
-  - SetIsDroping
-  - SetIsSwiping
-  - SetLoadSceneParam
-  - SetScale
-  - SetStatus
-  - UpdateView
+  RpcList: []
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 0
