@@ -32,7 +32,37 @@ MonoBehaviour:
   EnableSupportLogger: 0
   RunInBackground: 1
   StartInOfflineMode: 0
-  RpcList: []
+  RpcList:
+  - BoardShuffle
+  - CharacterInstantiate
+  - ClickRpc
+  - DeActivateObjectPool
+  - DestroyRpc
+  - DestroySpaceship
+  - DoSwipeActionFromRemote
+  - DoSwipeActionToHost
+  - DoSwipeActionToRemote
+  - Fire
+  - InitializeObjPoolWithPhoton
+  - InitStage
+  - InstantiatePrefabWithPhoton
+  - Move
+  - MoveTo
+  - RespawnSpaceship
+  - RPCMoveToAction
+  - RPCScaleAction
+  - Scale
+  - SetBlockBreed
+  - SetBlockType
+  - SetBoardBlock
+  - SetCellPosition
+  - SetEnemyScore
+  - SetIsDroping
+  - SetIsSwiping
+  - SetLoadSceneParam
+  - SetScale
+  - SetStatus
+  - UpdateView
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 0
