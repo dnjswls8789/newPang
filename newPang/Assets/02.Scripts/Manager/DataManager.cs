@@ -21,21 +21,26 @@ public class DataManager : SingletonClass<DataManager>
     {
         base.Awake();
 
+        custom = gameObject.AddComponent<CharacterCustom>();
+
         userData = new FBUserData();
 
         userData.characters = new Dictionary<string, string>();
         userData.accessories = new Dictionary<string, Dictionary<string, string>>();
         userData.customs = new Dictionary<string, string>();
 
+        // 이 밑의 userData 값들은 모두 db 에서 받는 값들.
+
         userData.nickname = "차녕";
-        userData.gold = 100;
+        userData.gold = 50000;
         //userData.characters.Add("")
-        userData.customs.Add("character", "empty");
-        userData.customs.Add("face", "empty");
-        userData.customs.Add("hand", "empty");
-        userData.customs.Add("bag", "empty");
-        userData.customs.Add("head", "empty");
-        userData.customs.Add("etc", "empty");
+        userData.customs.Add("character", "Bunny08");
+        userData.customs.Add("face", "Face20");
+        userData.customs.Add("hand", "SwordToyA");
+        userData.customs.Add("bag", "BackpackA");
+        userData.customs.Add("head", "Cap_turboC");
+        userData.customs.Add("etc", "CollarC");
+
 
         GameObject[] characters = Resources.LoadAll<GameObject>("Resource/Characters");
 
@@ -87,34 +92,39 @@ public class DataManager : SingletonClass<DataManager>
 
     }
 
-    public void ChangeCharacter()
+    public void ChangeCharacter(string characterName)
     {
+        if (userData.characters.ContainsKey(characterName))
+        {
+            userData.customs["character"] = characterName;
 
+            custom.ChangeCharacter(userData.customs["character"]);
+        }
     }
 
-    public void EpuipAccessorie(Accessory item)
+    public void EpuipAccessorie(string itemName, AccessoryType accessoryType)
     {
-        switch (item.type)
+        switch (accessoryType)
         {
             case AccessoryType.Face:
-                userData.customs["face"] = item.name;
+                    userData.customs["face"] = itemName;
                 break;
             case AccessoryType.Hand:
-                userData.customs["hand"] = item.name;
+                    userData.customs["hand"] = itemName;
                 break;
             case AccessoryType.Bag:
-                userData.customs["bag"] = item.name;
+                    userData.customs["bag"] = itemName;
                 break;
             case AccessoryType.Head:
-                userData.customs["head"] = item.name;
+                    userData.customs["head"] = itemName;
                 break;
             case AccessoryType.Etc:
-                userData.customs["etc"] = item.name;
+                    userData.customs["etc"] = itemName;
                 break;
             default:
                 break;
         }
 
-        custom.EpuipAccessorie(item);
+        custom.EpuipAccessorie(itemName, accessoryType);
     }
 }

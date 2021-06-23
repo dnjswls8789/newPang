@@ -27,6 +27,7 @@ public class Accessory : MonoBehaviour
 
     private void Awake()
     {
-        accessoryName = gameObject.name;
+        char c = '(';
+        accessoryName = gameObject.name.Split(c)[0];
     }
 }

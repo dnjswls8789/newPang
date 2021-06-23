@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 23969253639089940}
   - component: {fileID: 95489551028453188}
   - component: {fileID: -6357288728521011135}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: MinihatA
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -112,5 +112,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 540419aa970238d4395f5b7d357fecbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  accessoryName: 
   type: 3
   locator: 1

@@ -1,14 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MainLobbySceneManager : SingletonClass<MainLobbySceneManager>
 {
+    public Transform mainCharacterLocator;
+    public Transform customCharacterLocator;
     [SerializeField] GameObject mainView;
     [SerializeField] GameObject characterView;
 
     [SerializeField] GameObject loadingPopup;
 
+    [SerializeField] Toggle characterToggle;
     [SerializeField] GameObject characterInner;
     [SerializeField] GameObject ItemInner;
 
@@ -19,6 +23,22 @@ public class MainLobbySceneManager : SingletonClass<MainLobbySceneManager>
     {
         uiStack = new Stack<GameObject>();
     }
+
+    private void Start()
+    {
+        if (DataManager.GetInstance.userData.customs.ContainsKey("character"))
+        {
+            if (DataManager.GetInstance.userData.customs["character"] == "empty")
+            {
+                DataManager.GetInstance.ChangeCharacter("Cat00");
+            }
+            else
+            {
+                DataManager.GetInstance.ChangeCharacter(DataManager.GetInstance.userData.customs["character"]);
+            }
+        }
+    }
+
     public void Popup(GameObject popup)
     {
         popup.SetActive(true);
@@ -45,12 +65,6 @@ public class MainLobbySceneManager : SingletonClass<MainLobbySceneManager>
         Popup(loadingPopup);
         LobbyManager.GetInstance.JoinCoOpRoomWithCheckPhoton();
     }
-
-    //public void SingleGame()
-    //{
-    //    LobbyManager.GetInstance.JoinSingleRoomWithCheckPhoton();
-    //}
-
     public void MatchingCancel()
     {
         LobbyManager.GetInstance.MatchingCancel();
@@ -58,15 +72,24 @@ public class MainLobbySceneManager : SingletonClass<MainLobbySceneManager>
 
     public void OnCharacterView()
     {
+        customCharacterLocator.gameObject.SetActive(true);
+        mainCharacterLocator.gameObject.SetActive(false);
         mainView.SetActive(false);
         characterView.SetActive(true);
+
+        DataManager.GetInstance.custom.ChangeView(customCharacterLocator);
     }
 
     public void ExitCharacterView()
     {
+        customCharacterLocator.gameObject.SetActive(false);
+        mainCharacterLocator.gameObject.SetActive(true);
+        characterToggle.isOn = true;
+
         characterView.SetActive(false);
         mainView.SetActive(true);
-        //ToggleCharacterInner(true);
+
+        DataManager.GetInstance.custom.ChangeView(mainCharacterLocator);
     }
 
     public void ToggleCharacterInner(bool isOn)

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 33227602012442516}
   - component: {fileID: 23831939590810186}
   - component: {fileID: 6144506568564449029}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: BoneC
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -92,5 +92,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 540419aa970238d4395f5b7d357fecbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  accessoryName: 
   type: 1
   locator: 2

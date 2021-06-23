@@ -12,6 +12,14 @@ public class CharacterBase : MonoBehaviour
 
     private void Awake()
     {
+        if (headLocator == null || weaponLocator == null || etcLocator == null || faceRenderer == null)
+        {
+            InitLocator();
+        }
+    }
+
+    public void InitLocator()
+    {
         Transform[] allChildren = GetComponentsInChildren<Transform>();
         foreach (Transform child in allChildren)
         {
@@ -27,11 +35,16 @@ public class CharacterBase : MonoBehaviour
             {
                 weaponLocator = child;
             }
-            else if (child.name == "Face01")
+            else if (child.name.Length >= 4)
             {
-                faceRenderer = child.GetComponent<SkinnedMeshRenderer>();
+                if (child.name.Substring(0, 4) == "Face")
+                {
+                    if (faceRenderer == null)
+                    {
+                        faceRenderer = child.GetComponent<SkinnedMeshRenderer>();
+                    }
+                }
             }
-
         }
     }
 }

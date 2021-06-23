@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 33998700733051668}
   - component: {fileID: 23571094801817968}
   - component: {fileID: -4528768679579720275}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: MonkeymaceA
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -92,5 +92,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 540419aa970238d4395f5b7d357fecbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  accessoryName: 
   type: 1
   locator: 2

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 33976876652960768}
   - component: {fileID: 23118782730760522}
   - component: {fileID: 3926640142468390740}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: CollarB
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -92,5 +92,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 540419aa970238d4395f5b7d357fecbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  accessoryName: 
   type: 4
   locator: 0

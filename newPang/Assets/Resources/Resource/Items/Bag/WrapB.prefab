@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 33175836773897228}
   - component: {fileID: 23016122556665758}
   - component: {fileID: 31256213955826}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: WrapB
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -92,5 +92,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 540419aa970238d4395f5b7d357fecbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  accessoryName: 
   type: 2
   locator: 0

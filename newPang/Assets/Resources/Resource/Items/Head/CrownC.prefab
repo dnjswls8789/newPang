@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 33367479441004770}
   - component: {fileID: 23079326106537144}
   - component: {fileID: 3037599371517224813}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: CrownC
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -92,5 +92,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 540419aa970238d4395f5b7d357fecbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  accessoryName: 
   type: 3
   locator: 1

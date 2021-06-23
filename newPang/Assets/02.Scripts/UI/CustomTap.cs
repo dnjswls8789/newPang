@@ -20,9 +20,17 @@ public class CustomTap : MonoBehaviour
 
     Dictionary<string, string> customDic;
 
+    RectTransform rt;
+
+    private void OnDisable()
+    {
+        rt.localPosition = new Vector2(0f, 0f);
+    }
+
     private void Start()
     {
         toggleGroup = GetComponent<ToggleGroup>();
+        rt = GetComponent<RectTransform>();
 
         if (type == CustomType.Character)
         {
@@ -64,14 +72,12 @@ public class CustomTap : MonoBehaviour
             if (type == CustomType.Character)
             {
                 cell.transform.Find("head").GetComponent<RectTransform>().sizeDelta = new Vector2(40, 40);
-                cell.transform.Find("name").GetComponent<TextMeshProUGUI>().fontSize = 10f;
-
-                //cell.GetComponent<CustomizeCell>().objectName = DataManager.GetInstance.userData.characters.;
+                cell.transform.Find("name").GetComponent<TextMeshProUGUI>().fontSize = 10f;              
             }
             else
             {
                 cell.transform.Find("head").GetComponent<RectTransform>().sizeDelta = new Vector2(30, 30);
-                cell.transform.Find("name").GetComponent<TextMeshProUGUI>().fontSize = 8.5f;
+                cell.transform.Find("name").GetComponent<TextMeshProUGUI>().fontSize = 8.5f;               
             }
 
 

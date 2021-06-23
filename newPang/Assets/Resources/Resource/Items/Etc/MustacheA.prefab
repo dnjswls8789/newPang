@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 23832919615037668}
   - component: {fileID: 95816985247361408}
   - component: {fileID: 3262681608820304752}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: MustacheA
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -112,5 +112,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 540419aa970238d4395f5b7d357fecbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  accessoryName: 
   type: 4
   locator: 1

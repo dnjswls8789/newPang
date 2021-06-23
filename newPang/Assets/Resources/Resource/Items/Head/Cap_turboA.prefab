@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4119607320572872}
   - component: {fileID: 33850676399303998}
   - component: {fileID: 23613225539947616}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Cap_turbo_part
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -92,7 +92,7 @@ GameObject:
   - component: {fileID: 23697330711953122}
   - component: {fileID: 95360448386389712}
   - component: {fileID: -3350845638960438630}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Cap_turboA
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -192,5 +192,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 540419aa970238d4395f5b7d357fecbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  accessoryName: 
   type: 3
   locator: 1

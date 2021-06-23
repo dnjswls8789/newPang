@@ -40,6 +40,54 @@ public class CustomizeCell : MonoBehaviour
         objectName = _objectName;
 
         text.text = objectName;
+
+        if (type == CustomType.Character)
+        {
+            if (DataManager.GetInstance.userData.customs["character"] == objectName)
+            {
+                toggle.isOn = true;
+            }
+        }
+        else if (type == CustomType.Accessory)
+        {
+            switch (accessoryType)
+            {
+                case AccessoryType.None:
+                    break;
+                case AccessoryType.Face:
+                    if (DataManager.GetInstance.userData.customs["face"] == objectName)
+                    {
+                       toggle.isOn = true;
+                    }
+                    break;
+                case AccessoryType.Hand:
+                    if (DataManager.GetInstance.userData.customs["hand"] == objectName)
+                    {
+                        toggle.isOn = true;
+                    }
+                    break;
+                case AccessoryType.Bag:
+                    if (DataManager.GetInstance.userData.customs["bag"] == objectName)
+                    {
+                        toggle.isOn = true;
+                    }
+                    break;
+                case AccessoryType.Head:
+                    if (DataManager.GetInstance.userData.customs["head"] == objectName)
+                    {
+                        toggle.isOn = true;
+                    }
+                    break;
+                case AccessoryType.Etc:
+                    if (DataManager.GetInstance.userData.customs["etc"] == objectName)
+                    {
+                        toggle.isOn = true;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
     public void OnChangedToggle(bool isOn)
@@ -52,18 +100,25 @@ public class CustomizeCell : MonoBehaviour
 
             if (type == CustomType.Character)
             {
-
+                DataManager.GetInstance.ChangeCharacter(objectName);
             }
             else
             {
-
+                DataManager.GetInstance.EpuipAccessorie(objectName, accessoryType);
             }
+
         }
         else
         {
             bgImage.sprite = bgBasicImage;
             bgImage.color = bgBasicColor;
             text.color = textBasicColor;
+
+            if (toggle.group != null && !toggle.group.AnyTogglesOn())
+            {
+                DataManager.GetInstance.EpuipAccessorie("empty", accessoryType);
+            }
+
         }
     }
 }

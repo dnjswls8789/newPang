@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 23922713608099246}
   - component: {fileID: 95517474317926230}
   - component: {fileID: -3967416524113872089}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: FishmaceA4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -112,5 +112,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 540419aa970238d4395f5b7d357fecbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  accessoryName: 
   type: 1
   locator: 2

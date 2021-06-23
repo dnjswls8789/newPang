@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 33037824767154054}
   - component: {fileID: 23315057912951854}
   - component: {fileID: -5536739467730069477}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: SwordToyC
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -92,5 +92,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 540419aa970238d4395f5b7d357fecbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  accessoryName: 
   type: 1
   locator: 2
