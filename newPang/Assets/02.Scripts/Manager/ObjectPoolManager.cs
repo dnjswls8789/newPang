@@ -387,7 +387,7 @@ public class ObjectPoolManager : SingletonClass<ObjectPoolManager>
 
     public void LoadAllGameObject()
     {
-        GameObject[] objects = Resources.LoadAll<GameObject>("");
+        GameObject[] objects = Resources.LoadAll<GameObject>("Pool");
 
         for (int i = 0; i < objects.Length; i++)
         {
