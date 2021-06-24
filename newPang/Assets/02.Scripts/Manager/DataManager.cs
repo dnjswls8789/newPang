@@ -92,13 +92,13 @@ public class DataManager : SingletonClass<DataManager>
 
     }
 
-    public void ChangeCharacter(string characterName)
+    public void ChangeCharacter(string characterName, Transform locator)
     {
         if (userData.characters.ContainsKey(characterName))
         {
             userData.customs["character"] = characterName;
 
-            custom.ChangeCharacter(userData.customs["character"]);
+            custom.ChangeCharacter(userData.customs["character"], locator);
         }
     }
 

@@ -9,11 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4664848436985230}
-  - component: {fileID: 33818869825989058}
-  - component: {fileID: 23758687374618242}
-  - component: {fileID: 95545760014758668}
   - component: {fileID: -6780990819191106839}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: BagA3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -27,28 +24,78 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1747544265958360}
-  m_LocalRotation: {x: -0.000000059604645, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 6721032173049523857}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &33818869825989058
+--- !u!114 &-6780990819191106839
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1747544265958360}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 540419aa970238d4395f5b7d357fecbc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  accessoryName: 
+  type: 2
+  locator: 0
+--- !u!1 &6724790002357727431
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6721032173049523857}
+  - component: {fileID: 6714114515912112861}
+  - component: {fileID: 6701670598711049629}
+  - component: {fileID: 6630996150238027795}
+  - component: {fileID: 8984788216330519030}
+  m_Layer: 5
+  m_Name: BagA3
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6721032173049523857
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6724790002357727431}
+  m_LocalRotation: {x: -0.000000059604638, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.18892218, z: -0.0060688695}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4664848436985230}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &6714114515912112861
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1747544265958360}
+  m_GameObject: {fileID: 6724790002357727431}
   m_Mesh: {fileID: 4300000, guid: 5be37bd5510d591498edaf7e31b1dca8, type: 3}
---- !u!23 &23758687374618242
+--- !u!23 &6701670598711049629
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1747544265958360}
+  m_GameObject: {fileID: 6724790002357727431}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -81,14 +128,14 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!95 &95545760014758668
+--- !u!95 &6630996150238027795
 Animator:
   serializedVersion: 3
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1747544265958360}
+  m_GameObject: {fileID: 6724790002357727431}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 5be37bd5510d591498edaf7e31b1dca8, type: 3}
   m_Controller: {fileID: 0}
@@ -100,13 +147,13 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &-6780990819191106839
+--- !u!114 &8984788216330519030
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1747544265958360}
+  m_GameObject: {fileID: 6724790002357727431}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 540419aa970238d4395f5b7d357fecbc, type: 3}

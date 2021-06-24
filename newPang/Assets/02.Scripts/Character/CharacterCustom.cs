@@ -12,7 +12,7 @@ public class CharacterCustom : MonoBehaviour
     Accessory head;
     Accessory etc;
 
-    public void ChangeCharacter(string characterName)
+    public void ChangeCharacter(string characterName, Transform locator)
     {
         if (!ResourceManager.GetInstance.gameObjectDic.ContainsKey(characterName))
         {
@@ -38,14 +38,7 @@ public class CharacterCustom : MonoBehaviour
         characterBase = c.AddComponent<CharacterBase>();
         characterBase.InitLocator();
 
-        if (MainLobbySceneManager.GetInstance.mainCharacterLocator.gameObject.activeSelf)
-        {
-            ChangeView(MainLobbySceneManager.GetInstance.mainCharacterLocator);
-        }
-        else
-        {
-            ChangeView(MainLobbySceneManager.GetInstance.customCharacterLocator);
-        }
+        ChangeView(locator);
 
         if (DataManager.GetInstance.userData.customs["face"] != "empty")
         {

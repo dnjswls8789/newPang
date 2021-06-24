@@ -30,11 +30,11 @@ public class MainLobbySceneManager : SingletonClass<MainLobbySceneManager>
         {
             if (DataManager.GetInstance.userData.customs["character"] == "empty")
             {
-                DataManager.GetInstance.ChangeCharacter("Cat00");
+                DataManager.GetInstance.ChangeCharacter("Cat00", mainCharacterLocator);
             }
             else
             {
-                DataManager.GetInstance.ChangeCharacter(DataManager.GetInstance.userData.customs["character"]);
+                DataManager.GetInstance.ChangeCharacter(DataManager.GetInstance.userData.customs["character"], mainCharacterLocator);
             }
         }
     }

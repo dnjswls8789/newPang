@@ -100,7 +100,7 @@ public class CustomizeCell : MonoBehaviour
 
             if (type == CustomType.Character)
             {
-                DataManager.GetInstance.ChangeCharacter(objectName);
+                DataManager.GetInstance.ChangeCharacter(objectName, MainLobbySceneManager.GetInstance.customCharacterLocator);
             }
             else
             {
