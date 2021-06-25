@@ -23,6 +23,13 @@ public class MainGameManager : SingletonClass<MainGameManager>
     public Text comboText;
 
     int m_Combo;
+
+    public Transform playerLocator;
+    public Transform otherPlayerLocator;
+
+    public CharacterBase playerCb;
+    public CharacterBase otherPlayerCb;
+
     public int combo
     {
         get { return m_Combo; }
@@ -68,6 +75,7 @@ public class MainGameManager : SingletonClass<MainGameManager>
     private void BreakCombo()
     {
         combo = 0;
+
     }
 
     protected override void Awake()
@@ -109,6 +117,25 @@ public class MainGameManager : SingletonClass<MainGameManager>
             board.AllShuffle();
             board.MatchingCheckShuffle();
         }
+    }
+
+    public void PlayerCharacterCreate()
+    {
+        //DataManager.GetInstance.ChangeCharacter(DataManager.GetInstance.userData.customs["character"], playerLocator);
+
+        GameObject cb = PhotonManager.GetInstance.InstantiateWithPhoton(playerLocator.gameObject, DataManager.GetInstance.userData.customs["character"], Vector3.zero);
+
+        playerCb = cb.GetComponent<CharacterBase>();
+        playerCb.pv.RPC("EquipAccessory", RpcTarget.All, DataManager.GetInstance.userData.customs["face"]);
+        playerCb.pv.RPC("EquipAccessory", RpcTarget.All, DataManager.GetInstance.userData.customs["hand"]);
+        playerCb.pv.RPC("EquipAccessory", RpcTarget.All, DataManager.GetInstance.userData.customs["bag"]);
+        playerCb.pv.RPC("EquipAccessory", RpcTarget.All, DataManager.GetInstance.userData.customs["head"]);
+        playerCb.pv.RPC("EquipAccessory", RpcTarget.All, DataManager.GetInstance.userData.customs["etc"]);
+
+        playerCb.transform.SetParent(playerLocator);
+        playerCb.InitTransform();
+
+        playerCb.pv.RPC("SetOtherPlayer", RpcTarget.Others);
     }
 
     public bool IsHost()

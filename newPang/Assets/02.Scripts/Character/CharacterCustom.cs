@@ -35,7 +35,7 @@ public class CharacterCustom : MonoBehaviour
         //c.transform.localRotation = Quaternion.identity;
         //c.transform.localPosition = Vector3.zero;
 
-        characterBase = c.AddComponent<CharacterBase>();
+        characterBase = c.GetComponent<CharacterBase>();
         characterBase.InitLocator();
 
         ChangeView(locator);

@@ -13,9 +13,6 @@ public class BattleSceneManager : SingletonClass<BattleSceneManager>
     int playerScore;
     int enemyScore;
 
-    [SerializeField] Transform playerLocator;
-    [SerializeField] Transform enemyLocator;
-
     [SerializeField] Slider battleSlider;
     [SerializeField] Text playerScoreText;
     [SerializeField] Text EnemyScoreText;
@@ -29,6 +26,8 @@ public class BattleSceneManager : SingletonClass<BattleSceneManager>
     {
         pv = GetComponent<PhotonView>();
 
+
+
         if (LobbyManager.GetInstance.lobbyName != "SingleLobby")
         {
             battleSlider.minValue = 0;
@@ -40,7 +39,7 @@ public class BattleSceneManager : SingletonClass<BattleSceneManager>
             battleSlider.gameObject.SetActive(false);
         }
 
-        DataManager.GetInstance.ChangeCharacter(DataManager.GetInstance.userData.customs["character"], playerLocator);
+        MainGameManager.GetInstance.PlayerCharacterCreate();
     }
 
     private void Update()

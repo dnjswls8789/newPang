@@ -911,5 +911,11 @@ namespace Photon.Pun
         {
             return string.Format("View {0}{3} on {1} {2}", this.ViewID, (this.gameObject != null) ? this.gameObject.name : "GO==null", (this.IsRoomView) ? "(scene)" : string.Empty, this.Prefix > 0 ? "lvl" + this.Prefix : "");
         }
+
+        //public Component AddComponent(string typeName)
+        //{
+        //    Type componentType = Type.GetType(typeName);
+        //    return gameObject.AddComponent(componentType);
+        //}
     }
 }
