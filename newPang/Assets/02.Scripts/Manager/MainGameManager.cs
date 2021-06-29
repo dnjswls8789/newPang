@@ -27,8 +27,8 @@ public class MainGameManager : SingletonClass<MainGameManager>
     public Transform playerLocator;
     public Transform otherPlayerLocator;
 
-    public CharacterBase playerCb;
-    public CharacterBase otherPlayerCb;
+    public CharacterBattle playerCb;
+    public CharacterBattle otherPlayerCb;
 
     public int combo
     {
@@ -123,19 +123,20 @@ public class MainGameManager : SingletonClass<MainGameManager>
     {
         //DataManager.GetInstance.ChangeCharacter(DataManager.GetInstance.userData.customs["character"], playerLocator);
 
-        GameObject cb = PhotonManager.GetInstance.InstantiateWithPhoton(playerLocator.gameObject, DataManager.GetInstance.userData.customs["character"], Vector3.zero);
+        GameObject go = PhotonManager.GetInstance.InstantiateWithPhoton(playerLocator.gameObject, DataManager.GetInstance.userData.customs["character"], Vector3.zero);
 
-        playerCb = cb.GetComponent<CharacterBase>();
-        playerCb.pv.RPC("EquipAccessory", RpcTarget.All, DataManager.GetInstance.userData.customs["face"]);
-        playerCb.pv.RPC("EquipAccessory", RpcTarget.All, DataManager.GetInstance.userData.customs["hand"]);
-        playerCb.pv.RPC("EquipAccessory", RpcTarget.All, DataManager.GetInstance.userData.customs["bag"]);
-        playerCb.pv.RPC("EquipAccessory", RpcTarget.All, DataManager.GetInstance.userData.customs["head"]);
-        playerCb.pv.RPC("EquipAccessory", RpcTarget.All, DataManager.GetInstance.userData.customs["etc"]);
+        CharacterBase cb = go.GetComponent<CharacterBase>();
+        playerCb = cb.gameObject.AddComponent<CharacterBattle>();
+        cb.pv.RPC("EquipAccessory", RpcTarget.All, DataManager.GetInstance.userData.customs["face"]);
+        cb.pv.RPC("EquipAccessory", RpcTarget.All, DataManager.GetInstance.userData.customs["hand"]);
+        cb.pv.RPC("EquipAccessory", RpcTarget.All, DataManager.GetInstance.userData.customs["bag"]);
+        cb.pv.RPC("EquipAccessory", RpcTarget.All, DataManager.GetInstance.userData.customs["head"]);
+        cb.pv.RPC("EquipAccessory", RpcTarget.All, DataManager.GetInstance.userData.customs["etc"]);
 
-        playerCb.transform.SetParent(playerLocator);
-        playerCb.InitTransform();
+        cb.transform.SetParent(playerLocator);
+        cb.InitTransform();
 
-        playerCb.pv.RPC("SetOtherPlayer", RpcTarget.Others);
+        cb.pv.RPC("SetOtherPlayer", RpcTarget.Others);
     }
 
     public bool IsHost()

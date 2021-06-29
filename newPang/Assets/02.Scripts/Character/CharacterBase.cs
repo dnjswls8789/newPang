@@ -13,8 +13,6 @@ public class CharacterBase : MonoBehaviour
 
     public SkinnedMeshRenderer faceRenderer;
 
-    Animator anim;
-
     private void Awake()
     {
         if (headLocator == null || weaponLocator == null || etcLocator == null || faceRenderer == null)
@@ -22,8 +20,8 @@ public class CharacterBase : MonoBehaviour
             InitLocator();
         }
 
-        anim = GetComponent<Animator>();
         pv = GetComponent<PhotonView>();
+        
     }
 
     public void InitLocator()
@@ -66,7 +64,7 @@ public class CharacterBase : MonoBehaviour
     [PunRPC]
     public void SetOtherPlayer()
     {
-        MainGameManager.GetInstance.otherPlayerCb = this;
+        MainGameManager.GetInstance.otherPlayerCb = GetComponent<CharacterBattle>();
         transform.SetParent(MainGameManager.GetInstance.otherPlayerLocator);
 
         InitTransform();
