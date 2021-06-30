@@ -249,6 +249,18 @@ public class Block : MonoBehaviour
         if (MainGameManager.GetInstance.IsCoOpHost())
         {
             pv.RPC("SetScale", RpcTarget.Others, Vector3.one);
+
+            GameObject effect = PhotonManager.GetInstance.InstantiateWithPhoton(gameObject,
+                m_BlockConfig.GetChangeBlockEffect(breed).name,
+                transform.position,
+                2f);
+        }
+        else
+        {
+            GameObject effect = gameObject.AddChildFromObjPool(
+                m_BlockConfig.GetChangeBlockEffect(breed).name,
+                transform.position,
+                2f);
         }
     }
 
@@ -649,6 +661,11 @@ public class Block : MonoBehaviour
     }
     public void Quest()
     {
+        if (questType != BlockQuestType.CLEAR_SIMPLE)
+        {
+            MainGameManager.GetInstance.playerCb.pv.RPC("SetAnimInt", RpcTarget.All, "Attack", Random.Range(1, 3));
+        }
+
         switch (questType)
         {
             case BlockQuestType.CLEAR_HORZ:

@@ -114,8 +114,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
     private string customRoomName;
     private bool isMakeCustomRoom;
-    public string gameSceneName = "BattleScene";
-    public string lobbySceneName = "MatchTestScene";
+    public string lobbySceneName = "MainLobbyScene";
 
     private void Awake()
     {
@@ -518,7 +517,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         Debug.LogWarning("MakeSingleRoom");
         AllClearCallbackDelegate();
 
-        AddOnJoinedRoomCallback(() => { SceneManager.LoadScene(gameSceneName); });
+        AddOnJoinedRoomCallback(() => { SceneManager.LoadScene("BattleScene"); });
 
         roomOptions = new RoomOptions();
         roomOptions.IsVisible = true;
@@ -733,7 +732,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
             AddOnConnectedToMasterCallback(JoinAIRoom);
             // 방 접속완료 콜백 // 게임 씬으로 넘어갔는지 체크하는 코루틴.
             AddOnJoinedRoomCallback(() => { StartCoroutine("WaitGameStart"); },
-                    () => { SceneManager.LoadScene(gameSceneName); });
+                    () => { SceneManager.LoadScene("BattleScene"); });
             JoinToMaster();
         }
         else
@@ -1036,7 +1035,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
             if (lobbyName == "NormalLobby")
             {
-                PhotonNetwork.LoadLevel(gameSceneName);
+                PhotonNetwork.LoadLevel("BattleScene");
             }
             else if (lobbyName == "CoOpLobby")
             {
@@ -1147,7 +1146,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
                     //UIManager.GetInstance.NetworkNotReachable();
                 }
             }
-            else if (SceneManager.GetActiveScene().name == gameSceneName)
+            else if (SceneManager.GetActiveScene().name == "BattleScene" || SceneManager.GetActiveScene().name == "CoOpScene")
             {
                 if (Application.internetReachability == NetworkReachability.NotReachable)
                 {

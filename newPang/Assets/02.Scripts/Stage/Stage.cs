@@ -31,9 +31,17 @@ public class Stage : MonoBehaviour
     Vector3 m_CurPos;
     Cell m_ClickCell;
 
+    int pointerId;
+
     private void Awake()
     {
         pv = GetComponent<PhotonView>();
+
+#if UNITY_EDITOR
+        pointerId = -1;
+#elif UNITY_IOS || UNITY_ANDROID
+        pointerId = 0;
+#endif
     }
 
     [PunRPC]
@@ -63,7 +71,7 @@ public class Stage : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(0))
             {
-                if (EventSystem.current.IsPointerOverGameObject()) return;
+                if (EventSystem.current.IsPointerOverGameObject(pointerId)) return;
 
                 Vector3 clickPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 RaycastHit hit;

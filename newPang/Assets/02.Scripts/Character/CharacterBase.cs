@@ -64,7 +64,7 @@ public class CharacterBase : MonoBehaviour
     [PunRPC]
     public void SetOtherPlayer()
     {
-        MainGameManager.GetInstance.otherPlayerCb = GetComponent<CharacterBattle>();
+        MainGameManager.GetInstance.otherPlayerCb = gameObject.AddComponent<CharacterBattle>();
         transform.SetParent(MainGameManager.GetInstance.otherPlayerLocator);
 
         InitTransform();

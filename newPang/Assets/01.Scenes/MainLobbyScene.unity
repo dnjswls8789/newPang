@@ -34299,6 +34299,7 @@ MonoBehaviour:
   characterView: {fileID: 1673741816}
   loadingPopup: {fileID: 119836817}
   characterToggle: {fileID: 932547312}
+  accessoryToggle: {fileID: 1873025851}
   characterInner: {fileID: 1091378078}
   ItemInner: {fileID: 1888433424}
 --- !u!4 &1984870277

@@ -10,6 +10,7 @@ public class CharacterBattle : MonoBehaviour
 
     private void Awake()
     {
+        pv = GetComponent<PhotonView>();
         anim = GetComponent<Animator>();
 
         anim.runtimeAnimatorController = Resources.Load("Animation/CharacterInGameAnim") as RuntimeAnimatorController;
@@ -18,11 +19,19 @@ public class CharacterBattle : MonoBehaviour
     [PunRPC]
     public void SetAnimInt(string paramName, int value)
     {
-        anim.SetInteger(paramName, value);
+        if (IsIdle())
+        {
+            anim.SetInteger(paramName, value);
+        }
     }
 
     public bool IsIdle()
     {
         return anim.GetBool("Idle");
+    }
+
+    public void PlayDashAnim()
+    {
+
     }
 }

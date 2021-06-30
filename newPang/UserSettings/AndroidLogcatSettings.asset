@@ -3,7 +3,7 @@
     "m_SelectedPackage": {
         "deviceId": "LMG710Ne88b2b42",
         "name": "com.onwStudio.SubiPang",
-        "processId": 24646,
+        "processId": 32673,
         "exited": false
     },
     "m_SelectedPriority": 0,
@@ -96,6 +96,36 @@
             "deviceId": "LMG710Ne88b2b42",
             "name": "com.onwStudio.SubiPang",
             "processId": 24646,
+            "exited": false
+        },
+        {
+            "deviceId": "LMG710Ne88b2b42",
+            "name": "com.onwStudio.SubiPang",
+            "processId": 11270,
+            "exited": false
+        },
+        {
+            "deviceId": "LMG710Ne88b2b42",
+            "name": "com.onwStudio.SubiPang",
+            "processId": 12175,
+            "exited": false
+        },
+        {
+            "deviceId": "LMG710Ne88b2b42",
+            "name": "com.onwStudio.SubiPang",
+            "processId": 13541,
+            "exited": false
+        },
+        {
+            "deviceId": "LMG710Ne88b2b42",
+            "name": "com.onwStudio.SubiPang",
+            "processId": 23536,
+            "exited": false
+        },
+        {
+            "deviceId": "LMG710Ne88b2b42",
+            "name": "com.onwStudio.SubiPang",
+            "processId": 32673,
             "exited": false
         }
     ],

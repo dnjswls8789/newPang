@@ -1709,6 +1709,8 @@ public class Board : MonoBehaviour
             ClearHorz(baseBlock.cellPosition.x, baseBlock.cellPosition.y);
             ClearVert(baseBlock.cellPosition.x, baseBlock.cellPosition.y);
 
+            MainGameManager.GetInstance.playerCb.pv.RPC("SetAnimInt", RpcTarget.All, "Attack", 3);
+
             return true;
         }
         // 일자 + 써클
@@ -1735,6 +1737,8 @@ public class Board : MonoBehaviour
             ClearVert(baseBlock.cellPosition.x, baseBlock.cellPosition.y);
             ClearVert(baseBlock.cellPosition.x, baseBlock.cellPosition.y + 1);
 
+            MainGameManager.GetInstance.playerCb.pv.RPC("SetAnimInt", RpcTarget.All, "Attack", 3);
+
             return true;
         }
         //일자 + 레이저    해당 브리드 블럭 일자로 변경 후 폭발.
@@ -1758,8 +1762,9 @@ public class Board : MonoBehaviour
             //baseBlock.DoActionClear(true);
             targetBlock.DoActionClear(true);
 
-           // ClearLazer(baseBlock.breed);
-        
+            // ClearLazer(baseBlock.breed);
+            MainGameManager.GetInstance.playerCb.pv.RPC("SetAnimInt", RpcTarget.All, "Attack", 3);
+
             return true;
         }
         else if ((targetBlock.questType == BlockQuestType.CLEAR_HORZ || targetBlock.questType == BlockQuestType.CLEAR_VERT) &&
@@ -1783,7 +1788,8 @@ public class Board : MonoBehaviour
             //targetBlock.DoActionClear(true);
 
             //ClearLazer(targetBlock.breed);
-        
+            MainGameManager.GetInstance.playerCb.pv.RPC("SetAnimInt", RpcTarget.All, "Attack", 3);
+
             return true;
         }
          //써클 + 써클      타겟블럭 기준 5 * 5 폭발.
@@ -1799,6 +1805,7 @@ public class Board : MonoBehaviour
            //targetBlock.DoActionClear(true);
 
             ClearCircleDouble(baseBlock.cellPosition.x, baseBlock.cellPosition.y);
+            MainGameManager.GetInstance.playerCb.pv.RPC("SetAnimInt", RpcTarget.All, "Attack", 3);
 
             return true;
         }
@@ -1815,6 +1822,7 @@ public class Board : MonoBehaviour
             targetBlock.DoActionClear(true);
 
             //ClearLazer(baseBlock.breed);
+            MainGameManager.GetInstance.playerCb.pv.RPC("SetAnimInt", RpcTarget.All, "Attack", 3);
 
             return true;
         }
@@ -1830,6 +1838,7 @@ public class Board : MonoBehaviour
             //targetBlock.DoActionClear(true);
 
             //ClearLazer(targetBlock.breed);
+            MainGameManager.GetInstance.playerCb.pv.RPC("SetAnimInt", RpcTarget.All, "Attack", 3);
 
             return true;
         }
@@ -1842,6 +1851,8 @@ public class Board : MonoBehaviour
 
             ClearLazer(targetBlock.breed);
 
+            MainGameManager.GetInstance.playerCb.pv.RPC("SetAnimInt", RpcTarget.All, "Attack", 4);
+
             return true;
         }
         else if (targetBlock.questType == BlockQuestType.CLEAR_LAZER && (baseBlock.questType == BlockQuestType.CLEAR_SIMPLE || baseBlock.questType == BlockQuestType.SHUFFLE))
@@ -1851,6 +1862,8 @@ public class Board : MonoBehaviour
             targetBlock.DoActionClear(true);
 
             ClearLazer(baseBlock.breed);
+
+            MainGameManager.GetInstance.playerCb.pv.RPC("SetAnimInt", RpcTarget.All, "Attack", 4);
 
             return true;
         }
@@ -1867,7 +1880,9 @@ public class Board : MonoBehaviour
             targetBlock.DoActionClear(true);
 
             StartCoroutine(ClearAll());
-        
+
+            MainGameManager.GetInstance.playerCb.pv.RPC("SetAnimInt", RpcTarget.All, "Attack", 3);
+
             return true;
         }
 

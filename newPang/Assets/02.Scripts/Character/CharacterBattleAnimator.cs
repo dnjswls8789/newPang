@@ -9,8 +9,8 @@ public class CharacterBattleAnimator : StateMachineBehaviour
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        animator.SetBool("Idle", true);
         animator.SetInteger("Attack", 0);
+        animator.SetBool("Idle", true);
 
         //if (cb == null)
         //{

@@ -82,3 +82,10 @@ MonoBehaviour:
   - {fileID: 2861438460690957853, guid: 7723b06d21315c547ad4467fcdf9c371, type: 3}
   - {fileID: 2861438460690957853, guid: 66845712ce873f14f832cb6e5701cf63, type: 3}
   - {fileID: 2861438460690957853, guid: 1a687ffa71efa3b4a929e24ba3e3019c, type: 3}
+  blockChangeEffects:
+  - {fileID: 164592, guid: f83719c55d573f846969adb09410b7b3, type: 3}
+  - {fileID: 164592, guid: fb8b37b8f8ec59f46b4bca699d2d33fd, type: 3}
+  - {fileID: 164592, guid: 670303d48a5c7d444b5ec63968587e60, type: 3}
+  - {fileID: 164592, guid: 96c4610bc40acf6478538898dffc1873, type: 3}
+  - {fileID: 164592, guid: c93904169ecba6640b7269c9eb6d3a12, type: 3}
+  - {fileID: 164592, guid: e2ec99da2310ddf47bd674e8942ba2e8, type: 3}

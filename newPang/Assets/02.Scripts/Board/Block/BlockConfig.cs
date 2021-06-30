@@ -15,6 +15,7 @@ public class BlockConfig : ScriptableObject
     public Color[] blockColors;
     public GameObject[] explosion;
     public GameObject[] simpleExplosionColor;
+    public GameObject[] blockChangeEffects;
 
     public GameObject GetExplosionObject(BlockQuestType questType)
     {
@@ -39,5 +40,10 @@ public class BlockConfig : ScriptableObject
         {
             return simpleExplosionColor[(int)breed];
         }
+    }
+
+    public GameObject GetChangeBlockEffect(BlockBreed breed)
+    {
+        return blockChangeEffects[(int)breed];
     }
 }

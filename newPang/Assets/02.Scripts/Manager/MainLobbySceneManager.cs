@@ -13,6 +13,7 @@ public class MainLobbySceneManager : SingletonClass<MainLobbySceneManager>
     [SerializeField] GameObject loadingPopup;
 
     [SerializeField] Toggle characterToggle;
+    [SerializeField] Toggle accessoryToggle;
     [SerializeField] GameObject characterInner;
     [SerializeField] GameObject ItemInner;
 
@@ -82,9 +83,10 @@ public class MainLobbySceneManager : SingletonClass<MainLobbySceneManager>
 
     public void ExitCharacterView()
     {
+        accessoryToggle.isOn = true;
+        characterToggle.isOn = true;
         customCharacterLocator.gameObject.SetActive(false);
         mainCharacterLocator.gameObject.SetActive(true);
-        characterToggle.isOn = true;
 
         characterView.SetActive(false);
         mainView.SetActive(true);
