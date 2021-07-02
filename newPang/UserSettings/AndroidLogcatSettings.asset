@@ -3,129 +3,51 @@
     "m_SelectedPackage": {
         "deviceId": "LMG710Ne88b2b42",
         "name": "com.onwStudio.SubiPang",
-        "processId": 32673,
+        "processId": 25638,
         "exited": false
     },
     "m_SelectedPriority": 0,
     "m_KnownPackagesForSerialization": [
         {
             "deviceId": "LMG710Ne88b2b42",
-            "name": "com.google.android.gms.ui",
-            "processId": 4214,
-            "exited": false
-        },
-        {
-            "deviceId": "LMG710Ne88b2b42",
-            "name": "com.onwStudio.SubiPang",
-            "processId": 5891,
-            "exited": true
-        },
-        {
-            "deviceId": "LMG710Ne88b2b42",
-            "name": "com.onwStudio.SubiPang",
-            "processId": 6519,
-            "exited": true
-        },
-        {
-            "deviceId": "LMG710Ne88b2b42",
-            "name": "com.onwStudio.SubiPang",
-            "processId": 9133,
-            "exited": true
-        },
-        {
-            "deviceId": "LMG710Ne88b2b42",
-            "name": "com.onwStudio.SubiPang",
-            "processId": 9808,
-            "exited": true
-        },
-        {
-            "deviceId": "LMG710Ne88b2b42",
-            "name": "com.onwStudio.SubiPang",
-            "processId": 10766,
-            "exited": true
-        },
-        {
-            "deviceId": "LMG710Ne88b2b42",
-            "name": "com.lge.launcher3",
-            "processId": 16287,
-            "exited": false
-        },
-        {
-            "deviceId": "LMG710Ne88b2b42",
-            "name": "com.onwStudio.SubiPang",
-            "processId": 11367,
-            "exited": false
-        },
-        {
-            "deviceId": "LMG710Ne88b2b42",
-            "name": "com.onwStudio.SubiPang",
-            "processId": 23309,
-            "exited": false
-        },
-        {
-            "deviceId": "LMG710Ne88b2b42",
-            "name": "com.onwStudio.SubiPang",
-            "processId": 23543,
-            "exited": false
-        },
-        {
-            "deviceId": "LMG710Ne88b2b42",
-            "name": "com.onwStudio.SubiPang",
-            "processId": 30135,
-            "exited": false
-        },
-        {
-            "deviceId": "LMG710Ne88b2b42",
-            "name": "com.onwStudio.SubiPang",
-            "processId": 319,
-            "exited": false
-        },
-        {
-            "deviceId": "LMG710Ne88b2b42",
-            "name": "com.onwStudio.SubiPang",
-            "processId": 5069,
-            "exited": false
-        },
-        {
-            "deviceId": "LMG710Ne88b2b42",
-            "name": "com.onwStudio.SubiPang",
-            "processId": 22388,
-            "exited": false
-        },
-        {
-            "deviceId": "LMG710Ne88b2b42",
-            "name": "com.onwStudio.SubiPang",
-            "processId": 24646,
-            "exited": false
-        },
-        {
-            "deviceId": "LMG710Ne88b2b42",
-            "name": "com.onwStudio.SubiPang",
-            "processId": 11270,
-            "exited": false
-        },
-        {
-            "deviceId": "LMG710Ne88b2b42",
-            "name": "com.onwStudio.SubiPang",
-            "processId": 12175,
-            "exited": false
-        },
-        {
-            "deviceId": "LMG710Ne88b2b42",
             "name": "com.onwStudio.SubiPang",
             "processId": 13541,
-            "exited": false
+            "exited": true
         },
         {
             "deviceId": "LMG710Ne88b2b42",
             "name": "com.onwStudio.SubiPang",
             "processId": 23536,
-            "exited": false
+            "exited": true
         },
         {
             "deviceId": "LMG710Ne88b2b42",
             "name": "com.onwStudio.SubiPang",
             "processId": 32673,
+            "exited": true
+        },
+        {
+            "deviceId": "LMG710Ne88b2b42",
+            "name": "com.onwStudio.SubiPang",
+            "processId": 2688,
+            "exited": true
+        },
+        {
+            "deviceId": "LMG710Ne88b2b42",
+            "name": "com.onwStudio.SubiPang",
+            "processId": 11717,
+            "exited": true
+        },
+        {
+            "deviceId": "LMG710Ne88b2b42",
+            "name": "com.onwStudio.SubiPang",
+            "processId": 13384,
+            "exited": false
+        },
+        {
+            "deviceId": "LMG710Ne88b2b42",
+            "name": "com.onwStudio.SubiPang",
+            "processId": 25638,
             "exited": false
         }
     ],

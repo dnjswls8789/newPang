@@ -41,6 +41,11 @@ public class CustomizeCell : MonoBehaviour
 
         text.text = objectName;
 
+        if (ResourceManager.GetInstance.spriteDic.ContainsKey(_objectName))
+        {
+            itemImage.sprite = ResourceManager.GetInstance.spriteDic[_objectName];
+        }
+
         if (type == CustomType.Character)
         {
             if (DataManager.GetInstance.userData.customs["character"] == objectName)

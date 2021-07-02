@@ -7,6 +7,7 @@ public class ResourceManager : SingletonClass<ResourceManager>
 {
     public Dictionary<string, GameObject> gameObjectDic;
     public Dictionary<string, Material> matDic;
+    public Dictionary<string, Sprite> spriteDic;
 
     protected override void Awake()
     {
@@ -14,6 +15,7 @@ public class ResourceManager : SingletonClass<ResourceManager>
 
         gameObjectDic = new Dictionary<string, GameObject>();
         matDic = new Dictionary<string, Material>();
+        spriteDic = new Dictionary<string, Sprite>();
 
         GameObject[] gameObjects = Resources.LoadAll<GameObject>("Resource");
 
@@ -27,6 +29,13 @@ public class ResourceManager : SingletonClass<ResourceManager>
         for (int i = 0; i < mats.Length; i++)
         {
             matDic[mats[i].name] = mats[i];
+        }
+
+        Sprite[] sprites = Resources.LoadAll<Sprite>("Resource");
+
+        for (int i = 0; i < sprites.Length; i++)
+        {
+            spriteDic[sprites[i].name] = sprites[i];
         }
     }
 

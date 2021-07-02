@@ -249,18 +249,6 @@ public class Block : MonoBehaviour
         if (MainGameManager.GetInstance.IsCoOpHost())
         {
             pv.RPC("SetScale", RpcTarget.Others, Vector3.one);
-
-            GameObject effect = PhotonManager.GetInstance.InstantiateWithPhoton(gameObject,
-                m_BlockConfig.GetChangeBlockEffect(breed).name,
-                transform.position,
-                2f);
-        }
-        else
-        {
-            GameObject effect = gameObject.AddChildFromObjPool(
-                m_BlockConfig.GetChangeBlockEffect(breed).name,
-                transform.position,
-                2f);
         }
     }
 
@@ -560,52 +548,42 @@ public class Block : MonoBehaviour
         switch (match)
         {
             case MatchType.NONE:
-                questType = BlockQuestType.CLEAR_SIMPLE;
-                type = BlockType.BASIC;
+                SetQuestType(BlockQuestType.CLEAR_SIMPLE);
                 break;
             case MatchType.THREE:
-                questType = BlockQuestType.CLEAR_SIMPLE;
-                type = BlockType.BASIC;
+                SetQuestType(BlockQuestType.CLEAR_SIMPLE);
                 break;
             case MatchType.FOUR:
                 // 세로로 매치 됐으면 가로 특수블럭.
                 if (horzMatch)
                 {
-                    questType = BlockQuestType.CLEAR_VERT;
-                    type = BlockType.VERT;
+                    SetQuestType(BlockQuestType.CLEAR_VERT);
                 }
                 else
                 {
-                    questType = BlockQuestType.CLEAR_HORZ;
-                    type = BlockType.HORZ;
+                    SetQuestType(BlockQuestType.CLEAR_HORZ);
                 }
                 break;
             case MatchType.FIVE:
-                questType = BlockQuestType.CLEAR_LAZER;
-                type = BlockType.LAZER;
+                SetQuestType(BlockQuestType.CLEAR_LAZER);
                 breed = BlockBreed.NA;
                 break;
             case MatchType.THREE_THREE:
-                questType = BlockQuestType.CLEAR_CIRCLE;
-                type = BlockType.CIRCLE;
+                SetQuestType(BlockQuestType.CLEAR_CIRCLE);
                 break;
             case MatchType.THREE_FOUR:
-                questType = BlockQuestType.CLEAR_CIRCLE;
-                type = BlockType.CIRCLE;
+                SetQuestType(BlockQuestType.CLEAR_CIRCLE);
                 break;
             case MatchType.THREE_FIVE:
-                questType = BlockQuestType.CLEAR_LAZER;
-                type = BlockType.LAZER;
+                SetQuestType(BlockQuestType.CLEAR_LAZER);
                 breed = BlockBreed.NA;
                 break;
             case MatchType.FOUR_FIVE:
-                questType = BlockQuestType.CLEAR_LAZER;
-                type = BlockType.LAZER;
+                SetQuestType(BlockQuestType.CLEAR_LAZER);
                 breed = BlockBreed.NA;
                 break;
             case MatchType.FOUR_FOUR:
-                questType = BlockQuestType.CLEAR_CIRCLE;
-                type = BlockType.CIRCLE;
+                SetQuestType(BlockQuestType.CLEAR_CIRCLE);
                 break;
             default:
                 break;
@@ -617,9 +595,27 @@ public class Block : MonoBehaviour
         board.BlockPangCheck(cellPosition.x, cellPosition.y, out found, false);
     }
 
+    [PunRPC]
+    public void ChangeEffect()
+    {
+        gameObject.AddChildFromObjPool(
+                    m_BlockConfig.GetChangeBlockEffect(breed).name,
+                    transform.position,
+                    2f);
+    }
+
     public void SetQuestType(BlockQuestType quest)
     {
         questType = quest;
+
+        if (questType != BlockQuestType.NONE && questType != BlockQuestType.CLEAR_SIMPLE)
+        {
+            ChangeEffect();
+            if (MainGameManager.GetInstance.IsCoOpHost())
+            {
+                pv.RPC("ChangeEffect", RpcTarget.Others);
+            }
+        }
 
         switch (questType)
         {
