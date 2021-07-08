@@ -31,22 +31,78 @@ public class DataManager : SingletonClass<DataManager>
 
         // 이 밑의 userData 값들은 모두 db 에서 받는 값들.
 
+        if (PlayerPrefs.HasKey("character"))
+        {
+            userData.customs.Add("character", PlayerPrefs.GetString("character"));
+        }
+        else
+        {
+            userData.customs.Add("character", "Bear00");
+        }
+
+        if (PlayerPrefs.HasKey("face"))
+        {
+            userData.customs.Add("face", PlayerPrefs.GetString("face"));
+        }
+        else
+        {
+            userData.customs.Add("face", "Face01");
+        }
+
+        if (PlayerPrefs.HasKey("hand"))
+        {
+            userData.customs.Add("hand", PlayerPrefs.GetString("hand"));
+        }
+        else
+        {
+            userData.customs.Add("hand", "empty");
+
+        }
+
+        if (PlayerPrefs.HasKey("bag"))
+        {
+            userData.customs.Add("bag", PlayerPrefs.GetString("bag"));
+        }
+        else
+        {
+            userData.customs.Add("bag", "empty");
+
+        }
+
+        if (PlayerPrefs.HasKey("head"))
+        {
+            userData.customs.Add("head", PlayerPrefs.GetString("head"));
+        }
+        else
+        {
+            userData.customs.Add("head", "empty");
+
+        }
+
+        if (PlayerPrefs.HasKey("etc"))
+        {
+            userData.customs.Add("etc", PlayerPrefs.GetString("etc"));
+        }
+        else
+        {
+            userData.customs.Add("etc", "empty");
+
+        }
+
         userData.nickname = "차녕";
         userData.gold = 50000;
-        //userData.characters.Add("")
-        userData.customs.Add("character", "Bunny08");
-        userData.customs.Add("face", "Face20");
-        userData.customs.Add("hand", "SwordToyA");
-        userData.customs.Add("bag", "BackpackA");
-        userData.customs.Add("head", "Cap_turboC");
-        userData.customs.Add("etc", "CollarC");
 
 
-        GameObject[] characters = Resources.LoadAll<GameObject>("Resource/Characters");
+        object[] characters = Resources.LoadAll("Resource/Characters");
 
         for (int i = 0; i < characters.Length; i++)
         {
-            userData.characters[characters[i].name] = characters[i].name;
+            GameObject go = characters[i] as GameObject;
+
+            if (go != null)
+            {
+                userData.characters[go.name] = go.name;
+            }
         }
 
         Material[] face = Resources.LoadAll<Material>("Resource/Items/Face");
@@ -97,7 +153,7 @@ public class DataManager : SingletonClass<DataManager>
         if (userData.characters.ContainsKey(characterName))
         {
             userData.customs["character"] = characterName;
-
+            PlayerPrefs.SetString("character", characterName);
             custom.ChangeCharacter(userData.customs["character"], locator);
         }
     }
@@ -108,18 +164,23 @@ public class DataManager : SingletonClass<DataManager>
         {
             case AccessoryType.Face:
                     userData.customs["face"] = itemName;
+                    PlayerPrefs.SetString("face", itemName);
                 break;
             case AccessoryType.Hand:
                     userData.customs["hand"] = itemName;
+                    PlayerPrefs.SetString("hand", itemName);
                 break;
             case AccessoryType.Bag:
                     userData.customs["bag"] = itemName;
+                    PlayerPrefs.SetString("bag", itemName);
                 break;
             case AccessoryType.Head:
                     userData.customs["head"] = itemName;
+                    PlayerPrefs.SetString("head", itemName);
                 break;
             case AccessoryType.Etc:
                     userData.customs["etc"] = itemName;
+                    PlayerPrefs.SetString("etc", itemName);
                 break;
             default:
                 break;

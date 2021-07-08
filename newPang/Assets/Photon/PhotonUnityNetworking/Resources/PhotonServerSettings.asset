@@ -22,18 +22,19 @@ MonoBehaviour:
     Server: 
     Port: 0
     ProxyServer: 
-    Protocol: 1
+    Protocol: 0
     EnableProtocolFallback: 1
     AuthMode: 0
     EnableLobbyStatistics: 0
     NetworkLogging: 1
-  DevRegion: kr
+  DevRegion: 
   PunLogging: 0
   EnableSupportLogger: 0
   RunInBackground: 1
   StartInOfflineMode: 0
   RpcList:
   - BoardShuffle
+  - ChangeEffect
   - CharacterInstantiate
   - ClickRpc
   - DeActivateObjectPool
@@ -42,6 +43,7 @@ MonoBehaviour:
   - DoSwipeActionFromRemote
   - DoSwipeActionToHost
   - DoSwipeActionToRemote
+  - EquipAccessory
   - Fire
   - InitializeObjPoolWithPhoton
   - InitStage
@@ -52,6 +54,7 @@ MonoBehaviour:
   - RPCMoveToAction
   - RPCScaleAction
   - Scale
+  - SetAnimInt
   - SetBlockBreed
   - SetBlockType
   - SetBoardBlock
@@ -60,15 +63,10 @@ MonoBehaviour:
   - SetIsDroping
   - SetIsSwiping
   - SetLoadSceneParam
+  - SetOtherPlayer
   - SetScale
   - SetStatus
   - UpdateView
-  - asd
-  - EquipAccessory
-  - SetEnemyCharacterLocator
-  - SetOtherPlayer
-  - SetAnimInt
-  - ChangeEffect
   DisableAutoOpenWizard: 1
-  ShowSettings: 1
-  DevRegionSetOnce: 1
+  ShowSettings: 0
+  DevRegionSetOnce: 0

@@ -3,35 +3,11 @@
     "m_SelectedPackage": {
         "deviceId": "LMG710Ne88b2b42",
         "name": "com.onwStudio.SubiPang",
-        "processId": 25638,
+        "processId": 9814,
         "exited": false
     },
     "m_SelectedPriority": 0,
     "m_KnownPackagesForSerialization": [
-        {
-            "deviceId": "LMG710Ne88b2b42",
-            "name": "com.onwStudio.SubiPang",
-            "processId": 13541,
-            "exited": true
-        },
-        {
-            "deviceId": "LMG710Ne88b2b42",
-            "name": "com.onwStudio.SubiPang",
-            "processId": 23536,
-            "exited": true
-        },
-        {
-            "deviceId": "LMG710Ne88b2b42",
-            "name": "com.onwStudio.SubiPang",
-            "processId": 32673,
-            "exited": true
-        },
-        {
-            "deviceId": "LMG710Ne88b2b42",
-            "name": "com.onwStudio.SubiPang",
-            "processId": 2688,
-            "exited": true
-        },
         {
             "deviceId": "LMG710Ne88b2b42",
             "name": "com.onwStudio.SubiPang",
@@ -42,12 +18,36 @@
             "deviceId": "LMG710Ne88b2b42",
             "name": "com.onwStudio.SubiPang",
             "processId": 13384,
-            "exited": false
+            "exited": true
         },
         {
             "deviceId": "LMG710Ne88b2b42",
             "name": "com.onwStudio.SubiPang",
             "processId": 25638,
+            "exited": true
+        },
+        {
+            "deviceId": "LMG710Ne88b2b42",
+            "name": "com.lge.launcher3",
+            "processId": 5127,
+            "exited": false
+        },
+        {
+            "deviceId": "LMG710Ne88b2b42",
+            "name": "com.onwStudio.SubiPang",
+            "processId": 7002,
+            "exited": true
+        },
+        {
+            "deviceId": "LMG710Ne88b2b42",
+            "name": "com.onwStudio.SubiPang",
+            "processId": 9665,
+            "exited": true
+        },
+        {
+            "deviceId": "LMG710Ne88b2b42",
+            "name": "com.onwStudio.SubiPang",
+            "processId": 9814,
             "exited": false
         }
     ],

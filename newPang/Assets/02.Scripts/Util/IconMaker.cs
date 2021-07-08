@@ -38,7 +38,7 @@ namespace SA.Utilities
             }
 
             string path = SaveLocation();
-            path += spriteName;// + number + number2;
+            path += spriteName + number + number2;
 
             bakeCam.targetTexture = ren;
 
