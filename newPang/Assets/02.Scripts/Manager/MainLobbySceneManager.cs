@@ -38,6 +38,8 @@ public class MainLobbySceneManager : SingletonClass<MainLobbySceneManager>
                 DataManager.GetInstance.ChangeCharacter(DataManager.GetInstance.userData.customs["character"], mainCharacterLocator);
             }
         }
+
+        SoundManager.GetInstance.PlayBGM("LobbyBg");
     }
 
     public void Popup(GameObject popup)
