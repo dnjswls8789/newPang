@@ -6,6 +6,7 @@ using Photon.Pun;
 public class CoOpManager : SingletonClass<CoOpManager>
 {
     public PhotonView pv;
+    int targetScore;
 
     protected override void Awake()
     {

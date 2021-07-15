@@ -16,6 +16,7 @@ public class MainLobbySceneManager : SingletonClass<MainLobbySceneManager>
     [SerializeField] Toggle accessoryToggle;
     [SerializeField] GameObject characterInner;
     [SerializeField] GameObject ItemInner;
+    [SerializeField] Setting settingPopup;
 
     Stack<GameObject> uiStack;
 
@@ -38,6 +39,8 @@ public class MainLobbySceneManager : SingletonClass<MainLobbySceneManager>
                 DataManager.GetInstance.ChangeCharacter(DataManager.GetInstance.userData.customs["character"], mainCharacterLocator);
             }
         }
+
+        settingPopup.InitSetting();
 
         SoundManager.GetInstance.PlayBGM("LobbyBg");
     }

@@ -15,9 +15,9 @@ public class Setting : MonoBehaviour
 
     private void Start()
     {
-        InitSetting();
-
-        gameObject.SetActive(false);
+        //InitSetting();
+        //
+        //gameObject.SetActive(false);
     }
 
     public void InitSetting()
