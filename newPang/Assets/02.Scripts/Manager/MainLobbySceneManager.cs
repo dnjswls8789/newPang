@@ -18,6 +18,8 @@ public class MainLobbySceneManager : SingletonClass<MainLobbySceneManager>
     [SerializeField] GameObject ItemInner;
     [SerializeField] Setting settingPopup;
 
+    public UserInfoUI userInfo;
+
     Stack<GameObject> uiStack;
 
 

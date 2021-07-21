@@ -8,14 +8,14 @@ public enum GachaType
     Accessory
 }
 
-public class GachaManager : MonoBehaviour
+public class GachaManager : SingletonClass<GachaManager>
 {
     public GachaType gachaType;
 
     List<string> characterList;
     List<string> accessoryList;
 
-    private void Awake()
+    protected override void Awake()
     {
         characterList = new List<string>();
         accessoryList = new List<string>();
@@ -40,12 +40,7 @@ public class GachaManager : MonoBehaviour
         gachaType = type;
     }
 
-    public void asd()
-    {
-
-    }
-
-    public void PlayGacha()
+    public string PlayGacha()
     {
         string result = "";
 
@@ -62,8 +57,6 @@ public class GachaManager : MonoBehaviour
             result = accessoryList[random];
         }
 
-        Debug.LogError(result);
-
-        //return result;
+        return result;
     }
 }

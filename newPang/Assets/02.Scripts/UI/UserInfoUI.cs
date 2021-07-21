@@ -11,6 +11,11 @@ public class UserInfoUI : MonoBehaviour
     private void Start()
     {
         nickNameText.text = DataManager.GetInstance.userData.nickname;
+        RefreshGold();
+    }
+
+    public void RefreshGold()
+    {
         goldText.text = string.Format("{0:#,###}", DataManager.GetInstance.userData.gold);
     }
 }
