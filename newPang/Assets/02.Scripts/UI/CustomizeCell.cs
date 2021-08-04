@@ -39,7 +39,7 @@ public class CustomizeCell : MonoBehaviour
         accessoryType = _accessoryType;
         objectName = _objectName;
 
-        text.text = objectName;
+        text.text = Translator.TranslationName(objectName);
 
         if (ResourceManager.GetInstance.spriteDic.ContainsKey(_objectName))
         {
