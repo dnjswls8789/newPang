@@ -765,6 +765,7 @@ GameObject:
   - component: {fileID: -495356202682663056}
   - component: {fileID: 3060159410436624367}
   - component: {fileID: -828062097870827833}
+  - component: {fileID: 8062676186512555840}
   m_Layer: 5
   m_Name: Dog07
   m_TagString: Untagged
@@ -826,7 +827,8 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents: []
+  ObservedComponents:
+  - {fileID: 3060159410436624367}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -844,8 +846,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowLayerWeightsInspector: 1
   ShowParameterInspector: 1
-  m_SynchronizeParameters: []
-  m_SynchronizeLayers: []
+  m_SynchronizeParameters:
+  - Type: 3
+    SynchronizeType: 0
+    Name: animation
+  m_SynchronizeLayers:
+  - SynchronizeType: 0
+    LayerIndex: 0
 --- !u!114 &-828062097870827833
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -863,6 +870,20 @@ MonoBehaviour:
   weaponLocator: {fileID: 0}
   etcLocator: {fileID: 0}
   faceRenderer: {fileID: 0}
+--- !u!114 &8062676186512555840
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1232194054249334}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24fb70c36699cc14fbd03ea03d6f621e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectName: Dog07
+  weight: 0
 --- !u!1 &1237863373497854
 GameObject:
   m_ObjectHideFlags: 0

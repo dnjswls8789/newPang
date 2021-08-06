@@ -31,7 +31,7 @@ public class GachaTap : MonoBehaviour
 
     public void ResultAnimation()
     {
-        text.text = result;
+        text.text = Translator.TranslationName(result);
         image.sprite = ResourceManager.GetInstance.spriteDic[result];
     }
 

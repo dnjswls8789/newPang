@@ -2790,6 +2790,7 @@ GameObject:
   - component: {fileID: -2674805650170555752}
   - component: {fileID: -2978067056204260613}
   - component: {fileID: -7574874697563594916}
+  - component: {fileID: -8042742369048226158}
   m_Layer: 5
   m_Name: Bear04
   m_TagString: Untagged
@@ -2888,6 +2889,20 @@ MonoBehaviour:
   weaponLocator: {fileID: 0}
   etcLocator: {fileID: 0}
   faceRenderer: {fileID: 0}
+--- !u!114 &-8042742369048226158
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1679760949788990}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24fb70c36699cc14fbd03ea03d6f621e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemName: Bear04
+  weight: 0
 --- !u!1 &1691734284326192
 GameObject:
   m_ObjectHideFlags: 0

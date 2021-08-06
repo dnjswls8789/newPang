@@ -2691,6 +2691,7 @@ GameObject:
   - component: {fileID: 7500865851337614508}
   - component: {fileID: 1652879388304840467}
   - component: {fileID: 4589473954173286020}
+  - component: {fileID: -8394717456127288475}
   m_Layer: 5
   m_Name: Monkey09
   m_TagString: Untagged
@@ -2771,8 +2772,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowLayerWeightsInspector: 1
   ShowParameterInspector: 1
-  m_SynchronizeParameters: []
-  m_SynchronizeLayers: []
+  m_SynchronizeParameters:
+  - Type: 3
+    SynchronizeType: 0
+    Name: animation
+  m_SynchronizeLayers:
+  - SynchronizeType: 0
+    LayerIndex: 0
 --- !u!114 &4589473954173286020
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2790,6 +2796,20 @@ MonoBehaviour:
   weaponLocator: {fileID: 0}
   etcLocator: {fileID: 0}
   faceRenderer: {fileID: 0}
+--- !u!114 &-8394717456127288475
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1607769554399460}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24fb70c36699cc14fbd03ea03d6f621e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemName: Monkey09
+  weight: 0
 --- !u!1 &1614629485882580
 GameObject:
   m_ObjectHideFlags: 0

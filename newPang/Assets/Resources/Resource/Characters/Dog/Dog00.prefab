@@ -2405,6 +2405,7 @@ GameObject:
   - component: {fileID: -2780069360089548180}
   - component: {fileID: -7280450858023755909}
   - component: {fileID: 8666784553271650545}
+  - component: {fileID: -3880006821680953187}
   m_Layer: 5
   m_Name: Dog00
   m_TagString: Untagged
@@ -2509,6 +2510,20 @@ MonoBehaviour:
   weaponLocator: {fileID: 0}
   etcLocator: {fileID: 0}
   faceRenderer: {fileID: 0}
+--- !u!114 &-3880006821680953187
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1619118025370684}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24fb70c36699cc14fbd03ea03d6f621e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectName: Dog00
+  weight: 0
 --- !u!1 &1620848925387178
 GameObject:
   m_ObjectHideFlags: 0

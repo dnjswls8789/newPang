@@ -3181,6 +3181,7 @@ GameObject:
   - component: {fileID: -7359203881123305730}
   - component: {fileID: -8919700459503364213}
   - component: {fileID: -5097076837515412569}
+  - component: {fileID: 6547745048420395268}
   m_Layer: 5
   m_Name: Monkey08
   m_TagString: Untagged
@@ -3279,6 +3280,20 @@ MonoBehaviour:
   weaponLocator: {fileID: 0}
   etcLocator: {fileID: 0}
   faceRenderer: {fileID: 0}
+--- !u!114 &6547745048420395268
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1841216582895642}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24fb70c36699cc14fbd03ea03d6f621e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemName: Monkey08
+  weight: 0
 --- !u!1 &1863823538359710
 GameObject:
   m_ObjectHideFlags: 0

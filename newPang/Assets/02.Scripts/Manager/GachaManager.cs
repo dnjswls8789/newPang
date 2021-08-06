@@ -12,19 +12,31 @@ public class GachaManager : SingletonClass<GachaManager>
 {
     public GachaType gachaType;
 
-    List<string> characterList;
+    List<GachaWeight> characterList;
     List<string> accessoryList;
+
+    public List<Dictionary<string, object>> weightData;
+
 
     protected override void Awake()
     {
-        characterList = new List<string>();
+        weightData = CSVReader.Read("CharacterGacha");
+        int a = 0;
+        for (int i = 0; i < weightData.Count; i++)
+        {
+            a += (int)weightData[i]["확률"];
+        }
+
+        characterList = new List<GachaWeight>();
         accessoryList = new List<string>();
 
-        GameObject[] gameObjects = Resources.LoadAll<GameObject>("Resource/Characters");
+        GachaWeight[] gameObjects = Resources.LoadAll<GachaWeight>("Resource/Characters");
 
         for (int i = 0; i < gameObjects.Length; i++)
         {
-            characterList.Add(gameObjects[i].name);
+            gameObjects[i].objectName = gameObjects[i].name;
+            gameObjects[i].SetWeight();
+            characterList.Add(gameObjects[i]);
         }
 
         GameObject[] items = Resources.LoadAll<GameObject>("Resource/Items");
@@ -46,9 +58,24 @@ public class GachaManager : SingletonClass<GachaManager>
 
         if (gachaType == GachaType.Character)
         {
-            int random = Random.Range(0, characterList.Count);
+            int random = Random.Range(0, 100000);
+            int weight = 0;
 
-            result = characterList[random];
+            for (int i = 0; i < characterList.Count; i++)
+            {
+                weight += characterList[i].weight;
+
+                if (random < weight)
+                {
+                    result = characterList[i].objectName;
+                    break;
+                }
+            }
+            
+            if (result == "")
+            {
+                Debug.LogError("가챠 에러");
+            }
         }
         else if (gachaType == GachaType.Accessory)
         {

@@ -1793,6 +1793,7 @@ GameObject:
   - component: {fileID: 4052250318105654406}
   - component: {fileID: -7357506031324804742}
   - component: {fileID: -4417219601355244391}
+  - component: {fileID: 7634962081700117415}
   m_Layer: 5
   m_Name: Frog09
   m_TagString: Untagged
@@ -1891,6 +1892,20 @@ MonoBehaviour:
   weaponLocator: {fileID: 0}
   etcLocator: {fileID: 0}
   faceRenderer: {fileID: 0}
+--- !u!114 &7634962081700117415
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1521832538781952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24fb70c36699cc14fbd03ea03d6f621e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemName: Frog09
+  weight: 0
 --- !u!1 &1524432371569184
 GameObject:
   m_ObjectHideFlags: 0

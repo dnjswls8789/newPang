@@ -3117,6 +3117,7 @@ GameObject:
   - component: {fileID: -5713849925382734331}
   - component: {fileID: 262553231551879467}
   - component: {fileID: 1256756625459386786}
+  - component: {fileID: -188724330028043506}
   m_Layer: 5
   m_Name: Bunny01
   m_TagString: Untagged
@@ -3215,6 +3216,20 @@ MonoBehaviour:
   weaponLocator: {fileID: 0}
   etcLocator: {fileID: 0}
   faceRenderer: {fileID: 0}
+--- !u!114 &-188724330028043506
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1886735772335114}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24fb70c36699cc14fbd03ea03d6f621e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemName: Bunny01
+  weight: 0
 --- !u!1 &1887121863153520
 GameObject:
   m_ObjectHideFlags: 0

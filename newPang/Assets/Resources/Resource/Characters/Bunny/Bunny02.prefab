@@ -1009,6 +1009,7 @@ GameObject:
   - component: {fileID: -361342491143442132}
   - component: {fileID: -7917166234145023070}
   - component: {fileID: -7608832392065264779}
+  - component: {fileID: -7339302146545829206}
   m_Layer: 5
   m_Name: Bunny02
   m_TagString: Untagged
@@ -1107,6 +1108,20 @@ MonoBehaviour:
   weaponLocator: {fileID: 0}
   etcLocator: {fileID: 0}
   faceRenderer: {fileID: 0}
+--- !u!114 &-7339302146545829206
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1268666249275680}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24fb70c36699cc14fbd03ea03d6f621e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemName: Bunny02
+  weight: 0
 --- !u!1 &1277891867516958
 GameObject:
   m_ObjectHideFlags: 0

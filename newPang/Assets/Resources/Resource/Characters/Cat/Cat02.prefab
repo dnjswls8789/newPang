@@ -2971,6 +2971,7 @@ GameObject:
   - component: {fileID: -2625346526916813798}
   - component: {fileID: 7650373213146335664}
   - component: {fileID: -2812495283211489677}
+  - component: {fileID: -6987293187085282568}
   m_Layer: 5
   m_Name: Cat02
   m_TagString: Untagged
@@ -3069,6 +3070,20 @@ MonoBehaviour:
   weaponLocator: {fileID: 0}
   etcLocator: {fileID: 0}
   faceRenderer: {fileID: 0}
+--- !u!114 &-6987293187085282568
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1660521203184552}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24fb70c36699cc14fbd03ea03d6f621e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemName: Cat02
+  weight: 0
 --- !u!1 &1674833451306180
 GameObject:
   m_ObjectHideFlags: 0

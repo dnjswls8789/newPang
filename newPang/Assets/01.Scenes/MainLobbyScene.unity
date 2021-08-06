@@ -22502,7 +22502,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a56dd76814f99746a1bba9942550105, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gachaType: 1
+  gachaType: 0
 --- !u!4 &1038772419
 Transform:
   m_ObjectHideFlags: 0

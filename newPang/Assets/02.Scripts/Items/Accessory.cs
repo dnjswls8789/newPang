@@ -19,6 +19,7 @@ public enum LocatorType
     Weapon
 }
 
+
 public class Accessory : MonoBehaviour
 {
     public string accessoryName;

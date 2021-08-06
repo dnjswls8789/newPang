@@ -2130,6 +2130,7 @@ GameObject:
   - component: {fileID: 8220195312933988299}
   - component: {fileID: -3525255908712594879}
   - component: {fileID: 3863396595971995145}
+  - component: {fileID: -7744494280461079682}
   m_Layer: 5
   m_Name: Cat09
   m_TagString: Untagged
@@ -2228,6 +2229,20 @@ MonoBehaviour:
   weaponLocator: {fileID: 0}
   etcLocator: {fileID: 0}
   faceRenderer: {fileID: 0}
+--- !u!114 &-7744494280461079682
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1556620144951414}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24fb70c36699cc14fbd03ea03d6f621e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemName: Cat09
+  weight: 0
 --- !u!1 &1558211428296858
 GameObject:
   m_ObjectHideFlags: 0

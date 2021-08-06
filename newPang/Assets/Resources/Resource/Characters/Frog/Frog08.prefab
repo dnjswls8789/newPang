@@ -571,6 +571,7 @@ GameObject:
   - component: {fileID: 8244636052115900969}
   - component: {fileID: 5126185730530490884}
   - component: {fileID: 3999203332071899760}
+  - component: {fileID: 6055185141744780096}
   m_Layer: 5
   m_Name: Frog08
   m_TagString: Untagged
@@ -632,7 +633,8 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents: []
+  ObservedComponents:
+  - {fileID: 5126185730530490884}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -650,8 +652,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowLayerWeightsInspector: 1
   ShowParameterInspector: 1
-  m_SynchronizeParameters: []
-  m_SynchronizeLayers: []
+  m_SynchronizeParameters:
+  - Type: 3
+    SynchronizeType: 0
+    Name: animation
+  m_SynchronizeLayers:
+  - SynchronizeType: 0
+    LayerIndex: 0
 --- !u!114 &3999203332071899760
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -669,6 +676,20 @@ MonoBehaviour:
   weaponLocator: {fileID: 0}
   etcLocator: {fileID: 0}
   faceRenderer: {fileID: 0}
+--- !u!114 &6055185141744780096
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1133711944270674}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24fb70c36699cc14fbd03ea03d6f621e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemName: Frog08
+  weight: 0
 --- !u!1 &1140634214034982
 GameObject:
   m_ObjectHideFlags: 0

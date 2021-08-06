@@ -877,6 +877,7 @@ GameObject:
   - component: {fileID: -2277129819710509568}
   - component: {fileID: -572130532942719404}
   - component: {fileID: -6074489957173532928}
+  - component: {fileID: 4217933319151492754}
   m_Layer: 5
   m_Name: Frog05
   m_TagString: Untagged
@@ -975,6 +976,20 @@ MonoBehaviour:
   weaponLocator: {fileID: 0}
   etcLocator: {fileID: 0}
   faceRenderer: {fileID: 0}
+--- !u!114 &4217933319151492754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1297435959522658}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24fb70c36699cc14fbd03ea03d6f621e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemName: Frog05
+  weight: 0
 --- !u!1 &1305543629845828
 GameObject:
   m_ObjectHideFlags: 0
