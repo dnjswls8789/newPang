@@ -71,13 +71,13 @@ public class CustomTap : MonoBehaviour
 
             if (type == CustomType.Character)
             {
-                cell.transform.Find("head").GetComponent<RectTransform>().sizeDelta = new Vector2(45, 45);
-                cell.transform.Find("name").GetComponent<TextMeshProUGUI>().fontSize = 10f;              
+                cell.transform.Find("head").GetComponent<RectTransform>().sizeDelta = new Vector2(180, 180);
+                cell.transform.Find("name").GetComponent<TextMeshProUGUI>().fontSize = 40f;              
             }
             else
             {
-                cell.transform.Find("head").GetComponent<RectTransform>().sizeDelta = new Vector2(35, 35);
-                cell.transform.Find("name").GetComponent<TextMeshProUGUI>().fontSize = 9f;               
+                cell.transform.Find("head").GetComponent<RectTransform>().sizeDelta = new Vector2(140, 140);
+                cell.transform.Find("name").GetComponent<TextMeshProUGUI>().fontSize = 35f;               
             }
 
 
